@@ -1,0 +1,8 @@
+﻿type uint32 {
+    range "0..4294967295" {
+        description "Dummy description";
+        reference "Dummy reference";
+        error-message "Dummy error message";
+        error-app-tag "Dummy error app tag";
+    }
+}

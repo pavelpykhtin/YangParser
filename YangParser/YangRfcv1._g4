@@ -1,0 +1,903 @@
+﻿grammar YangRfc;
+                                
+moduleStmt                  : optsep moduleKeyword sep identifierArgStr
+                                 optsep
+                                 '{' stmtsep
+                                     moduleHeaderStmts
+                                     linkageStmts
+                                     metaStmts
+                                     revisionStmts
+                                     bodyStmts
+                                 '}' optsep ;                                 
+submoduleStmt               : optsep submoduleKeyword sep identifierArgStr
+                                 optsep
+                                 '{' stmtsep
+                                     submoduleHeaderStmts
+                                     linkageStmts
+                                     metaStmts
+                                     revisionStmts
+                                     bodyStmts
+                                 '}' optsep ;
+moduleHeaderStmts           : // these stmts can appear in any order
+                                 (yangVersionStmt |
+                                 namespaceStmt    |
+                                 prefixStmt)* ;
+submoduleHeaderStmts        :
+                                // these stmts can appear in any order
+                                (yangVersionStmt |
+                                belongsToStmt)* ;                         
+metaStmts                  : // these stmts can appear in any order
+                                (organizationStmt |
+                                contactStmt |
+                                descriptionStmt |
+                                referenceStmt )* ;
+linkageStmts                : // these stmts can appear in any order
+                                (importStmt | includeStmt)* ;
+revisionStmts               : revisionStmt* ;
+bodyStmts                   : (extensionStmt |
+                                   featureStmt |
+                                   identityStmt |
+                                   typedefStmt |
+                                   groupingStmt |
+                                   dataDefStmt |
+                                   augmentStmt |
+                                   rpcStmt |
+                                   notificationStmt |
+                                   deviationStmt)* ;
+dataDefStmt                 : containerStmt |
+                                 leafStmt |
+                                 leafListStmt |
+                                 listStmt |
+                                 choiceStmt |
+                                 anydataStmt |
+                                 anyxmlStmt |
+                                 usesStmt ;
+yangVersionStmt             : yangVersionKeyword sep yangVersionArgStr
+                                stmtend ;
+yangVersionArgStr           : yangVersionArg;
+yangVersionArg              : '1.1' ;
+importStmt                  : importKeyword sep identifierArgStr optsep
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (prefixStmt |
+                                     revisionDateStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                 '}' stmtsep ;                     
+includeStmt                 : includeKeyword sep identifierArgStr optsep
+                                 (';' |
+                                  '{' stmtsep
+                                      // these stmts can appear in any order
+                                      (revisionDateStmt |
+                                      descriptionStmt |
+                                      referenceStmt)*
+                                  '}') stmtsep ;
+namespaceStmt               : namespaceKeyword sep uriStr stmtend ;
+uriStr                      : '"' .+ '"';
+prefixStmt                  : prefixKeyword sep prefixArgStr stmtend ;
+belongsToStmt               : belongsToKeyword sep identifierArgStr
+                                 optsep
+                                 '{' stmtsep
+                                     prefixStmt
+                                 '}' stmtsep ;
+organizationStmt            : organizationKeyword sep string stmtend ;
+contactStmt                 : contactKeyword sep string stmtend ;
+descriptionStmt             : descriptionKeyword sep string stmtend ;
+referenceStmt               : referenceKeyword sep string stmtend ;
+unitsStmt                   : unitsKeyword sep string stmtend ;
+revisionStmt                : revisionKeyword sep revisionDate optsep
+                                 (';' |
+                                  '{' stmtsep
+                                      // these stmts can appear in any order
+                                      (descriptionStmt |
+                                      referenceStmt)*
+                                  '}') stmtsep ;
+revisionDate                : dateArgStr ;
+revisionDateStmt            : revisionDateKeyword sep revisionDate stmtend ;
+extensionStmt               : extensionKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (argumentStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt)* 
+                                 '}') stmtsep ;
+argumentStmt                : argumentKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     yinElementStmt?
+                                 '}') stmtsep ;
+yinElementStmt              : yinElementKeyword sep yinElementArgStr
+                                stmtend ;
+yinElementArgStr            : yinElementArg ;
+yinElementArg               : trueKeyword | falseKeyword ;
+identityStmt                : identityKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (ifFeatureStmt |
+                                     baseStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                 '}') stmtsep ;
+
+baseStmt                    : baseKeyword sep identifierRefArgStr
+                                stmtend ;
+featureStmt                 : featureKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (ifFeatureStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                 '}') stmtsep ;
+ifFeatureStmt               : ifFeatureKeyword sep ifFeatureExprStr stmtend ;
+ifFeatureExprStr            : ifFeatureExpr ;
+ifFeatureExpr               : ifFeatureTerm
+                                (sep orKeyword sep ifFeatureExpr) ;
+ifFeatureTerm               : ifFeatureFactor
+                                (sep andKeyword sep ifFeatureTerm)? ;
+ifFeatureFactor             : notKeyword sep ifFeatureFactor |
+                                '(' optsep ifFeatureExpr optsep ')' |
+                                identifierRefArg ;
+typedefStmt                 : typedefKeyword sep identifierArgStr optsep
+                                '{' stmtsep
+                                    // these stmts can appear in any order
+                                    (typeStmt |
+                                    unitsStmt |
+                                    defaultStmt |
+                                    statusStmt |
+                                    descriptionStmt |
+                                    referenceStmt)*
+                                 '}' stmtsep ;
+typeStmt                    : typeKeyword sep identifierRefArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     typeBodyStmts?
+                                 '}') stmtsep ;
+typeBodyStmts               : numericalRestrictions |
+                                decimal64Specification |
+                                stringRestrictions |
+                                enumSpecification |
+                                leafrefSpecification |
+                                identityrefSpecification |
+                                instanceIdentifierSpecification |
+                                bitsSpecification |
+                                unionSpecification |
+                                binarySpecification ;
+numericalRestrictions       : rangeStmt? ;
+rangeStmt                   : rangeKeyword sep rangeArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (errorMessageStmt |
+                                     errorAppTagStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                  '}') stmtsep ;
+decimal64Specification      : // these stmts can appear in any order
+                                (fractionDigitsStmt |
+                                rangeStmt)* ;
+fractionDigitsStmt          : fractionDigitsKeyword sep
+                                fractionDigitsArgStr stmtend ;
+fractionDigitsArgStr        : fractionDigitsArg ;
+fractionDigitsArg           : ('1' '0..8'?) | '2..9';
+stringRestrictions          :
+                                // these stmts can appear in any order
+                                (lengthStmt |
+                                patternStmt)* ;
+lengthStmt                  : lengthKeyword sep lengthArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (errorMessageStmt |
+                                     errorAppTagStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                  '}') stmtsep ;
+patternStmt                 : patternKeyword sep string optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (modifierStmt |
+                                     errorMessageStmt |
+                                     errorAppTagStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                  '}') stmtsep ;
+modifierStmt                : modifierKeyword sep modifierArgStr stmtend ;
+modifierArgStr              : modifierArg ;
+modifierArg                 : invertMatchKeyword ;
+defaultStmt                 : defaultKeyword sep string stmtend ;
+enumSpecification           : enumStmt+ ;
+enumStmt                    : enumKeyword sep string optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (ifFeatureStmt |
+                                     valueStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                  '}') stmtsep ;
+
+leafrefSpecification        :
+                                // these stmts can appear in any order
+                                (pathStmt |
+                                requireInstanceStmt)* ;
+
+pathStmt                    : pathKeyword sep pathArgStr stmtend ;
+requireInstanceStmt         : requireInstanceKeyword sep
+                                requireInstanceArgStr stmtend ;
+requireInstanceArgStr       : requireInstanceArg ;
+requireInstanceArg          : trueKeyword | falseKeyword ; 
+instanceIdentifierSpecification   : requireInstanceStmt? ;
+identityrefSpecification    : baseStmt+ ;
+unionSpecification          :  typeStmt+ ;
+binarySpecification         : lengthStmt? ;
+bitsSpecification           :  bitStmt+ ;
+bitStmt                     : bitKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (ifFeatureStmt |
+                                     positionStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                 '}') stmtsep ;
+positionStmt                : positionKeyword sep
+                                positionValueArgStr stmtend ;
+positionValueArgStr         : positionValueArg ; 
+positionValueArg            : nonNegativeIntegerValue ;
+statusStmt                  : statusKeyword sep statusArgStr stmtend ;
+statusArgStr                : statusArg ;
+statusArg                   : currentKeyword |
+                                obsoleteKeyword |
+                                deprecatedKeyword ;
+configStmt                  : configKeyword sep
+                                configArgStr stmtend ;
+configArgStr                : configArg ;
+configArg                   : trueKeyword | falseKeyword ;
+mandatoryStmt               : mandatoryKeyword sep 
+                                mandatoryArgStr stmtend ;
+mandatoryArgStr             : mandatoryArg ;
+mandatoryArg                : trueKeyword | falseKeyword ;
+presenceStmt                : presenceKeyword sep string stmtend ;
+orderedByStmt               : orderedByKeyword sep
+                                orderedByArgStr stmtend ;
+orderedByArgStr             : orderedByArg ;
+orderedByArg                : userKeyword | systemKeyword ;
+mustStmt                    : mustKeyword sep string optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (errorMessageStmt |
+                                     errorAppTagStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                  '}') stmtsep ;
+
+errorMessageStmt            : errorMessageKeyword sep string stmtend;
+errorAppTagStmt             : errorAppTagKeyword sep string stmtend;
+minElementsStmt             : minElementsKeyword sep
+                                minValueArgStr stmtend ;
+minValueArgStr              : minValueArg ;
+minValueArg                 : nonNegativeIntegerValue ;
+maxElementsStmt             : maxElementsKeyword sep
+                                maxValueArgStr stmtend;
+maxValueArgStr              : maxValueArg ;
+maxValueArg                 : unboundedKeyword |
+                                positiveIntegerValue ;
+valueStmt                   : valueKeyword sep integerValueStr stmtend ;
+integerValueStr             : integerValue ;
+groupingStmt                : groupingKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt |
+                                     (typedefStmt | groupingStmt) |
+                                     dataDefStmt |
+                                     actionStmt |
+                                     notificationStmt)
+                                 '}') stmtsep;
+containerStmt               : containerKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (whenStmt |
+                                     ifFeatureStmt |
+                                     mustStmt |
+                                     presenceStmt |
+                                     configStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt |
+                                     (typedefStmt | groupingStmt) |
+                                     dataDefStmt |
+                                     actionStmt |
+                                     notificationStmt)*
+                                 '}') stmtsep ;
+
+leafStmt                    : leafKeyword sep identifierArgStr optsep
+                                '{' stmtsep
+                                    // these stmts can appear in any order
+                                    (whenStmt |
+                                    ifFeatureStmt |
+                                    typeStmt |
+                                    unitsStmt |
+                                    mustStmt |
+                                    defaultStmt |
+                                    configStmt |
+                                    mandatoryStmt |
+                                    statusStmt |
+                                    descriptionStmt |
+                                    referenceStmt)*
+                                 '}' stmtsep ;
+leafListStmt                : leafListKeyword sep identifierArgStr optsep
+                                '{' stmtsep
+                                    // these stmts can appear in any order
+                                    (whenStmt |
+                                    ifFeatureStmt |
+                                    (typeStmt stmtsep) |
+                                    unitsStmt |
+                                    mustStmt |
+                                    defaultStmt |
+                                    configStmt |
+                                    minElementsStmt |
+                                    maxElementsStmt |
+                                    orderedByStmt |
+                                    statusStmt |
+                                    descriptionStmt |
+                                    referenceStmt)*
+                                 '}' stmtsep;
+listStmt                    : listKeyword sep identifierArgStr optsep
+                                '{' stmtsep
+                                    // these stmts can appear in any order
+                                    (whenStmt |
+                                    ifFeatureStmt |
+                                    mustStmt |
+                                    keyStmt |
+                                    uniqueStmt |
+                                    configStmt |
+                                    minElementsStmt |
+                                    maxElementsStmt |
+                                    orderedByStmt |
+                                    statusStmt |
+                                    descriptionStmt |
+                                    referenceStmt |
+                                    (typedefStmt | groupingStmt) |
+                                    dataDefStmt |
+                                    actionStmt |
+                                    notificationStmt)*
+                                 '}' stmtsep ;
+keyStmt                     : keyKeyword sep keyArgStr stmtend ;
+keyArgStr                   : keyArg ;
+keyArg                      : nodeIdentifier (sep nodeIdentifier)* ;
+uniqueStmt                  : uniqueKeyword sep uniqueArgStr stmtend ;
+uniqueArgStr                : uniqueArg ;
+uniqueArg                   : descendantSchemaNodeid
+                                (sep descendantSchemaNodeid)* ;
+choiceStmt                  : choiceKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (whenStmt |
+                                     ifFeatureStmt |
+                                     defaultStmt |
+                                     configStmt |
+                                     mandatoryStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt |
+                                     shortCaseStmt | 
+                                     caseStmt)*
+                                 '}') stmtsep ;
+shortCaseStmt               : choiceStmt |
+                                containerStmt |
+                                leafStmt |
+                                leafListStmt |
+                                listStmt |
+                                anydataStmt |
+                                anyxmlStmt ;
+caseStmt                    : caseKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (whenStmt |
+                                     ifFeatureStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt |
+                                     dataDefStmt)*
+                                 '}') stmtsep ;
+anydataStmt                 : anydataKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (whenStmt |
+                                     ifFeatureStmt |
+                                     mustStmt |
+                                     configStmt |
+                                     mandatoryStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                  '}') stmtsep ;
+anyxmlStmt                  : anyxmlKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (whenStmt |
+                                     ifFeatureStmt |
+                                     mustStmt |
+                                     configStmt |
+                                     mandatoryStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                  '}') stmtsep ;
+usesStmt                    : usesKeyword sep identifierRefArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (whenStmt
+                                     ifFeatureStmt
+                                     statusStmt
+                                     descriptionStmt
+                                     referenceStmt
+                                     refineStmt
+                                     usesAugmentStmt)*
+                                 '}') stmtsep ;
+refineStmt                  : refineKeyword sep refineArgStr optsep
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (ifFeatureStmt |
+                                     mustStmt |
+                                     presenceStmt |
+                                     defaultStmt |
+                                     configStmt |
+                                     mandatoryStmt |
+                                     minElementsStmt |
+                                     maxElementsStmt |
+                                     descriptionStmt |
+                                     referenceStmt)*
+                                   '}' stmtsep ;
+refineArgStr                : refineArg ;
+refineArg                   : descendantSchemaNodeid ;
+usesAugmentStmt             : augmentKeyword sep usesAugmentArgStr optsep
+                                '{' stmtsep
+                                    // these stmts can appear in any order
+                                    (whenStmt |
+                                    ifFeatureStmt |
+                                    statusStmt |
+                                    descriptionStmt |
+                                    referenceStmt |
+                                    (dataDefStmt | caseStmt |
+                                       actionStmt | notificationStmt)+)*
+                                 '}' stmtsep ;
+usesAugmentArgStr           : usesAugmentArg ;
+usesAugmentArg              : descendantSchemaNodeid;
+augmentStmt                 : augmentKeyword sep augmentArgStr optsep
+                                '{' stmtsep
+                                    // these stmts can appear in any order
+                                    (whenStmt |
+                                    ifFeatureStmt |
+                                    statusStmt |
+                                    descriptionStmt |
+                                    referenceStmt |
+                                    (dataDefStmt | caseStmt |
+                                       actionStmt | notificationStmt)+)*
+                                 '}' stmtsep ;
+augmentArgStr               : augmentArg ;
+augmentArg                  : absoluteSchemaNodeid ;
+whenStmt                    : whenKeyword sep string optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (descriptionStmt |
+                                     referenceStmt)*
+                                  '}') stmtsep ;
+rpcStmt                     : rpcKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (ifFeatureStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt |
+                                     (typedefStmt | groupingStmt) |
+                                     inputStmt |
+                                     outputStmt)*
+                                 '}') stmtsep ;
+actionStmt                  : actionKeyword sep identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (ifFeatureStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt |
+                                     (typedefStmt | groupingStmt) |
+                                     inputStmt |
+                                     outputStmt)* 
+                                 '}') stmtsep ;
+inputStmt                   : inputKeyword optsep
+                                '{' stmtsep
+                                    // these stmts can appear in any order
+                                    (mustStmt |
+                                    (typedefStmt | groupingStmt) |
+                                    dataDefStmt)*
+                                '}' stmtsep ;
+outputStmt                  : outputKeyword optsep
+                                '{' stmtsep
+                                    // these stmts can appear in any order
+                                    (mustStmt |
+                                    (typedefStmt | groupingStmt) |
+                                    dataDefStmt)*
+                                '}' stmtsep ;
+notificationStmt            : notificationKeyword sep
+                                identifierArgStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (ifFeatureStmt |
+                                     mustStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt |
+                                     (typedefStmt | groupingStmt) |
+                                     dataDefStmt)*
+                                 '}') stmtsep ;
+deviationStmt               : deviationKeyword sep
+                                deviationArgStr optsep
+                                '{' stmtsep
+                                    // these stmts can appear in any order
+                                    (descriptionStmt |
+                                    referenceStmt |
+                                    deviateNotSupportedStmt |
+                                    deviateAddStmt |
+                                    deviateReplaceStmt |
+                                    deviateDeleteStmt)*
+                                '}' stmtsep ;
+deviationArgStr             : deviationArg ;
+deviationArg                : absoluteSchemaNodeid ;
+deviateNotSupportedStmt     :   deviateKeyword sep
+                                    notSupportedKeywordStr stmtend ;
+deviateAddStmt              : deviateKeyword sep addKeywordStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (unitsStmt |
+                                     mustStmt |
+                                     uniqueStmt |
+                                     defaultStmt |
+                                     configStmt |
+                                     mandatoryStmt |
+                                     minElementsStmt |
+                                     maxElementsStmt)*
+                                 '}') stmtsep ;
+deviateDeleteStmt           : deviateKeyword sep deleteKeywordStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (unitsStmt |
+                                     mustStmt |
+                                     uniqueStmt |
+                                     defaultStmt)*
+                                 '}') stmtsep ;
+deviateReplaceStmt          : deviateKeyword sep replaceKeywordStr optsep
+                                (';' |
+                                 '{' stmtsep
+                                     // these stmts can appear in any order
+                                     (typeStmt |
+                                     unitsStmt |
+                                     defaultStmt |
+                                     configStmt |
+                                     mandatoryStmt |
+                                     minElementsStmt |
+                                     maxElementsStmt)*
+                                 '}') stmtsep ;
+notSupportedKeywordStr      : notSupportedKeyword ;
+addKeywordStr               : addKeyword ;
+deleteKeywordStr            : deleteKeyword ;
+replaceKeywordStr           : replaceKeyword ;
+
+// represents the usage of an extension
+unknownStatement            : prefix ':' identifier (sep string)? optsep
+                                (';' |
+                                    '{' optsep
+                                    ((yangStmt | unknownStatement) optsep)*
+                                    '}') stmtsep ;
+
+yangStmt                    : actionStmt |
+                                anydataStmt |
+                                anyxmlStmt |
+                                argumentStmt |
+                                augmentStmt |
+                                baseStmt |
+                                belongsToStmt |
+                                bitStmt |
+                                caseStmt |
+                                choiceStmt |
+                                configStmt |
+                                contactStmt |
+                                containerStmt |
+                                defaultStmt |
+                                descriptionStmt |
+                                deviateAddStmt |
+                                deviateDeleteStmt |
+                                deviateNotSupportedStmt |
+                                deviateReplaceStmt |
+                                deviationStmt |
+                                enumStmt |
+                                errorAppTagStmt |
+                                errorMessageStmt |
+                                extensionStmt |
+                                featureStmt |
+                                fractionDigitsStmt |
+                                groupingStmt |
+                                identityStmt |
+                                ifFeatureStmt |
+                                importStmt |
+                                includeStmt |
+                                inputStmt |
+                                keyStmt |
+                                leafListStmt |
+                                leafStmt |
+                                lengthStmt |
+                                listStmt |
+                                mandatoryStmt |
+                                maxElementsStmt |
+                                minElementsStmt |
+                                modifierStmt |
+                                moduleStmt |
+                                mustStmt |
+                                namespaceStmt |
+                                notificationStmt |
+                                orderedByStmt |
+                                organizationStmt |
+                                outputStmt |
+                                pathStmt |
+                                patternStmt |
+                                positionStmt |
+                                prefixStmt |
+                                presenceStmt |
+                                rangeStmt |
+                                referenceStmt |
+                                refineStmt |
+                                requireInstanceStmt |
+                                revisionDateStmt |
+                                revisionStmt |
+                                rpcStmt |
+                                statusStmt |
+                                submoduleStmt |
+                                typedefStmt |
+                                typeStmt |
+                                uniqueStmt |
+                                unitsStmt |
+                                usesAugmentStmt |
+                                usesStmt |
+                                valueStmt |
+                                whenStmt |
+                                yangVersionStmt |
+                                yinElementStmt ;
+
+// ranges
+rangeArgStr                 : rangeArg ;
+rangeArg                    : rangePart (optsep '|' optsep rangePart)* ;
+rangePart                   : rangeBoundary (optsep '..' optsep rangeBoundary) ;
+rangeBoundary               : minKeyword | maxKeyword |
+                                integerValue | decimalValue ;
+
+// lengths
+lengthArgStr                : lengthArg ;
+lengthArg                   : lengthPart (optsep '|' optsep lengthPart)* ;
+lengthPart                  : lengthBoundary (optsep '..' optsep lengthBoundary)? ;
+lengthBoundary              : minKeyword | maxKeyword |
+                                nonNegativeIntegerValue ;
+
+// date
+dateArgStr                  : dateArg ;
+dateArg                     : DIGIT DIGIT DIGIT DIGIT '-' DIGIT DIGIT '-' DIGIT DIGIT ;
+
+// schema node identifiers
+schemaNodeid                : absoluteSchemaNodeid |
+                                descendantSchemaNodeid ;
+absoluteSchemaNodeid        : ('/' nodeIdentifier)+ ;
+descendantSchemaNodeid      : nodeIdentifier
+                                (absoluteSchemaNodeid)? ;
+nodeIdentifier              : (prefix ':')? identifier ;
+
+// instance identifiers
+instanceIdentifier          : ('/' (nodeIdentifier
+                                (   keyPredicate+ |
+                                    leafListPredicate |
+                                    pos)?))+ ;
+keyPredicate                : '[' WSP* keyPredicateExpr WSP* ']' ;
+keyPredicateExpr            : nodeIdentifier WSP* '=' WSP* quotedString ;
+leafListPredicate           : '[' WSP* leafListPredicateExpr WSP* ']' ;
+leafListPredicateExpr       : '.' WSP* '=' WSP* quotedString ;
+pos                         : '[' WSP* positiveIntegerValue WSP* ']' ;
+quotedString                : (DQUOTE string DQUOTE) | (SQUOTE string SQUOTE) ;
+
+// leafref path
+pathArgStr                  : pathArg;
+pathArg                     : absolutePath | relativePath ;
+absolutePath                : ('/' (nodeIdentifier pathPredicate*))+ ;
+relativePath                : ('../')+ descendantPath ;
+descendantPath              : nodeIdentifier pathPredicate absolutePath* ;
+pathPredicate               : '[' WSP* pathEqualityExpr WSP* ']' ;
+pathEqualityExpr            : nodeIdentifier WSP* '=' WSP* pathKeyExpr ;
+pathKeyExpr                 : currentFunctionInvocation WSP* '/' WSP*
+                                relPathKeyexpr ;
+relPathKeyexpr              : ('..' WSP* '/' WSP*)+
+                                (nodeIdentifier WSP* '/' WSP*)*
+                                nodeIdentifier ;
+
+// keywords, using the syntax for caseSensitive strings (RFC 7405)
+
+// statement keywords
+actionKeyword               : 'action';
+anydataKeyword              : 'anydata';
+anyxmlKeyword               : 'anyxml';
+argumentKeyword             : 'argument';
+augmentKeyword              : 'augment';
+baseKeyword                 : 'base';
+belongsToKeyword            : 'belongsTo';
+bitKeyword                  : 'bit';
+caseKeyword                 : 'case';
+choiceKeyword               : 'choice';
+configKeyword               : 'config';
+contactKeyword              : 'contact';
+containerKeyword            : 'container';
+defaultKeyword              : 'default';
+descriptionKeyword          : 'description';
+deviateKeyword              : 'deviate';
+deviationKeyword            : 'deviation';
+enumKeyword                 : 'enum';
+errorAppTagKeyword          : 'errorAppTag';
+errorMessageKeyword         : 'errorMessage';
+extensionKeyword            : 'extension';
+featureKeyword              : 'feature';
+fractionDigitsKeyword       : 'fractionDigits';
+groupingKeyword             : 'grouping';
+identityKeyword             : 'identity';
+ifFeatureKeyword            : 'ifFeature';
+importKeyword               : 'import';
+includeKeyword              : 'include';
+inputKeyword                : 'input';
+keyKeyword                  : 'key';
+leafKeyword                 : 'leaf';
+leafListKeyword             : 'leafList';
+lengthKeyword               : 'length';
+listKeyword                 : 'list';
+mandatoryKeyword            : 'mandatory';
+maxElementsKeyword          : 'maxElements';
+minElementsKeyword          : 'minElements';
+modifierKeyword             : 'modifier';
+moduleKeyword               : 'module';
+mustKeyword                 : 'must';
+namespaceKeyword            : 'namespace';
+notificationKeyword         : 'notification';
+orderedByKeyword            : 'orderedBy';
+organizationKeyword         : 'organization';
+outputKeyword               : 'output';
+pathKeyword                 : 'path';
+patternKeyword              : 'pattern';
+positionKeyword             : 'position';
+prefixKeyword               : 'prefix';
+presenceKeyword             : 'presence';
+rangeKeyword                : 'range';
+referenceKeyword            : 'reference';
+refineKeyword               : 'refine';
+requireInstanceKeyword      : 'requireInstance';
+revisionKeyword             : 'revision';
+revisionDateKeyword         : 'revisionDate';
+rpcKeyword                  : 'rpc';
+statusKeyword               : 'status';
+submoduleKeyword            : 'submodule';
+typeKeyword                 : 'type';
+typedefKeyword              : 'typedef';
+uniqueKeyword               : 'unique';
+unitsKeyword                : 'units';
+usesKeyword                 : 'uses';
+valueKeyword                : 'value';
+whenKeyword                 : 'when';
+yangVersionKeyword          : 'yangVersion';
+yinElementKeyword           : 'yinElement';
+
+// other keywords
+addKeyword                  : 'add' ;
+currentKeyword              : 'current' ;
+deleteKeyword               : 'delete' ;
+deprecatedKeyword           : 'deprecated' ;
+falseKeyword                : 'false' ;
+invertMatchKeyword          : 'invertMatch' ;
+maxKeyword                  : 'max' ;
+minKeyword                  : 'min' ;
+notSupportedKeyword         : 'notSupported' ;
+obsoleteKeyword             : 'obsolete' ;
+replaceKeyword              : 'replace' ;
+systemKeyword               : 'system' ;
+trueKeyword                 : 'true' ;
+unboundedKeyword            : 'unbounded' ;
+userKeyword                 : 'user' ;
+andKeyword                  : 'and';
+orKeyword                   : 'or';
+notKeyword                  : 'not';
+
+currentFunctionInvocation   : currentKeyword WSP* '(' WSP* ')' ;
+
+// basic rules
+prefixArgStr                : prefixArg ;
+prefixArg                   : prefix ;
+prefix                      : identifier ;
+identifierArgStr            : identifierArg ;
+identifierArg               : identifier ;
+identifier                  : (ALPHA | '_')
+                                (ALPHA | DIGIT | '_' | '-' | '.')* ;
+
+identifierRefArgStr         : identifierRefArg ;
+
+identifierRefArg            : identifierRef ;
+                    
+identifierRef               : ( prefix ':' )? identifier ;
+                    
+string                      : yangString ;
+                    
+yangString                  : yangChar* ;
+
+// any unicode or ISO/IEC 10646 character, including tab, carriage
+// return, and line feed but excluding the other C0 control
+// characters, the surrogate blocks, and the noncharacters
+yangChar                    : '\t' | '\n' | '\r' | '\u0020..\uD7FF' |
+                                                                            // exclude surrogate blocks %xD800DFFF
+                                 '\uE000..\uFDCF'   |                        // exclude noncharacters %xFDD0FDEF
+                                 '\uFDF0..\uFFFD'   |                        // exclude noncharacters %xFFFEFFFF
+                                 '\u10000..\u1FFFD' |                        // exclude noncharacters %x1FFFE-1FFFF
+                                 '\u20000..\u2FFFD' |                        // exclude noncharacters %x2FFFE-2FFFF
+                                 '\u30000..\u3FFFD' |                        // exclude noncharacters %x3FFFE-3FFFF
+                                 '\u40000..\u4FFFD' |                        // exclude noncharacters %x4FFFE-4FFFF
+                                 '\u50000..\u5FFFD' |                        // exclude noncharacters %x5FFFE-5FFFF
+                                 '\u60000..\u6FFFD' |                        // exclude noncharacters %x6FFFE-6FFFF
+                                 '\u70000..\u7FFFD' |                        // exclude noncharacters %x7FFFE-7FFFF
+                                 '\u80000..\u8FFFD' |                        // exclude noncharacters %x8FFFE-8FFFF
+                                 '\u90000..\u9FFFD' |                        // exclude noncharacters %x9FFFE-9FFFF
+                                 '\uA0000..\uAFFFD' |                        // exclude noncharacters %xAFFFEAFFFF
+                                 '\uB0000..\uBFFFD' |                        // exclude noncharacters %xBFFFEBFFFF
+                                 '\uC0000..\uCFFFD' |                        // exclude noncharacters %xCFFFECFFFF
+                                 '\uD0000..\uDFFFD' |                        // exclude noncharacters %xDFFFEDFFFF
+                                 '\uE0000..\uEFFFD' |                        // exclude noncharacters %xEFFFEEFFFF
+                                 '\uF0000..\uFFFFD' |                        // exclude noncharacters %xFFFFEFFFFF
+                                 '\u100000..\u10FFFD' ;                      // exclude noncharacters %x10FFFE-10FFFF
+
+integerValue                : ('-' nonNegativeIntegerValue) |
+                                nonNegativeIntegerValue ;
+nonNegativeIntegerValue     : '0' | positiveIntegerValue ;
+positiveIntegerValue        : (nonZeroDigit DIGIT*) ;
+zeroIntegerValue            : DIGIT+ ;
+
+stmtend             : optsep ( ';' | '{' stmtsep '}' ) stmtsep ;
+sep                 : (WSP | lineBreak)+ ;                                // unconditional separator
+optsep              : (WSP | lineBreak)+ ;
+stmtsep             : (WSP | lineBreak | unknownStatement)+ ;
+lineBreak           : CRLF | LF ;
+nonZeroDigit        : '1..9' ;
+decimalValue        : integerValue ('.' zeroIntegerValue) ;
+SQUOTE              : '\'' ;
+// core rules from RFC 5234
+ALPHA               : [A-Za-z] ;
+CR                  : '\r' ;                                                // carriage return
+CRLF                : CR LF ;                                               // internet standard newline
+DIGIT               : '0..9' ;
+DQUOTE              : '"' ;
+HTAB                : '\t' ;                                                // horizontal tab
+LF                  : '\n' ;                                                // line feed
+SP                  : ' ' ;                                                 // space
+WSP                 : (' ' | '\t');                                         // whitespace

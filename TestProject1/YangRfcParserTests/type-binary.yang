@@ -1,0 +1,8 @@
+﻿type binary {
+    length "1..max" {
+        description "Dummy description";
+        reference "Dummy reference";
+        error-message "Dummy error message";
+        error-app-tag "Dummy error app tag";
+    }
+}

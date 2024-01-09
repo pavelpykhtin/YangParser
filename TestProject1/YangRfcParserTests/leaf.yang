@@ -1,0 +1,8 @@
+﻿leaf context-engine-id {
+        type snmp:engine-id;
+        mandatory true;
+        reference
+          "RFC 3413: Simple Network Management Protocol (SNMP).
+             Applications.
+             SNMP-PROXY-MIB.snmpProxyContextEngineID";
+      }

@@ -1,0 +1,16 @@
+﻿type bits {
+     bit disable-nagle {
+       position 0;
+     }
+     bit auto-sense-speed {
+       if-feature "ssh";
+       if-feature "ips";
+       position 1;
+       status current;
+       description "Dummy description";
+       reference "Dummy reference";
+     }
+     bit ten-mb-only {
+       position 2;
+     }
+}

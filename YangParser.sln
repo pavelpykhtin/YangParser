@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YangParser", "YangParser\YangParser.csproj", "{84A6D2ED-F929-4E0E-BF30-7E1FAAB5FEA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject1\TestProject1.csproj", "{B3DEF55B-89F2-41DD-B57B-781B88295E4F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{84A6D2ED-F929-4E0E-BF30-7E1FAAB5FEA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84A6D2ED-F929-4E0E-BF30-7E1FAAB5FEA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84A6D2ED-F929-4E0E-BF30-7E1FAAB5FEA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84A6D2ED-F929-4E0E-BF30-7E1FAAB5FEA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3DEF55B-89F2-41DD-B57B-781B88295E4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3DEF55B-89F2-41DD-B57B-781B88295E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3DEF55B-89F2-41DD-B57B-781B88295E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3DEF55B-89F2-41DD-B57B-781B88295E4F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

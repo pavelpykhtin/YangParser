@@ -1,0 +1,4 @@
+﻿type leafref {
+   path "/interface[name = current()/../if-name]/admin-status";
+   require-instance false;
+}

@@ -1,0 +1,6 @@
+﻿feature proxy {
+  description "A server implements this feature if it can act as an SNMP proxy.";
+  reference
+    "RFC 3413: Simple Network Management Protocol (SNMP)
+       Applications";
+}

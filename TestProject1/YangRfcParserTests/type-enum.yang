@@ -1,0 +1,11 @@
+﻿type enumeration {
+  enum zero;
+  enum one;
+  enum seven {
+    if-feature "ssh";
+    value 7;
+    description "Dummy description";
+    reference "Dummy reference";
+  }
+  enum eight;
+}
