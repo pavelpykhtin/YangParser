@@ -47,34 +47,34 @@
       <None Update="YangRfcParserTests\leaf.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="YangRfcParserTests\type-numerical.yang">
+      <None Update="TypeStmt\data\type-binary.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="YangRfcParserTests\type-decimal.yang">
+      <None Update="TypeStmt\data\type-bits.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="YangRfcParserTests\type-string.yang">
+      <None Update="TypeStmt\data\type-decimal.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="YangRfcParserTests\type-enum.yang">
+      <None Update="TypeStmt\data\type-enum.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="YangRfcParserTests\type-leafref.yang">
+      <None Update="TypeStmt\data\type-identityref.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="YangRfcParserTests\type-identityref.yang">
+      <None Update="TypeStmt\data\type-instance-identifier.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="YangRfcParserTests\type-instance-identifier.yang">
+      <None Update="TypeStmt\data\type-leafref.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="YangRfcParserTests\type-bits.yang">
+      <None Update="TypeStmt\data\type-numerical.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="YangRfcParserTests\type-binary.yang">
+      <None Update="TypeStmt\data\type-string.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="YangRfcParserTests\type-union.yang">
+      <None Update="TypeStmt\data\type-union.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

@@ -1,8 +1,7 @@
-﻿using YangParser;
-using YangParser.Extensions;
+﻿using YangParser.Extensions;
 using YangParser.Model;
 
-namespace TestProject1.YangRfcParserTests;
+namespace YangParser;
 
 public class YangRfcVisitor: YangRfcBaseVisitor<INode>
 {
@@ -41,8 +40,6 @@ public class YangRfcVisitor: YangRfcBaseVisitor<INode>
                 ?.quotedString().GetContentText(),
             Status = context.statusStmt().MapSingle(x => x.statusArgStr().GetText()).Map(x => Enum.Parse<Status>(x, true))
         };
-
-        using var identer = new Identer();
         
         return featureNode;
     }
