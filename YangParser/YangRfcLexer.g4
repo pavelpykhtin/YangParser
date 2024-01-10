@@ -84,7 +84,7 @@ organizationStmt            : organizationKeyword SEP string stmtend ;
 contactStmt                 : contactKeyword SEP string stmtend ;
 descriptionStmt             : descriptionKeyword SEP quotedString stmtend ;
 referenceStmt               : referenceKeyword SEP quotedString stmtend ;
-unitsStmt                   : unitsKeyword SEP string stmtend ;
+unitsStmt                   : unitsKeyword SEP quotedString stmtend ;
 revisionStmt                : revisionKeyword SEP revisionDate SEP?
                                  (';' |
                                   '{' stmtsep
@@ -201,7 +201,7 @@ patternStmt                 : patternKeyword SEP patternArgStr SEP?
 modifierStmt                : modifierKeyword SEP modifierArgStr stmtend ;
 modifierArgStr              : modifierArg ;
 modifierArg                 : invertMatchKeyword ;
-defaultStmt                 : defaultKeyword SEP string stmtend ;
+defaultStmt                 : defaultKeyword SEP quotedString stmtend ;
 enumSpecification           : enumStmt+ ;
 enumStmt                    : enumKeyword SEP identifier SEP?
                                 (';' |
@@ -256,12 +256,12 @@ mandatoryStmt               : mandatoryKeyword SEP
                                 mandatoryArgStr stmtend ;
 mandatoryArgStr             : mandatoryArg ;
 mandatoryArg                : trueKeyword | falseKeyword ;
-presenceStmt                : presenceKeyword SEP string stmtend ;
+presenceStmt                : presenceKeyword SEP quotedString stmtend ;
 orderedByStmt               : orderedByKeyword SEP
                                 orderedByArgStr stmtend ;
 orderedByArgStr             : orderedByArg ;
 orderedByArg                : userKeyword | systemKeyword ;
-mustStmt                    : mustKeyword SEP string SEP?
+mustStmt                    : mustKeyword SEP quotedString SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -294,7 +294,7 @@ groupingStmt                : groupingKeyword SEP identifierArgStr SEP?
                                      (typedefStmt | groupingStmt) |
                                      dataDefStmt |
                                      actionStmt |
-                                     notificationStmt)
+                                     notificationStmt)*
                                  '}') stmtsep;
 containerStmt               : containerKeyword SEP identifierArgStr SEP?
                                 (';' |
@@ -486,7 +486,7 @@ augmentStmt                 : augmentKeyword SEP augmentArgStr SEP?
                                  '}' stmtsep ;
 augmentArgStr               : augmentArg ;
 augmentArg                  : absoluteSchemaNodeid ;
-whenStmt                    : whenKeyword SEP string SEP?
+whenStmt                    : whenKeyword SEP quotedString SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -813,8 +813,8 @@ prefixArg                   : prefix ;
 prefix                      : identifier ;
 identifierArgStr            : identifierArg ;
 identifierArg               : identifier ;
-identifier                  : (ALPHA | '_')
-                                (ALPHA | DIGIT | '_' | '-' | '.')* ;
+identifier                  : (ALPHA | UNDERSCORE)
+                                (ALPHA | DIGIT | UNDERSCORE | DASH | '.')* ;
 
 identifierRefArgStr         : quotedString | identifierRefArg ;
 identifierRefArg            : identifierRef ;
@@ -846,6 +846,8 @@ CRLF                : CR LF ;                                               // i
 CR                  : '\r' ;                                                // carriage return
 LF                  : '\n' ;                                                // line feed
 DIGIT               : [0-9] ;
+DASH                : '-';
+UNDERSCORE          : '_';
 DQUOTE              : '"' ;
 HTAB                : '\t' ;                                                // horizontal tab
 SP                  : ' ' ;                                                 // space

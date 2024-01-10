@@ -1,0 +1,4 @@
+﻿leaf context-engine-id {
+        type snmp:engine-id;        
+        if-feature "ssh";
+}

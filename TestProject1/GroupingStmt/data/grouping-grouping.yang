@@ -1,0 +1,9 @@
+﻿grouping login {
+    grouping nested1 {
+        description "nested description 1";
+    }
+       
+    grouping nested2 {
+        description "nested description 2";
+    }
+}

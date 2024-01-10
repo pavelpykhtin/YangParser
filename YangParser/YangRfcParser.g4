@@ -1,23 +1,23 @@
 ﻿grammar YangRfc;
                                 
-moduleStmt                  : optsep moduleKeyword sep identifierArgStr
-                                 optsep
+moduleStmt                  : SEP? moduleKeyword SEP identifierArgStr
+                                 SEP?
                                  '{' stmtsep
                                      moduleHeaderStmts
                                      linkageStmts
                                      metaStmts
                                      revisionStmts
                                      bodyStmts
-                                 '}' optsep ;                                 
-submoduleStmt               : optsep submoduleKeyword sep identifierArgStr
-                                 optsep
+                                 '}' SEP? ;                                 
+submoduleStmt               : SEP? submoduleKeyword SEP identifierArgStr
+                                 SEP?
                                  '{' stmtsep
                                      submoduleHeaderStmts
                                      linkageStmts
                                      metaStmts
                                      revisionStmts
                                      bodyStmts
-                                 '}' optsep ;
+                                 '}' SEP? ;
 moduleHeaderStmts           : // these stmts can appear in any order
                                  (yangVersionStmt |
                                  namespaceStmt    |
@@ -52,11 +52,11 @@ dataDefStmt                 : containerStmt |
                                  anydataStmt |
                                  anyxmlStmt |
                                  usesStmt ;
-yangVersionStmt             : yangVersionKeyword sep yangVersionArgStr
+yangVersionStmt             : yangVersionKeyword SEP yangVersionArgStr
                                 stmtend ;
 yangVersionArgStr           : yangVersionArg;
 yangVersionArg              : '1.1' ;
-importStmt                  : importKeyword sep identifierArgStr optsep
+importStmt                  : importKeyword SEP identifierArgStr SEP?
                                  '{' stmtsep
                                      // these stmts can appear in any order
                                      (prefixStmt |
@@ -64,7 +64,7 @@ importStmt                  : importKeyword sep identifierArgStr optsep
                                      descriptionStmt |
                                      referenceStmt)*
                                  '}' stmtsep ;                     
-includeStmt                 : includeKeyword sep identifierArgStr optsep
+includeStmt                 : includeKeyword SEP identifierArgStr SEP?
                                  (';' |
                                   '{' stmtsep
                                       // these stmts can appear in any order
@@ -72,20 +72,20 @@ includeStmt                 : includeKeyword sep identifierArgStr optsep
                                       descriptionStmt |
                                       referenceStmt)*
                                   '}') stmtsep ;
-namespaceStmt               : namespaceKeyword sep uriStr stmtend ;
-uriStr                      : '"' .+ '"';
-prefixStmt                  : prefixKeyword sep prefixArgStr stmtend ;
-belongsToStmt               : belongsToKeyword sep identifierArgStr
-                                 optsep
+namespaceStmt               : namespaceKeyword SEP uriStr stmtend ;
+uriStr                      : quotedString;
+prefixStmt                  : prefixKeyword SEP prefixArgStr stmtend ;
+belongsToStmt               : belongsToKeyword SEP identifierArgStr
+                                 SEP?
                                  '{' stmtsep
                                      prefixStmt
                                  '}' stmtsep ;
-organizationStmt            : organizationKeyword sep string stmtend ;
-contactStmt                 : contactKeyword sep string stmtend ;
-descriptionStmt             : descriptionKeyword sep string stmtend ;
-referenceStmt               : referenceKeyword sep string stmtend ;
-unitsStmt                   : unitsKeyword sep string stmtend ;
-revisionStmt                : revisionKeyword sep revisionDate optsep
+organizationStmt            : organizationKeyword SEP string stmtend ;
+contactStmt                 : contactKeyword SEP string stmtend ;
+descriptionStmt             : descriptionKeyword SEP quotedString stmtend ;
+referenceStmt               : referenceKeyword SEP quotedString stmtend ;
+unitsStmt                   : unitsKeyword SEP quotedString stmtend ;
+revisionStmt                : revisionKeyword SEP revisionDate SEP?
                                  (';' |
                                   '{' stmtsep
                                       // these stmts can appear in any order
@@ -93,8 +93,8 @@ revisionStmt                : revisionKeyword sep revisionDate optsep
                                       referenceStmt)*
                                   '}') stmtsep ;
 revisionDate                : dateArgStr ;
-revisionDateStmt            : revisionDateKeyword sep revisionDate stmtend ;
-extensionStmt               : extensionKeyword sep identifierArgStr optsep
+revisionDateStmt            : revisionDateKeyword SEP revisionDate stmtend ;
+extensionStmt               : extensionKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -103,16 +103,16 @@ extensionStmt               : extensionKeyword sep identifierArgStr optsep
                                      descriptionStmt |
                                      referenceStmt)* 
                                  '}') stmtsep ;
-argumentStmt                : argumentKeyword sep identifierArgStr optsep
+argumentStmt                : argumentKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      yinElementStmt?
                                  '}') stmtsep ;
-yinElementStmt              : yinElementKeyword sep yinElementArgStr
+yinElementStmt              : yinElementKeyword SEP yinElementArgStr
                                 stmtend ;
 yinElementArgStr            : yinElementArg ;
 yinElementArg               : trueKeyword | falseKeyword ;
-identityStmt                : identityKeyword sep identifierArgStr optsep
+identityStmt                : identityKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -123,9 +123,9 @@ identityStmt                : identityKeyword sep identifierArgStr optsep
                                      referenceStmt)*
                                  '}') stmtsep ;
 
-baseStmt                    : baseKeyword sep identifierRefArgStr
+baseStmt                    : baseKeyword SEP identifierRefArgStr
                                 stmtend ;
-featureStmt                 : featureKeyword sep identifierArgStr optsep
+featureStmt                 : featureKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -134,16 +134,9 @@ featureStmt                 : featureKeyword sep identifierArgStr optsep
                                      descriptionStmt |
                                      referenceStmt)*
                                  '}') stmtsep ;
-ifFeatureStmt               : ifFeatureKeyword sep ifFeatureExprStr stmtend ;
-ifFeatureExprStr            : ifFeatureExpr ;
-ifFeatureExpr               : ifFeatureTerm
-                                (sep orKeyword sep ifFeatureExpr) ;
-ifFeatureTerm               : ifFeatureFactor
-                                (sep andKeyword sep ifFeatureTerm)? ;
-ifFeatureFactor             : notKeyword sep ifFeatureFactor |
-                                '(' optsep ifFeatureExpr optsep ')' |
-                                identifierRefArg ;
-typedefStmt                 : typedefKeyword sep identifierArgStr optsep
+ifFeatureStmt               : ifFeatureKeyword SEP ifFeatureExprStr stmtend ;
+ifFeatureExprStr            : quotedString ;
+typedefStmt                 : typedefKeyword SEP identifierArgStr SEP?
                                 '{' stmtsep
                                     // these stmts can appear in any order
                                     (typeStmt |
@@ -153,13 +146,12 @@ typedefStmt                 : typedefKeyword sep identifierArgStr optsep
                                     descriptionStmt |
                                     referenceStmt)*
                                  '}' stmtsep ;
-typeStmt                    : typeKeyword sep identifierRefArgStr optsep
+typeStmt                    : typeKeyword SEP identifierRefArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      typeBodyStmts?
                                  '}') stmtsep ;
 typeBodyStmts               : numericalRestrictions |
-                                decimal64Specification |
                                 stringRestrictions |
                                 enumSpecification |
                                 leafrefSpecification |
@@ -168,8 +160,10 @@ typeBodyStmts               : numericalRestrictions |
                                 bitsSpecification |
                                 unionSpecification |
                                 binarySpecification ;
-numericalRestrictions       : rangeStmt? ;
-rangeStmt                   : rangeKeyword sep rangeArgStr optsep
+numericalRestrictions       : // these stmts can appear in any order
+                                  (fractionDigitsStmt |
+                                  rangeStmt)* ;
+rangeStmt                   : rangeKeyword SEP rangeArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -178,18 +172,14 @@ rangeStmt                   : rangeKeyword sep rangeArgStr optsep
                                      descriptionStmt |
                                      referenceStmt)*
                                   '}') stmtsep ;
-decimal64Specification      : // these stmts can appear in any order
-                                (fractionDigitsStmt |
-                                rangeStmt)* ;
-fractionDigitsStmt          : fractionDigitsKeyword sep
+fractionDigitsStmt          : fractionDigitsKeyword SEP
                                 fractionDigitsArgStr stmtend ;
-fractionDigitsArgStr        : fractionDigitsArg ;
-fractionDigitsArg           : ('1' '0..8'?) | '2..9';
+fractionDigitsArgStr        : integerValue ;
 stringRestrictions          :
                                 // these stmts can appear in any order
                                 (lengthStmt |
                                 patternStmt)* ;
-lengthStmt                  : lengthKeyword sep lengthArgStr optsep
+lengthStmt                  : lengthKeyword SEP lengthArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -198,7 +188,7 @@ lengthStmt                  : lengthKeyword sep lengthArgStr optsep
                                      descriptionStmt |
                                      referenceStmt)*
                                   '}') stmtsep ;
-patternStmt                 : patternKeyword sep string optsep
+patternStmt                 : patternKeyword SEP patternArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -208,12 +198,12 @@ patternStmt                 : patternKeyword sep string optsep
                                      descriptionStmt |
                                      referenceStmt)*
                                   '}') stmtsep ;
-modifierStmt                : modifierKeyword sep modifierArgStr stmtend ;
+modifierStmt                : modifierKeyword SEP modifierArgStr stmtend ;
 modifierArgStr              : modifierArg ;
 modifierArg                 : invertMatchKeyword ;
-defaultStmt                 : defaultKeyword sep string stmtend ;
+defaultStmt                 : defaultKeyword SEP quotedString stmtend ;
 enumSpecification           : enumStmt+ ;
-enumStmt                    : enumKeyword sep string optsep
+enumStmt                    : enumKeyword SEP identifier SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -229,8 +219,8 @@ leafrefSpecification        :
                                 (pathStmt |
                                 requireInstanceStmt)* ;
 
-pathStmt                    : pathKeyword sep pathArgStr stmtend ;
-requireInstanceStmt         : requireInstanceKeyword sep
+pathStmt                    : pathKeyword SEP pathArgStr stmtend ;
+requireInstanceStmt         : requireInstanceKeyword SEP
                                 requireInstanceArgStr stmtend ;
 requireInstanceArgStr       : requireInstanceArg ;
 requireInstanceArg          : trueKeyword | falseKeyword ; 
@@ -239,7 +229,7 @@ identityrefSpecification    : baseStmt+ ;
 unionSpecification          :  typeStmt+ ;
 binarySpecification         : lengthStmt? ;
 bitsSpecification           :  bitStmt+ ;
-bitStmt                     : bitKeyword sep identifierArgStr optsep
+bitStmt                     : bitKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -249,29 +239,29 @@ bitStmt                     : bitKeyword sep identifierArgStr optsep
                                      descriptionStmt |
                                      referenceStmt)*
                                  '}') stmtsep ;
-positionStmt                : positionKeyword sep
+positionStmt                : positionKeyword SEP
                                 positionValueArgStr stmtend ;
 positionValueArgStr         : positionValueArg ; 
-positionValueArg            : nonNegativeIntegerValue ;
-statusStmt                  : statusKeyword sep statusArgStr stmtend ;
+positionValueArg            : integerValue ;
+statusStmt                  : statusKeyword SEP statusArgStr stmtend ;
 statusArgStr                : statusArg ;
 statusArg                   : currentKeyword |
                                 obsoleteKeyword |
                                 deprecatedKeyword ;
-configStmt                  : configKeyword sep
+configStmt                  : configKeyword SEP
                                 configArgStr stmtend ;
 configArgStr                : configArg ;
 configArg                   : trueKeyword | falseKeyword ;
-mandatoryStmt               : mandatoryKeyword sep 
+mandatoryStmt               : mandatoryKeyword SEP 
                                 mandatoryArgStr stmtend ;
 mandatoryArgStr             : mandatoryArg ;
 mandatoryArg                : trueKeyword | falseKeyword ;
-presenceStmt                : presenceKeyword sep string stmtend ;
-orderedByStmt               : orderedByKeyword sep
+presenceStmt                : presenceKeyword SEP quotedString stmtend ;
+orderedByStmt               : orderedByKeyword SEP
                                 orderedByArgStr stmtend ;
 orderedByArgStr             : orderedByArg ;
 orderedByArg                : userKeyword | systemKeyword ;
-mustStmt                    : mustKeyword sep string optsep
+mustStmt                    : mustKeyword SEP quotedString SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -281,20 +271,20 @@ mustStmt                    : mustKeyword sep string optsep
                                      referenceStmt)*
                                   '}') stmtsep ;
 
-errorMessageStmt            : errorMessageKeyword sep string stmtend;
-errorAppTagStmt             : errorAppTagKeyword sep string stmtend;
-minElementsStmt             : minElementsKeyword sep
+errorMessageStmt            : errorMessageKeyword SEP quotedString stmtend;
+errorAppTagStmt             : errorAppTagKeyword SEP quotedString stmtend;
+minElementsStmt             : minElementsKeyword SEP
                                 minValueArgStr stmtend ;
 minValueArgStr              : minValueArg ;
-minValueArg                 : nonNegativeIntegerValue ;
-maxElementsStmt             : maxElementsKeyword sep
+minValueArg                 : integerValue ;
+maxElementsStmt             : maxElementsKeyword SEP
                                 maxValueArgStr stmtend;
 maxValueArgStr              : maxValueArg ;
 maxValueArg                 : unboundedKeyword |
-                                positiveIntegerValue ;
-valueStmt                   : valueKeyword sep integerValueStr stmtend ;
+                                integerValue ;
+valueStmt                   : valueKeyword SEP integerValueStr stmtend ;
 integerValueStr             : integerValue ;
-groupingStmt                : groupingKeyword sep identifierArgStr optsep
+groupingStmt                : groupingKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -304,9 +294,9 @@ groupingStmt                : groupingKeyword sep identifierArgStr optsep
                                      (typedefStmt | groupingStmt) |
                                      dataDefStmt |
                                      actionStmt |
-                                     notificationStmt)
+                                     notificationStmt)*
                                  '}') stmtsep;
-containerStmt               : containerKeyword sep identifierArgStr optsep
+containerStmt               : containerKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -324,7 +314,7 @@ containerStmt               : containerKeyword sep identifierArgStr optsep
                                      notificationStmt)*
                                  '}') stmtsep ;
 
-leafStmt                    : leafKeyword sep identifierArgStr optsep
+leafStmt                    : leafKeyword SEP identifierArgStr SEP?
                                 '{' stmtsep
                                     // these stmts can appear in any order
                                     (whenStmt |
@@ -339,7 +329,7 @@ leafStmt                    : leafKeyword sep identifierArgStr optsep
                                     descriptionStmt |
                                     referenceStmt)*
                                  '}' stmtsep ;
-leafListStmt                : leafListKeyword sep identifierArgStr optsep
+leafListStmt                : leafListKeyword SEP identifierArgStr SEP?
                                 '{' stmtsep
                                     // these stmts can appear in any order
                                     (whenStmt |
@@ -356,7 +346,7 @@ leafListStmt                : leafListKeyword sep identifierArgStr optsep
                                     descriptionStmt |
                                     referenceStmt)*
                                  '}' stmtsep;
-listStmt                    : listKeyword sep identifierArgStr optsep
+listStmt                    : listKeyword SEP identifierArgStr SEP?
                                 '{' stmtsep
                                     // these stmts can appear in any order
                                     (whenStmt |
@@ -376,14 +366,14 @@ listStmt                    : listKeyword sep identifierArgStr optsep
                                     actionStmt |
                                     notificationStmt)*
                                  '}' stmtsep ;
-keyStmt                     : keyKeyword sep keyArgStr stmtend ;
+keyStmt                     : keyKeyword SEP keyArgStr stmtend ;
 keyArgStr                   : keyArg ;
-keyArg                      : nodeIdentifier (sep nodeIdentifier)* ;
-uniqueStmt                  : uniqueKeyword sep uniqueArgStr stmtend ;
+keyArg                      : nodeIdentifier (SEP nodeIdentifier)* ;
+uniqueStmt                  : uniqueKeyword SEP uniqueArgStr stmtend ;
 uniqueArgStr                : uniqueArg ;
 uniqueArg                   : descendantSchemaNodeid
-                                (sep descendantSchemaNodeid)* ;
-choiceStmt                  : choiceKeyword sep identifierArgStr optsep
+                                (SEP descendantSchemaNodeid)* ;
+choiceStmt                  : choiceKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -405,7 +395,7 @@ shortCaseStmt               : choiceStmt |
                                 listStmt |
                                 anydataStmt |
                                 anyxmlStmt ;
-caseStmt                    : caseKeyword sep identifierArgStr optsep
+caseStmt                    : caseKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -416,7 +406,7 @@ caseStmt                    : caseKeyword sep identifierArgStr optsep
                                      referenceStmt |
                                      dataDefStmt)*
                                  '}') stmtsep ;
-anydataStmt                 : anydataKeyword sep identifierArgStr optsep
+anydataStmt                 : anydataKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -429,7 +419,7 @@ anydataStmt                 : anydataKeyword sep identifierArgStr optsep
                                      descriptionStmt |
                                      referenceStmt)*
                                   '}') stmtsep ;
-anyxmlStmt                  : anyxmlKeyword sep identifierArgStr optsep
+anyxmlStmt                  : anyxmlKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -442,7 +432,7 @@ anyxmlStmt                  : anyxmlKeyword sep identifierArgStr optsep
                                      descriptionStmt |
                                      referenceStmt)*
                                   '}') stmtsep ;
-usesStmt                    : usesKeyword sep identifierRefArgStr optsep
+usesStmt                    : usesKeyword SEP identifierRefArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -454,7 +444,7 @@ usesStmt                    : usesKeyword sep identifierRefArgStr optsep
                                      refineStmt
                                      usesAugmentStmt)*
                                  '}') stmtsep ;
-refineStmt                  : refineKeyword sep refineArgStr optsep
+refineStmt                  : refineKeyword SEP refineArgStr SEP?
                                  '{' stmtsep
                                      // these stmts can appear in any order
                                      (ifFeatureStmt |
@@ -470,7 +460,7 @@ refineStmt                  : refineKeyword sep refineArgStr optsep
                                    '}' stmtsep ;
 refineArgStr                : refineArg ;
 refineArg                   : descendantSchemaNodeid ;
-usesAugmentStmt             : augmentKeyword sep usesAugmentArgStr optsep
+usesAugmentStmt             : augmentKeyword SEP usesAugmentArgStr SEP?
                                 '{' stmtsep
                                     // these stmts can appear in any order
                                     (whenStmt |
@@ -483,7 +473,7 @@ usesAugmentStmt             : augmentKeyword sep usesAugmentArgStr optsep
                                  '}' stmtsep ;
 usesAugmentArgStr           : usesAugmentArg ;
 usesAugmentArg              : descendantSchemaNodeid;
-augmentStmt                 : augmentKeyword sep augmentArgStr optsep
+augmentStmt                 : augmentKeyword SEP augmentArgStr SEP?
                                 '{' stmtsep
                                     // these stmts can appear in any order
                                     (whenStmt |
@@ -496,14 +486,14 @@ augmentStmt                 : augmentKeyword sep augmentArgStr optsep
                                  '}' stmtsep ;
 augmentArgStr               : augmentArg ;
 augmentArg                  : absoluteSchemaNodeid ;
-whenStmt                    : whenKeyword sep string optsep
+whenStmt                    : whenKeyword SEP quotedString SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
                                      (descriptionStmt |
                                      referenceStmt)*
                                   '}') stmtsep ;
-rpcStmt                     : rpcKeyword sep identifierArgStr optsep
+rpcStmt                     : rpcKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -515,7 +505,7 @@ rpcStmt                     : rpcKeyword sep identifierArgStr optsep
                                      inputStmt |
                                      outputStmt)*
                                  '}') stmtsep ;
-actionStmt                  : actionKeyword sep identifierArgStr optsep
+actionStmt                  : actionKeyword SEP identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -527,22 +517,22 @@ actionStmt                  : actionKeyword sep identifierArgStr optsep
                                      inputStmt |
                                      outputStmt)* 
                                  '}') stmtsep ;
-inputStmt                   : inputKeyword optsep
+inputStmt                   : inputKeyword SEP?
                                 '{' stmtsep
                                     // these stmts can appear in any order
                                     (mustStmt |
                                     (typedefStmt | groupingStmt) |
                                     dataDefStmt)*
                                 '}' stmtsep ;
-outputStmt                  : outputKeyword optsep
+outputStmt                  : outputKeyword SEP?
                                 '{' stmtsep
                                     // these stmts can appear in any order
                                     (mustStmt |
                                     (typedefStmt | groupingStmt) |
                                     dataDefStmt)*
                                 '}' stmtsep ;
-notificationStmt            : notificationKeyword sep
-                                identifierArgStr optsep
+notificationStmt            : notificationKeyword SEP
+                                identifierArgStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -554,8 +544,8 @@ notificationStmt            : notificationKeyword sep
                                      (typedefStmt | groupingStmt) |
                                      dataDefStmt)*
                                  '}') stmtsep ;
-deviationStmt               : deviationKeyword sep
-                                deviationArgStr optsep
+deviationStmt               : deviationKeyword SEP
+                                deviationArgStr SEP?
                                 '{' stmtsep
                                     // these stmts can appear in any order
                                     (descriptionStmt |
@@ -567,9 +557,9 @@ deviationStmt               : deviationKeyword sep
                                 '}' stmtsep ;
 deviationArgStr             : deviationArg ;
 deviationArg                : absoluteSchemaNodeid ;
-deviateNotSupportedStmt     :   deviateKeyword sep
+deviateNotSupportedStmt     :   deviateKeyword SEP
                                     notSupportedKeywordStr stmtend ;
-deviateAddStmt              : deviateKeyword sep addKeywordStr optsep
+deviateAddStmt              : deviateKeyword SEP addKeywordStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -582,7 +572,7 @@ deviateAddStmt              : deviateKeyword sep addKeywordStr optsep
                                      minElementsStmt |
                                      maxElementsStmt)*
                                  '}') stmtsep ;
-deviateDeleteStmt           : deviateKeyword sep deleteKeywordStr optsep
+deviateDeleteStmt           : deviateKeyword SEP deleteKeywordStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -591,7 +581,7 @@ deviateDeleteStmt           : deviateKeyword sep deleteKeywordStr optsep
                                      uniqueStmt |
                                      defaultStmt)*
                                  '}') stmtsep ;
-deviateReplaceStmt          : deviateKeyword sep replaceKeywordStr optsep
+deviateReplaceStmt          : deviateKeyword SEP replaceKeywordStr SEP?
                                 (';' |
                                  '{' stmtsep
                                      // these stmts can appear in any order
@@ -609,10 +599,10 @@ deleteKeywordStr            : deleteKeyword ;
 replaceKeywordStr           : replaceKeyword ;
 
 // represents the usage of an extension
-unknownStatement            : prefix ':' identifier (sep string)? optsep
+unknownStatement            : prefix ':' identifier (SEP string)? SEP?
                                 (';' |
-                                    '{' optsep
-                                    ((yangStmt | unknownStatement) optsep)*
+                                    '{' SEP?
+                                    ((yangStmt | unknownStatement) SEP?)*
                                     '}') stmtsep ;
 
 yangStmt                    : actionStmt |
@@ -689,22 +679,16 @@ yangStmt                    : actionStmt |
                                 yinElementStmt ;
 
 // ranges
-rangeArgStr                 : rangeArg ;
-rangeArg                    : rangePart (optsep '|' optsep rangePart)* ;
-rangePart                   : rangeBoundary (optsep '..' optsep rangeBoundary) ;
-rangeBoundary               : minKeyword | maxKeyword |
-                                integerValue | decimalValue ;
+rangeArgStr                 : quotedString ;
 
 // lengths
-lengthArgStr                : lengthArg ;
-lengthArg                   : lengthPart (optsep '|' optsep lengthPart)* ;
-lengthPart                  : lengthBoundary (optsep '..' optsep lengthBoundary)? ;
-lengthBoundary              : minKeyword | maxKeyword |
-                                nonNegativeIntegerValue ;
+lengthArgStr                : quotedString ;
+
+// pattern
+patternArgStr               : quotedString ;
 
 // date
-dateArgStr                  : dateArg ;
-dateArg                     : DIGIT DIGIT DIGIT DIGIT '-' DIGIT DIGIT '-' DIGIT DIGIT ;
+dateArgStr                  : quotedString ;
 
 // schema node identifiers
 schemaNodeid                : absoluteSchemaNodeid |
@@ -723,22 +707,11 @@ keyPredicate                : '[' WSP* keyPredicateExpr WSP* ']' ;
 keyPredicateExpr            : nodeIdentifier WSP* '=' WSP* quotedString ;
 leafListPredicate           : '[' WSP* leafListPredicateExpr WSP* ']' ;
 leafListPredicateExpr       : '.' WSP* '=' WSP* quotedString ;
-pos                         : '[' WSP* positiveIntegerValue WSP* ']' ;
-quotedString                : (DQUOTE string DQUOTE) | (SQUOTE string SQUOTE) ;
+pos                         : '[' WSP* integerValue WSP* ']' ;
+quotedString                : (DQUOTE dquoteContent DQUOTE) | (SQUOTE squoteContent SQUOTE) ;
 
 // leafref path
-pathArgStr                  : pathArg;
-pathArg                     : absolutePath | relativePath ;
-absolutePath                : ('/' (nodeIdentifier pathPredicate*))+ ;
-relativePath                : ('../')+ descendantPath ;
-descendantPath              : nodeIdentifier pathPredicate absolutePath* ;
-pathPredicate               : '[' WSP* pathEqualityExpr WSP* ']' ;
-pathEqualityExpr            : nodeIdentifier WSP* '=' WSP* pathKeyExpr ;
-pathKeyExpr                 : currentFunctionInvocation WSP* '/' WSP*
-                                relPathKeyexpr ;
-relPathKeyexpr              : ('..' WSP* '/' WSP*)+
-                                (nodeIdentifier WSP* '/' WSP*)*
-                                nodeIdentifier ;
+pathArgStr                  : quotedString ;
 
 // keywords, using the syntax for caseSensitive strings (RFC 7405)
 
@@ -749,7 +722,7 @@ anyxmlKeyword               : 'anyxml';
 argumentKeyword             : 'argument';
 augmentKeyword              : 'augment';
 baseKeyword                 : 'base';
-belongsToKeyword            : 'belongsTo';
+belongsToKeyword            : 'belongs-to';
 bitKeyword                  : 'bit';
 caseKeyword                 : 'case';
 choiceKeyword               : 'choice';
@@ -761,31 +734,31 @@ descriptionKeyword          : 'description';
 deviateKeyword              : 'deviate';
 deviationKeyword            : 'deviation';
 enumKeyword                 : 'enum';
-errorAppTagKeyword          : 'errorAppTag';
-errorMessageKeyword         : 'errorMessage';
+errorAppTagKeyword          : 'error-app-tag';
+errorMessageKeyword         : 'error-message';
 extensionKeyword            : 'extension';
 featureKeyword              : 'feature';
-fractionDigitsKeyword       : 'fractionDigits';
+fractionDigitsKeyword       : 'fraction-digits';
 groupingKeyword             : 'grouping';
 identityKeyword             : 'identity';
-ifFeatureKeyword            : 'ifFeature';
+ifFeatureKeyword            : 'if-feature';
 importKeyword               : 'import';
 includeKeyword              : 'include';
 inputKeyword                : 'input';
 keyKeyword                  : 'key';
 leafKeyword                 : 'leaf';
-leafListKeyword             : 'leafList';
+leafListKeyword             : 'leaf-list';
 lengthKeyword               : 'length';
 listKeyword                 : 'list';
 mandatoryKeyword            : 'mandatory';
-maxElementsKeyword          : 'maxElements';
-minElementsKeyword          : 'minElements';
+maxElementsKeyword          : 'max-elements';
+minElementsKeyword          : 'min-elements';
 modifierKeyword             : 'modifier';
 moduleKeyword               : 'module';
 mustKeyword                 : 'must';
 namespaceKeyword            : 'namespace';
 notificationKeyword         : 'notification';
-orderedByKeyword            : 'orderedBy';
+orderedByKeyword            : 'ordered-by';
 organizationKeyword         : 'organization';
 outputKeyword               : 'output';
 pathKeyword                 : 'path';
@@ -796,9 +769,9 @@ presenceKeyword             : 'presence';
 rangeKeyword                : 'range';
 referenceKeyword            : 'reference';
 refineKeyword               : 'refine';
-requireInstanceKeyword      : 'requireInstance';
+requireInstanceKeyword      : 'require-instance';
 revisionKeyword             : 'revision';
-revisionDateKeyword         : 'revisionDate';
+revisionDateKeyword         : 'revision-date';
 rpcKeyword                  : 'rpc';
 statusKeyword               : 'status';
 submoduleKeyword            : 'submodule';
@@ -809,8 +782,8 @@ unitsKeyword                : 'units';
 usesKeyword                 : 'uses';
 valueKeyword                : 'value';
 whenKeyword                 : 'when';
-yangVersionKeyword          : 'yangVersion';
-yinElementKeyword           : 'yinElement';
+yangVersionKeyword          : 'yang-version';
+yinElementKeyword           : 'yin-element';
 
 // other keywords
 addKeyword                  : 'add' ;
@@ -840,64 +813,62 @@ prefixArg                   : prefix ;
 prefix                      : identifier ;
 identifierArgStr            : identifierArg ;
 identifierArg               : identifier ;
-identifier                  : (ALPHA | '_')
-                                (ALPHA | DIGIT | '_' | '-' | '.')* ;
+identifier                  : (ALPHA | UNDERSCORE)
+                                (ALPHA | DIGIT | UNDERSCORE | DASH | '.')* ;
 
-identifierRefArgStr         : identifierRefArg ;
-
+identifierRefArgStr         : quotedString | identifierRefArg ;
 identifierRefArg            : identifierRef ;
-                    
 identifierRef               : ( prefix ':' )? identifier ;
                     
 string                      : yangString ;
                     
 yangString                  : yangChar* ;
+squoteContent               : ~SQUOTE*;
+dquoteContent               : ~DQUOTE*;
 
 // any unicode or ISO/IEC 10646 character, including tab, carriage
 // return, and line feed but excluding the other C0 control
 // characters, the surrogate blocks, and the noncharacters
-yangChar                    : '\t' | '\n' | '\r' | '\u0020..\uD7FF' |
-                                                                            // exclude surrogate blocks %xD800DFFF
-                                 '\uE000..\uFDCF'   |                        // exclude noncharacters %xFDD0FDEF
-                                 '\uFDF0..\uFFFD'   |                        // exclude noncharacters %xFFFEFFFF
-                                 '\u10000..\u1FFFD' |                        // exclude noncharacters %x1FFFE-1FFFF
-                                 '\u20000..\u2FFFD' |                        // exclude noncharacters %x2FFFE-2FFFF
-                                 '\u30000..\u3FFFD' |                        // exclude noncharacters %x3FFFE-3FFFF
-                                 '\u40000..\u4FFFD' |                        // exclude noncharacters %x4FFFE-4FFFF
-                                 '\u50000..\u5FFFD' |                        // exclude noncharacters %x5FFFE-5FFFF
-                                 '\u60000..\u6FFFD' |                        // exclude noncharacters %x6FFFE-6FFFF
-                                 '\u70000..\u7FFFD' |                        // exclude noncharacters %x7FFFE-7FFFF
-                                 '\u80000..\u8FFFD' |                        // exclude noncharacters %x8FFFE-8FFFF
-                                 '\u90000..\u9FFFD' |                        // exclude noncharacters %x9FFFE-9FFFF
-                                 '\uA0000..\uAFFFD' |                        // exclude noncharacters %xAFFFEAFFFF
-                                 '\uB0000..\uBFFFD' |                        // exclude noncharacters %xBFFFEBFFFF
-                                 '\uC0000..\uCFFFD' |                        // exclude noncharacters %xCFFFECFFFF
-                                 '\uD0000..\uDFFFD' |                        // exclude noncharacters %xDFFFEDFFFF
-                                 '\uE0000..\uEFFFD' |                        // exclude noncharacters %xEFFFEEFFFF
-                                 '\uF0000..\uFFFFD' |                        // exclude noncharacters %xFFFFEFFFFF
-                                 '\u100000..\u10FFFD' ;                      // exclude noncharacters %x10FFFE-10FFFF
+yangChar                    : WSP | LF | CR | EXTRA_CHAR;
 
-integerValue                : ('-' nonNegativeIntegerValue) |
-                                nonNegativeIntegerValue ;
-nonNegativeIntegerValue     : '0' | positiveIntegerValue ;
-positiveIntegerValue        : (nonZeroDigit DIGIT*) ;
-zeroIntegerValue            : DIGIT+ ;
+integerValue                : DIGIT+ ;
 
-stmtend             : optsep ( ';' | '{' stmtsep '}' ) stmtsep ;
-sep                 : (WSP | lineBreak)+ ;                                // unconditional separator
-optsep              : (WSP | lineBreak)+ ;
-stmtsep             : (WSP | lineBreak | unknownStatement)+ ;
-lineBreak           : CRLF | LF ;
-nonZeroDigit        : '1..9' ;
-decimalValue        : integerValue ('.' zeroIntegerValue) ;
-SQUOTE              : '\'' ;
+stmtend             : SEP? ( ';' | '{' stmtsep '}' ) stmtsep ;
+stmtsep             : (SEP | unknownStatement)* ; //(WSP | LINEBREAK | unknownStatement)* ;
+decimalValue        : integerValue ('.' integerValue) ;
+
 // core rules from RFC 5234
+SEP                 : (WSP | LINEBREAK)+ ;                                // unconditional separator
+SQUOTE              : '\'' ;
 ALPHA               : [A-Za-z] ;
-CR                  : '\r' ;                                                // carriage return
+LINEBREAK           : CRLF | LF ;
 CRLF                : CR LF ;                                               // internet standard newline
-DIGIT               : '0..9' ;
+CR                  : '\r' ;                                                // carriage return
+LF                  : '\n' ;                                                // line feed
+DIGIT               : [0-9] ;
+DASH                : '-';
+UNDERSCORE          : '_';
 DQUOTE              : '"' ;
 HTAB                : '\t' ;                                                // horizontal tab
-LF                  : '\n' ;                                                // line feed
 SP                  : ' ' ;                                                 // space
 WSP                 : (' ' | '\t');                                         // whitespace
+EXTRA_CHAR           : 
+                        [\u0020-\uD7FF]   |                         // exclude surrogate blocks %xD800DFFF
+                        [\uE000-\uFDCF]   |                         // exclude noncharacters %xFDD0FDEF
+                        [\uFDF0-\uFFFD] ;                           // exclude noncharacters %xFFFEFFFF
+//                        [\u10000-\u1FFFD] |                       // exclude noncharacters %x1FFFE-1FFFF
+//                        [\u20000-\u2FFFD] |                       // exclude noncharacters %x2FFFE-2FFFF
+//                        [\u30000-\u3FFFD] |                       // exclude noncharacters %x3FFFE-3FFFF
+//                        [\u40000-\u4FFFD] |                       // exclude noncharacters %x4FFFE-4FFFF
+//                        [\u50000-\u5FFFD] |                       // exclude noncharacters %x5FFFE-5FFFF
+//                        [\u60000-\u6FFFD] |                       // exclude noncharacters %x6FFFE-6FFFF
+//                        [\u70000-\u7FFFD] |                       // exclude noncharacters %x7FFFE-7FFFF
+//                        [\u80000-\u8FFFD] |                       // exclude noncharacters %x8FFFE-8FFFF
+//                        [\u90000-\u9FFFD] |                       // exclude noncharacters %x9FFFE-9FFFF
+//                        [\uA0000-\uAFFFD] |                       // exclude noncharacters %xAFFFEAFFFF
+//                        [\uB0000-\uBFFFD] |                       // exclude noncharacters %xBFFFEBFFFF
+//                        [\uC0000-\uCFFFD] |                       // exclude noncharacters %xCFFFECFFFF
+//                        [\uD0000-\uDFFFD] |                       // exclude noncharacters %xDFFFEDFFFF
+//                        [\uE0000-\uEFFFD] |                       // exclude noncharacters %xEFFFEEFFFF
+//                        [\uF0000-\uFFFFD] |                       // exclude noncharacters %xFFFFEFFFFF
+//                        [\u100000-\u10FFFD] ;                     // exclude noncharacters %x10FFFE-10FFFF

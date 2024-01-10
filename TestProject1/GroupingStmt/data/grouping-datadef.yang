@@ -1,0 +1,10 @@
+﻿grouping login {
+    container nested-test {
+        description "container description";
+    }
+    
+    leaf nested-leaf {
+        type uint32;
+        description "container description";
+    }
+}

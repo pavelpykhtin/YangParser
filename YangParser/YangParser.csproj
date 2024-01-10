@@ -16,8 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Antlr4 Include="YangRfc.g4">
-            <Listener>True</Listener>
+        <Antlr4 Include="YangRfcGrammar.g4">
+            <Listener>False</Listener>
             <Visitor>True</Visitor>
         </Antlr4>
     </ItemGroup>

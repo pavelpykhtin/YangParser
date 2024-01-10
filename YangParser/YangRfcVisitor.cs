@@ -52,13 +52,85 @@ public class YangRfcVisitor: YangRfcBaseVisitor<INode>
             Type = (TypeNode)VisitTypeStmt(context.typeStmt().Single()),
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
-            Mandatory = context.mandatoryStmt()
-                .Select(x => bool.Parse(x.mandatoryArgStr().GetText()))
-                .SingleOrDefault(),
-            Status = context.statusStmt().MapSingle(x => x.statusArgStr().GetText()).Map(x => Enum.Parse<Status>(x, true))
+            Mandatory = context.mandatoryStmt().MapSingle(x => bool.Parse(x.mandatoryArgStr().GetText())),
+            Status = context.statusStmt().MapSingle(x => x.statusArgStr().GetText()).Map(x => Enum.Parse<Status>(x, true)),
+            Default = context.defaultStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+            Units = context.unitsStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+            Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
+            Must = new MustSpecificationNode
+            {
+                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
+            },
+            When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
+            IfFeatures = context.ifFeatureStmt()
+                .Select(x => x.ifFeatureExprStr())
+                .Select(x => VisitQuotedString(x.quotedString()))
+                .Select(x => x.StringValue()!)
+                .ToList()
         };
 
         return leafNode;
+    }
+
+    public override INode VisitContainerStmt(YangRfcParser.ContainerStmtContext context)
+    {
+        var leafNode = new ContainerNode
+        {
+            Identifier = context.identifierArgStr().GetText(),
+            Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
+            Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
+            Status = context.statusStmt().MapSingle(x => x.statusArgStr().GetText()).Map(x => Enum.Parse<Status>(x, true)),
+            Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
+            Presence = context.presenceStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+            Typedefs = context.typedefStmt().Select(x => (TypedefNode)VisitTypedefStmt(x)).ToList(),
+            Must = new MustSpecificationNode
+            {
+                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
+            },
+            When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
+            IfFeatures = context.ifFeatureStmt()
+                .Select(x => x.ifFeatureExprStr())
+                .Select(x => VisitQuotedString(x.quotedString()))
+                .Select(x => x.StringValue()!)
+                .ToList()
+        };
+
+        return leafNode;
+    }
+
+    public override INode VisitTypedefStmt(YangRfcParser.TypedefStmtContext context)
+    {
+        return new TypedefNode
+        {
+            Identifier = context.identifierArgStr().GetText(),
+            Type = (TypeNode)VisitTypeStmt(context.typeStmt().Single()),
+            Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
+            Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
+            Status = context.statusStmt().MapSingle(x => x.statusArgStr().GetText()).Map(x => Enum.Parse<Status>(x, true)),
+            Default = context.defaultStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+            Units = context.unitsStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+        };
+    }
+
+    public override INode VisitGroupingStmt(YangRfcParser.GroupingStmtContext context)
+    {
+        return new GroupingNode
+        {
+            Identifier = context.identifierArgStr().GetText(),
+            Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
+            Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
+            Status = context.statusStmt().MapSingle(x => x.statusArgStr().GetText()).Map(x => Enum.Parse<Status>(x, true)),
+            Typedefs = context.typedefStmt().Select(x => (TypedefNode)VisitTypedefStmt(x)).ToList(),
+            Groupings = context.groupingStmt().Select(x => (GroupingNode)VisitGroupingStmt(x)).ToList(),
+            DataDefinitions = context.dataDefStmt().Select(VisitDataDefStmt).ToList()
+        };
+    }
+
+    public override INode VisitDataDefStmt(YangRfcParser.DataDefStmtContext context)
+    {
+        return context.containerStmt().Map(VisitContainerStmt)
+               ?? context.leafStmt().Map(VisitLeafStmt)
+               ?? throw new NotImplementedException("Unknown data-definition type");
     }
 
     public override INode VisitTypeStmt(YangRfcParser.TypeStmtContext context)
@@ -199,6 +271,26 @@ public class YangRfcVisitor: YangRfcBaseVisitor<INode>
         {
             Types = context.typeStmt().Select(x => (TypeNode)VisitTypeStmt(x)).ToList()
         };
+
+    public override INode VisitMustStmt(YangRfcParser.MustStmtContext context) =>
+        new MustNode
+        {
+            Condition = context.Map(x => VisitQuotedString(x.quotedString())).StringValue()!,
+            Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
+            Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
+            ErrorAppTag = context.errorAppTagStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+            ErrorMessage = context.errorMessageStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+        };
+
+    public override INode VisitWhenStmt(YangRfcParser.WhenStmtContext context)
+    {
+        return new WhenNode
+        {
+            Condition = context.Map(x => VisitQuotedString(x.quotedString())).StringValue()!,
+            Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
+            Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue()
+        };
+    }
 
     public override INode VisitQuotedString(YangRfcParser.QuotedStringContext context) => new StringNode(context.GetContentText());
     public override INode VisitDescriptionStmt(YangRfcParser.DescriptionStmtContext context) => context.Map(x => VisitQuotedString(x.quotedString()))!;

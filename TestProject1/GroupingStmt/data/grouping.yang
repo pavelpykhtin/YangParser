@@ -1,0 +1,7 @@
+﻿grouping login {
+    status current;
+    description
+        "Message given at start of login session.";
+    reference
+        "Dummy reference";
+}

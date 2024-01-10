@@ -41,22 +41,6 @@ public class YangRfcParserTests
         featureNode.Status.Should().Be(Status.Current);
     }
 
-    [Fact]
-    public void HandlesLeaf()
-    {
-        YangRfcParser parser = CreateParser("YangRfcParserTests/leaf.yang");
-
-        var context = parser.leafStmt();
-
-        var leafNode = (LeafNode)_visitor.Visit(context);
-
-        leafNode.Identifier.Should().Be("context-engine-id");
-        leafNode.Type.Identifier.Should().Be("snmp:engine-id");
-        leafNode.Mandatory.Should().BeTrue();
-        leafNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP).\r\n             Applications.\r\n             SNMP-PROXY-MIB.snmpProxyContextEngineID");
-        leafNode.Status.Should().Be(Status.Current);
-    }
-
     private YangRfcParser CreateParser(string filePath)
     {
         using var input = File.OpenText(filePath);

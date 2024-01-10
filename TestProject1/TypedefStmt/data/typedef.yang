@@ -1,0 +1,7 @@
+﻿typedef context-engine-id {
+    type snmp:engine-id;        
+    default "1.2.3.4";
+    units "ipv4";
+    reference "RFC 3413: Simple Network Management Protocol (SNMP).";
+    description "Dummy description";
+}

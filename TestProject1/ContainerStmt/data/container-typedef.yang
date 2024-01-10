@@ -1,0 +1,12 @@
+﻿container login {
+    typedef percent {
+        type uint8 {
+            range "0 .. 100";
+        }
+    }
+    typedef minute {
+        type uint8 {
+            range "0 .. 59";
+        }
+    }
+}

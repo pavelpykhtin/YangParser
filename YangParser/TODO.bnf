@@ -103,8 +103,6 @@ organization-stmt   = organization-keyword sep string stmtend
 
 contact-stmt        = contact-keyword sep string stmtend
 
-units-stmt          = units-keyword sep string stmtend
-
 revision-stmt       = revision-keyword sep revision-date optsep
                      (";" /
                       "{" stmtsep
@@ -157,29 +155,6 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
                              // these stmts can appear in any order
                              *if-feature-stmt
                          "}") stmtsep
-   
-  typedef-stmt        = typedef-keyword sep identifier-arg-str optsep
-                        "{" stmtsep
-                            // these stmts can appear in any order
-                            type-stmt
-                            [units-stmt]
-                            [default-stmt]
-                            [status-stmt]
-                            [description-stmt]
-                            [reference-stmt]
-                         "}" stmtsep
-
-  default-stmt        = default-keyword sep string stmtend
-
-  config-stmt         = config-keyword sep
-                        config-arg-str stmtend
-
-  config-arg-str      = < a string that matches the rule >
-                        < config-arg >
-
-  config-arg          = true-keyword / false-keyword
-
-  presence-stmt       = presence-keyword sep string stmtend
 
   ordered-by-stmt     = ordered-by-keyword sep
                         ordered-by-arg-str stmtend
@@ -228,10 +203,6 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
                         (";" /
                          "{" stmtsep
                              // these stmts can appear in any order
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                             *(typedef-stmt / grouping-stmt)
                              *data-def-stmt
                              *action-stmt
                              *notification-stmt
@@ -241,31 +212,11 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
                         (";" /
                          "{" stmtsep
                              // these stmts can appear in any order
-                             [when-stmt]
-                             *if-feature-stmt
-                             *must-stmt
-                             [presence-stmt]
-                             [config-stmt]
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                             *(typedef-stmt / grouping-stmt)
+                             *(grouping-stmt)
                              *data-def-stmt
                              *action-stmt
                              *notification-stmt
                          "}") stmtsep
-
-
-  leaf-stmt           = leaf-keyword sep identifier-arg-str optsep
-                        "{" stmtsep
-                            // these stmts can appear in any order
-                            [when-stmt]
-                            *if-feature-stmt
-                            [units-stmt]
-                            *must-stmt
-                            [default-stmt]
-                            [config-stmt]                            
-                         "}" stmtsep
 
   leaf-list-stmt      = leaf-list-keyword sep identifier-arg-str optsep
                         "{" stmtsep
