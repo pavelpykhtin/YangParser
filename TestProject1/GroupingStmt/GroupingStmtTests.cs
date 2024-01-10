@@ -1,4 +1,5 @@
 ﻿using Antlr4.Runtime;
+using Antlr4.Runtime.Atn;
 using FluentAssertions;
 using YangParser;
 using YangParser.Model;
@@ -74,11 +75,11 @@ public class GroupingStmtTests
 
         groupingNode.DataDefinitions.Should().HaveCount(2);
         
-        containerNode.Description.Should().Be("container description");
         containerNode.Identifier.Should().Be("nested-container");
+        containerNode.Description.Should().Be("container description");
         
-        leafNode.Description.Should().Be("leaf description");
         leafNode.Identifier.Should().Be("nested-leaf");
+        leafNode.Description.Should().Be("leaf description");
     }
 
     private YangRfcParser CreateParser(string filePath)
@@ -89,6 +90,7 @@ public class GroupingStmtTests
         YangRfcLexer lexer = new YangRfcLexer(inputStream);
         CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
         YangRfcParser parser = new YangRfcParser(commonTokenStream);
+        parser.Interpreter.PredictionMode = PredictionMode.LlExactAmbigDetection;
 
         return parser;
     }

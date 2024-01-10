@@ -3,13 +3,13 @@ using YangParser.Model;
 
 namespace YangParser;
 
-public class YangRfcVisitor: YangRfcBaseVisitor<INode>
+public class YangRfcVisitor: YangRfcParserBaseVisitor<INode>
 {
     public override INode VisitModuleStmt(YangRfcParser.ModuleStmtContext context)
     {
         var moduleNode = new ModuleNode
         {
-            Identifier = context.identifierArgStr().GetText()
+            Identifier = context.ID().GetText()
         };
         
         base.VisitModuleStmt(context);
@@ -21,7 +21,7 @@ public class YangRfcVisitor: YangRfcBaseVisitor<INode>
     {
         var submoduleNode = new SubmoduleNode
         {
-            Identifier = context.identifierArgStr().GetText()
+            Identifier = context.ID().GetText()
         };
 
         base.VisitSubmoduleStmt(context);
@@ -33,7 +33,7 @@ public class YangRfcVisitor: YangRfcBaseVisitor<INode>
     {
         var featureNode = new FeatureNode
         {
-            Identifier = context.identifierArgStr().GetText(),
+            Identifier = context.ID().GetText(),
             Description = context.descriptionStmt().SingleOrDefault()
                 ?.quotedString().GetContentText(),
             Reference = context.referenceStmt().SingleOrDefault()
@@ -48,7 +48,7 @@ public class YangRfcVisitor: YangRfcBaseVisitor<INode>
     {
         var leafNode = new LeafNode
         {
-            Identifier = context.identifierArgStr().GetText(),
+            Identifier = context.ID().GetText(),
             Type = (TypeNode)VisitTypeStmt(context.typeStmt().Single()),
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
@@ -76,7 +76,7 @@ public class YangRfcVisitor: YangRfcBaseVisitor<INode>
     {
         var leafNode = new ContainerNode
         {
-            Identifier = context.identifierArgStr().GetText(),
+            Identifier = context.ID().GetText(),
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Status = context.statusStmt().MapSingle(x => x.statusArgStr().GetText()).Map(x => Enum.Parse<Status>(x, true)),
@@ -102,7 +102,7 @@ public class YangRfcVisitor: YangRfcBaseVisitor<INode>
     {
         return new TypedefNode
         {
-            Identifier = context.identifierArgStr().GetText(),
+            Identifier = context.ID().GetText(),
             Type = (TypeNode)VisitTypeStmt(context.typeStmt().Single()),
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
@@ -116,7 +116,7 @@ public class YangRfcVisitor: YangRfcBaseVisitor<INode>
     {
         return new GroupingNode
         {
-            Identifier = context.identifierArgStr().GetText(),
+            Identifier = context.ID().GetText(),
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Status = context.statusStmt().MapSingle(x => x.statusArgStr().GetText()).Map(x => Enum.Parse<Status>(x, true)),
@@ -215,7 +215,7 @@ public class YangRfcVisitor: YangRfcBaseVisitor<INode>
     {
         return new EnumSpecifiationMemberNode
         {
-            Key = context.identifier().GetText(),
+            Key = context.ID().GetText(),
             Value = context.valueStmt()?.MapSingle(x => (int?)int.Parse(x.integerValueStr().GetText())),
             IfFeatures = context.ifFeatureStmt()
                 .Select(x => x.ifFeatureExprStr())

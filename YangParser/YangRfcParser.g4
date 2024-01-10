@@ -1,23 +1,25 @@
-﻿grammar YangRfc;
+﻿parser grammar YangRfcParser;
+
+options { tokenVocab = YangRfcLexer; }
                                 
-moduleStmt                  : SEP? moduleKeyword SEP identifierArgStr
+moduleStmt                  : SEP? ModuleKeyword SEP ID
                                  SEP?
-                                 '{' stmtsep
+                                 CURLYBRO stmtsep
                                      moduleHeaderStmts
                                      linkageStmts
                                      metaStmts
                                      revisionStmts
                                      bodyStmts
-                                 '}' SEP? ;                                 
-submoduleStmt               : SEP? submoduleKeyword SEP identifierArgStr
+                                 CURLYBRC SEP? ;                                 
+submoduleStmt               : SEP? SubmoduleKeyword SEP ID
                                  SEP?
-                                 '{' stmtsep
+                                 CURLYBRO stmtsep
                                      submoduleHeaderStmts
                                      linkageStmts
                                      metaStmts
                                      revisionStmts
                                      bodyStmts
-                                 '}' SEP? ;
+                                 CURLYBRC SEP? ;
 moduleHeaderStmts           : // these stmts can appear in any order
                                  (yangVersionStmt |
                                  namespaceStmt    |
@@ -52,92 +54,91 @@ dataDefStmt                 : containerStmt |
                                  anydataStmt |
                                  anyxmlStmt |
                                  usesStmt ;
-yangVersionStmt             : yangVersionKeyword SEP yangVersionArgStr
+yangVersionStmt             : YangVersionKeyword SEP yangVersionArgStr
                                 stmtend ;
-yangVersionArgStr           : yangVersionArg;
-yangVersionArg              : '1.1' ;
-importStmt                  : importKeyword SEP identifierArgStr SEP?
-                                 '{' stmtsep
+yangVersionArgStr           : YangVersion;
+importStmt                  : ImportKeyword SEP ID SEP?
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (prefixStmt |
                                      revisionDateStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                 '}' stmtsep ;                     
-includeStmt                 : includeKeyword SEP identifierArgStr SEP?
-                                 (';' |
-                                  '{' stmtsep
+                                 CURLYBRC stmtsep ;                     
+includeStmt                 : IncludeKeyword SEP ID SEP?
+                                 (SEMICOLON |
+                                  CURLYBRO stmtsep
                                       // these stmts can appear in any order
                                       (revisionDateStmt |
                                       descriptionStmt |
                                       referenceStmt)*
-                                  '}') stmtsep ;
-namespaceStmt               : namespaceKeyword SEP uriStr stmtend ;
+                                  CURLYBRC) stmtsep ;
+namespaceStmt               : NamespaceKeyword SEP uriStr stmtend ;
 uriStr                      : quotedString;
-prefixStmt                  : prefixKeyword SEP prefixArgStr stmtend ;
-belongsToStmt               : belongsToKeyword SEP identifierArgStr
+prefixStmt                  : PrefixKeyword SEP prefixArgStr stmtend ;
+belongsToStmt               : BelongsToKeyword SEP ID
                                  SEP?
-                                 '{' stmtsep
+                                 CURLYBRO stmtsep
                                      prefixStmt
-                                 '}' stmtsep ;
-organizationStmt            : organizationKeyword SEP string stmtend ;
-contactStmt                 : contactKeyword SEP string stmtend ;
-descriptionStmt             : descriptionKeyword SEP quotedString stmtend ;
-referenceStmt               : referenceKeyword SEP quotedString stmtend ;
-unitsStmt                   : unitsKeyword SEP quotedString stmtend ;
-revisionStmt                : revisionKeyword SEP revisionDate SEP?
-                                 (';' |
-                                  '{' stmtsep
+                                 CURLYBRC stmtsep ;
+organizationStmt            : OrganizationKeyword SEP string stmtend ;
+contactStmt                 : ContactKeyword SEP string stmtend ;
+descriptionStmt             : DescriptionKeyword SEP quotedString stmtend ;
+referenceStmt               : ReferenceKeyword SEP quotedString stmtend ;
+unitsStmt                   : UnitsKeyword SEP quotedString stmtend ;
+revisionStmt                : RevisionKeyword SEP revisionDate SEP?
+                                 (SEMICOLON |
+                                  CURLYBRO stmtsep
                                       // these stmts can appear in any order
                                       (descriptionStmt |
                                       referenceStmt)*
-                                  '}') stmtsep ;
+                                  CURLYBRC) stmtsep ;
 revisionDate                : dateArgStr ;
-revisionDateStmt            : revisionDateKeyword SEP revisionDate stmtend ;
-extensionStmt               : extensionKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+revisionDateStmt            : RevisionDateKeyword SEP revisionDate stmtend ;
+extensionStmt               : ExtensionKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (argumentStmt |
                                      statusStmt |
                                      descriptionStmt |
                                      referenceStmt)* 
-                                 '}') stmtsep ;
-argumentStmt                : argumentKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                 CURLYBRC) stmtsep ;
+argumentStmt                : ArgumentKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      yinElementStmt?
-                                 '}') stmtsep ;
-yinElementStmt              : yinElementKeyword SEP yinElementArgStr
+                                 CURLYBRC) stmtsep ;
+yinElementStmt              : YinElementKeyword SEP yinElementArgStr
                                 stmtend ;
 yinElementArgStr            : yinElementArg ;
-yinElementArg               : trueKeyword | falseKeyword ;
-identityStmt                : identityKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+yinElementArg               : TrueKeyword | FalseKeyword ;
+identityStmt                : IdentityKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (ifFeatureStmt |
                                      baseStmt |
                                      statusStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                 '}') stmtsep ;
+                                 CURLYBRC) stmtsep ;
 
-baseStmt                    : baseKeyword SEP identifierRefArgStr
+baseStmt                    : BaseKeyword SEP identifierRefArgStr
                                 stmtend ;
-featureStmt                 : featureKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+featureStmt                 : FeatureKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (ifFeatureStmt |
                                      statusStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                 '}') stmtsep ;
-ifFeatureStmt               : ifFeatureKeyword SEP ifFeatureExprStr stmtend ;
+                                 CURLYBRC) stmtsep ;
+ifFeatureStmt               : IfFeatureKeyword SEP ifFeatureExprStr stmtend ;
 ifFeatureExprStr            : quotedString ;
-typedefStmt                 : typedefKeyword SEP identifierArgStr SEP?
-                                '{' stmtsep
+typedefStmt                 : TypedefKeyword SEP ID SEP?
+                                CURLYBRO stmtsep
                                     // these stmts can appear in any order
                                     (typeStmt |
                                     unitsStmt |
@@ -145,12 +146,12 @@ typedefStmt                 : typedefKeyword SEP identifierArgStr SEP?
                                     statusStmt |
                                     descriptionStmt |
                                     referenceStmt)*
-                                 '}' stmtsep ;
-typeStmt                    : typeKeyword SEP identifierRefArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                 CURLYBRC stmtsep ;
+typeStmt                    : TypeKeyword SEP identifierRefArgStr SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      typeBodyStmts?
-                                 '}') stmtsep ;
+                                 CURLYBRC) stmtsep ;
 typeBodyStmts               : numericalRestrictions |
                                 stringRestrictions |
                                 enumSpecification |
@@ -163,130 +164,130 @@ typeBodyStmts               : numericalRestrictions |
 numericalRestrictions       : // these stmts can appear in any order
                                   (fractionDigitsStmt |
                                   rangeStmt)* ;
-rangeStmt                   : rangeKeyword SEP rangeArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+rangeStmt                   : RangeKeyword SEP rangeArgStr SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (errorMessageStmt |
                                      errorAppTagStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                  '}') stmtsep ;
-fractionDigitsStmt          : fractionDigitsKeyword SEP
+                                  CURLYBRC) stmtsep ;
+fractionDigitsStmt          : FractionDigitsKeyword SEP
                                 fractionDigitsArgStr stmtend ;
 fractionDigitsArgStr        : integerValue ;
 stringRestrictions          :
                                 // these stmts can appear in any order
                                 (lengthStmt |
                                 patternStmt)* ;
-lengthStmt                  : lengthKeyword SEP lengthArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+lengthStmt                  : LengthKeyword SEP lengthArgStr SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (errorMessageStmt |
                                      errorAppTagStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                  '}') stmtsep ;
-patternStmt                 : patternKeyword SEP patternArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                  CURLYBRC) stmtsep ;
+patternStmt                 : PatternKeyword SEP patternArgStr SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (modifierStmt |
                                      errorMessageStmt |
                                      errorAppTagStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                  '}') stmtsep ;
-modifierStmt                : modifierKeyword SEP modifierArgStr stmtend ;
+                                  CURLYBRC) stmtsep ;
+modifierStmt                : ModifierKeyword SEP modifierArgStr stmtend ;
 modifierArgStr              : modifierArg ;
-modifierArg                 : invertMatchKeyword ;
-defaultStmt                 : defaultKeyword SEP quotedString stmtend ;
+modifierArg                 : InvertMatchKeyword ;
+defaultStmt                 : DefaultKeyword SEP quotedString stmtend ;
 enumSpecification           : enumStmt+ ;
-enumStmt                    : enumKeyword SEP identifier SEP?
-                                (';' |
-                                 '{' stmtsep
+enumStmt                    : EnumKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (ifFeatureStmt |
                                      valueStmt |
                                      statusStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                  '}') stmtsep ;
+                                  CURLYBRC) stmtsep ;
 
 leafrefSpecification        :
                                 // these stmts can appear in any order
                                 (pathStmt |
                                 requireInstanceStmt)* ;
 
-pathStmt                    : pathKeyword SEP pathArgStr stmtend ;
-requireInstanceStmt         : requireInstanceKeyword SEP
+pathStmt                    : PathKeyword SEP pathArgStr stmtend ;
+requireInstanceStmt         : RequireInstanceKeyword SEP
                                 requireInstanceArgStr stmtend ;
 requireInstanceArgStr       : requireInstanceArg ;
-requireInstanceArg          : trueKeyword | falseKeyword ; 
+requireInstanceArg          : TrueKeyword | FalseKeyword ; 
 instanceIdentifierSpecification   : requireInstanceStmt? ;
 identityrefSpecification    : baseStmt+ ;
 unionSpecification          :  typeStmt+ ;
 binarySpecification         : lengthStmt? ;
 bitsSpecification           :  bitStmt+ ;
-bitStmt                     : bitKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+bitStmt                     : BitKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (ifFeatureStmt |
                                      positionStmt |
                                      statusStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                 '}') stmtsep ;
-positionStmt                : positionKeyword SEP
+                                 CURLYBRC) stmtsep ;
+positionStmt                : PositionKeyword SEP
                                 positionValueArgStr stmtend ;
 positionValueArgStr         : positionValueArg ; 
 positionValueArg            : integerValue ;
-statusStmt                  : statusKeyword SEP statusArgStr stmtend ;
+statusStmt                  : StatusKeyword SEP statusArgStr stmtend ;
 statusArgStr                : statusArg ;
-statusArg                   : currentKeyword |
-                                obsoleteKeyword |
-                                deprecatedKeyword ;
-configStmt                  : configKeyword SEP
+statusArg                   : CurrentKeyword |
+                                ObsoleteKeyword |
+                                DeprecatedKeyword ;
+configStmt                  : ConfigKeyword SEP
                                 configArgStr stmtend ;
 configArgStr                : configArg ;
-configArg                   : trueKeyword | falseKeyword ;
-mandatoryStmt               : mandatoryKeyword SEP 
+configArg                   : TrueKeyword | FalseKeyword ;
+mandatoryStmt               : MandatoryKeyword SEP 
                                 mandatoryArgStr stmtend ;
 mandatoryArgStr             : mandatoryArg ;
-mandatoryArg                : trueKeyword | falseKeyword ;
-presenceStmt                : presenceKeyword SEP quotedString stmtend ;
-orderedByStmt               : orderedByKeyword SEP
+mandatoryArg                : TrueKeyword | FalseKeyword ;
+presenceStmt                : PresenceKeyword SEP quotedString stmtend ;
+orderedByStmt               : OrderedByKeyword SEP
                                 orderedByArgStr stmtend ;
 orderedByArgStr             : orderedByArg ;
-orderedByArg                : userKeyword | systemKeyword ;
-mustStmt                    : mustKeyword SEP quotedString SEP?
-                                (';' |
-                                 '{' stmtsep
+orderedByArg                : UserKeyword | SystemKeyword ;
+mustStmt                    : MustKeyword SEP quotedString SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (errorMessageStmt |
                                      errorAppTagStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                  '}') stmtsep ;
+                                  CURLYBRC) stmtsep ;
 
-errorMessageStmt            : errorMessageKeyword SEP quotedString stmtend;
-errorAppTagStmt             : errorAppTagKeyword SEP quotedString stmtend;
-minElementsStmt             : minElementsKeyword SEP
+errorMessageStmt            : ErrorMessageKeyword SEP quotedString stmtend;
+errorAppTagStmt             : ErrorAppTagKeyword SEP quotedString stmtend;
+minElementsStmt             : MinElementsKeyword SEP
                                 minValueArgStr stmtend ;
 minValueArgStr              : minValueArg ;
 minValueArg                 : integerValue ;
-maxElementsStmt             : maxElementsKeyword SEP
+maxElementsStmt             : MaxElementsKeyword SEP
                                 maxValueArgStr stmtend;
 maxValueArgStr              : maxValueArg ;
-maxValueArg                 : unboundedKeyword |
+maxValueArg                 : UnboundedKeyword |
                                 integerValue ;
-valueStmt                   : valueKeyword SEP integerValueStr stmtend ;
+valueStmt                   : ValueKeyword SEP integerValueStr stmtend ;
 integerValueStr             : integerValue ;
-groupingStmt                : groupingKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+groupingStmt                : GroupingKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (statusStmt |
                                      descriptionStmt |
@@ -295,10 +296,10 @@ groupingStmt                : groupingKeyword SEP identifierArgStr SEP?
                                      dataDefStmt |
                                      actionStmt |
                                      notificationStmt)*
-                                 '}') stmtsep;
-containerStmt               : containerKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                 CURLYBRC) stmtsep;
+containerStmt               : ContainerKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (whenStmt |
                                      ifFeatureStmt |
@@ -312,10 +313,10 @@ containerStmt               : containerKeyword SEP identifierArgStr SEP?
                                      dataDefStmt |
                                      actionStmt |
                                      notificationStmt)*
-                                 '}') stmtsep ;
+                                 CURLYBRC) stmtsep ;
 
-leafStmt                    : leafKeyword SEP identifierArgStr SEP?
-                                '{' stmtsep
+leafStmt                    : LeafKeyword SEP ID SEP?
+                                CURLYBRO stmtsep
                                     // these stmts can appear in any order
                                     (whenStmt |
                                     ifFeatureStmt |
@@ -328,9 +329,9 @@ leafStmt                    : leafKeyword SEP identifierArgStr SEP?
                                     statusStmt |
                                     descriptionStmt |
                                     referenceStmt)*
-                                 '}' stmtsep ;
-leafListStmt                : leafListKeyword SEP identifierArgStr SEP?
-                                '{' stmtsep
+                                 CURLYBRC stmtsep ;
+leafListStmt                : LeafListKeyword SEP ID SEP?
+                                CURLYBRO stmtsep
                                     // these stmts can appear in any order
                                     (whenStmt |
                                     ifFeatureStmt |
@@ -345,9 +346,9 @@ leafListStmt                : leafListKeyword SEP identifierArgStr SEP?
                                     statusStmt |
                                     descriptionStmt |
                                     referenceStmt)*
-                                 '}' stmtsep;
-listStmt                    : listKeyword SEP identifierArgStr SEP?
-                                '{' stmtsep
+                                 CURLYBRC stmtsep;
+listStmt                    : ListKeyword SEP ID SEP?
+                                CURLYBRO stmtsep
                                     // these stmts can appear in any order
                                     (whenStmt |
                                     ifFeatureStmt |
@@ -365,17 +366,17 @@ listStmt                    : listKeyword SEP identifierArgStr SEP?
                                     dataDefStmt |
                                     actionStmt |
                                     notificationStmt)*
-                                 '}' stmtsep ;
-keyStmt                     : keyKeyword SEP keyArgStr stmtend ;
+                                 CURLYBRC stmtsep ;
+keyStmt                     : KeyKeyword SEP keyArgStr stmtend ;
 keyArgStr                   : keyArg ;
 keyArg                      : nodeIdentifier (SEP nodeIdentifier)* ;
-uniqueStmt                  : uniqueKeyword SEP uniqueArgStr stmtend ;
+uniqueStmt                  : UniqueKeyword SEP uniqueArgStr stmtend ;
 uniqueArgStr                : uniqueArg ;
 uniqueArg                   : descendantSchemaNodeid
                                 (SEP descendantSchemaNodeid)* ;
-choiceStmt                  : choiceKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+choiceStmt                  : ChoiceKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (whenStmt |
                                      ifFeatureStmt |
@@ -387,7 +388,7 @@ choiceStmt                  : choiceKeyword SEP identifierArgStr SEP?
                                      referenceStmt |
                                      shortCaseStmt | 
                                      caseStmt)*
-                                 '}') stmtsep ;
+                                 CURLYBRC) stmtsep ;
 shortCaseStmt               : choiceStmt |
                                 containerStmt |
                                 leafStmt |
@@ -395,9 +396,9 @@ shortCaseStmt               : choiceStmt |
                                 listStmt |
                                 anydataStmt |
                                 anyxmlStmt ;
-caseStmt                    : caseKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+caseStmt                    : CaseKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (whenStmt |
                                      ifFeatureStmt |
@@ -405,10 +406,10 @@ caseStmt                    : caseKeyword SEP identifierArgStr SEP?
                                      descriptionStmt |
                                      referenceStmt |
                                      dataDefStmt)*
-                                 '}') stmtsep ;
-anydataStmt                 : anydataKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                 CURLYBRC) stmtsep ;
+anydataStmt                 : AnydataKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (whenStmt |
                                      ifFeatureStmt |
@@ -418,10 +419,10 @@ anydataStmt                 : anydataKeyword SEP identifierArgStr SEP?
                                      statusStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                  '}') stmtsep ;
-anyxmlStmt                  : anyxmlKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                  CURLYBRC) stmtsep ;
+anyxmlStmt                  : AnyxmlKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (whenStmt |
                                      ifFeatureStmt |
@@ -431,10 +432,10 @@ anyxmlStmt                  : anyxmlKeyword SEP identifierArgStr SEP?
                                      statusStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                  '}') stmtsep ;
-usesStmt                    : usesKeyword SEP identifierRefArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                  CURLYBRC) stmtsep ;
+usesStmt                    : UsesKeyword SEP identifierRefArgStr SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (whenStmt
                                      ifFeatureStmt
@@ -443,9 +444,9 @@ usesStmt                    : usesKeyword SEP identifierRefArgStr SEP?
                                      referenceStmt
                                      refineStmt
                                      usesAugmentStmt)*
-                                 '}') stmtsep ;
-refineStmt                  : refineKeyword SEP refineArgStr SEP?
-                                 '{' stmtsep
+                                 CURLYBRC) stmtsep ;
+refineStmt                  : RefineKeyword SEP refineArgStr SEP?
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (ifFeatureStmt |
                                      mustStmt |
@@ -457,11 +458,11 @@ refineStmt                  : refineKeyword SEP refineArgStr SEP?
                                      maxElementsStmt |
                                      descriptionStmt |
                                      referenceStmt)*
-                                   '}' stmtsep ;
+                                   CURLYBRC stmtsep ;
 refineArgStr                : refineArg ;
 refineArg                   : descendantSchemaNodeid ;
-usesAugmentStmt             : augmentKeyword SEP usesAugmentArgStr SEP?
-                                '{' stmtsep
+usesAugmentStmt             : AugmentKeyword SEP usesAugmentArgStr SEP?
+                                CURLYBRO stmtsep
                                     // these stmts can appear in any order
                                     (whenStmt |
                                     ifFeatureStmt |
@@ -470,11 +471,11 @@ usesAugmentStmt             : augmentKeyword SEP usesAugmentArgStr SEP?
                                     referenceStmt |
                                     (dataDefStmt | caseStmt |
                                        actionStmt | notificationStmt)+)*
-                                 '}' stmtsep ;
+                                 CURLYBRC stmtsep ;
 usesAugmentArgStr           : usesAugmentArg ;
 usesAugmentArg              : descendantSchemaNodeid;
-augmentStmt                 : augmentKeyword SEP augmentArgStr SEP?
-                                '{' stmtsep
+augmentStmt                 : AugmentKeyword SEP augmentArgStr SEP?
+                                CURLYBRO stmtsep
                                     // these stmts can appear in any order
                                     (whenStmt |
                                     ifFeatureStmt |
@@ -483,19 +484,19 @@ augmentStmt                 : augmentKeyword SEP augmentArgStr SEP?
                                     referenceStmt |
                                     (dataDefStmt | caseStmt |
                                        actionStmt | notificationStmt)+)*
-                                 '}' stmtsep ;
+                                 CURLYBRC stmtsep ;
 augmentArgStr               : augmentArg ;
 augmentArg                  : absoluteSchemaNodeid ;
-whenStmt                    : whenKeyword SEP quotedString SEP?
-                                (';' |
-                                 '{' stmtsep
+whenStmt                    : WhenKeyword SEP quotedString SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (descriptionStmt |
                                      referenceStmt)*
-                                  '}') stmtsep ;
-rpcStmt                     : rpcKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                  CURLYBRC) stmtsep ;
+rpcStmt                     : RpcKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (ifFeatureStmt |
                                      statusStmt |
@@ -504,10 +505,10 @@ rpcStmt                     : rpcKeyword SEP identifierArgStr SEP?
                                      (typedefStmt | groupingStmt) |
                                      inputStmt |
                                      outputStmt)*
-                                 '}') stmtsep ;
-actionStmt                  : actionKeyword SEP identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                 CURLYBRC) stmtsep ;
+actionStmt                  : ActionKeyword SEP ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (ifFeatureStmt |
                                      statusStmt |
@@ -516,25 +517,25 @@ actionStmt                  : actionKeyword SEP identifierArgStr SEP?
                                      (typedefStmt | groupingStmt) |
                                      inputStmt |
                                      outputStmt)* 
-                                 '}') stmtsep ;
-inputStmt                   : inputKeyword SEP?
-                                '{' stmtsep
+                                 CURLYBRC) stmtsep ;
+inputStmt                   : InputKeyword SEP?
+                                CURLYBRO stmtsep
                                     // these stmts can appear in any order
                                     (mustStmt |
                                     (typedefStmt | groupingStmt) |
                                     dataDefStmt)*
-                                '}' stmtsep ;
-outputStmt                  : outputKeyword SEP?
-                                '{' stmtsep
+                                CURLYBRC stmtsep ;
+outputStmt                  : OutputKeyword SEP?
+                                CURLYBRO stmtsep
                                     // these stmts can appear in any order
                                     (mustStmt |
                                     (typedefStmt | groupingStmt) |
                                     dataDefStmt)*
-                                '}' stmtsep ;
-notificationStmt            : notificationKeyword SEP
-                                identifierArgStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                CURLYBRC stmtsep ;
+notificationStmt            : NotificationKeyword SEP
+                                ID SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (ifFeatureStmt |
                                      mustStmt |
@@ -543,10 +544,10 @@ notificationStmt            : notificationKeyword SEP
                                      referenceStmt |
                                      (typedefStmt | groupingStmt) |
                                      dataDefStmt)*
-                                 '}') stmtsep ;
-deviationStmt               : deviationKeyword SEP
+                                 CURLYBRC) stmtsep ;
+deviationStmt               : DeviationKeyword SEP
                                 deviationArgStr SEP?
-                                '{' stmtsep
+                                CURLYBRO stmtsep
                                     // these stmts can appear in any order
                                     (descriptionStmt |
                                     referenceStmt |
@@ -554,14 +555,14 @@ deviationStmt               : deviationKeyword SEP
                                     deviateAddStmt |
                                     deviateReplaceStmt |
                                     deviateDeleteStmt)*
-                                '}' stmtsep ;
+                                CURLYBRC stmtsep ;
 deviationArgStr             : deviationArg ;
 deviationArg                : absoluteSchemaNodeid ;
-deviateNotSupportedStmt     :   deviateKeyword SEP
+deviateNotSupportedStmt     :   DeviateKeyword SEP
                                     notSupportedKeywordStr stmtend ;
-deviateAddStmt              : deviateKeyword SEP addKeywordStr SEP?
-                                (';' |
-                                 '{' stmtsep
+deviateAddStmt              : DeviateKeyword SEP addKeywordStr SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (unitsStmt |
                                      mustStmt |
@@ -571,19 +572,19 @@ deviateAddStmt              : deviateKeyword SEP addKeywordStr SEP?
                                      mandatoryStmt |
                                      minElementsStmt |
                                      maxElementsStmt)*
-                                 '}') stmtsep ;
-deviateDeleteStmt           : deviateKeyword SEP deleteKeywordStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                 CURLYBRC) stmtsep ;
+deviateDeleteStmt           : DeviateKeyword SEP deleteKeywordStr SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (unitsStmt |
                                      mustStmt |
                                      uniqueStmt |
                                      defaultStmt)*
-                                 '}') stmtsep ;
-deviateReplaceStmt          : deviateKeyword SEP replaceKeywordStr SEP?
-                                (';' |
-                                 '{' stmtsep
+                                 CURLYBRC) stmtsep ;
+deviateReplaceStmt          : DeviateKeyword SEP replaceKeywordStr SEP?
+                                (SEMICOLON |
+                                 CURLYBRO stmtsep
                                      // these stmts can appear in any order
                                      (typeStmt |
                                      unitsStmt |
@@ -592,18 +593,18 @@ deviateReplaceStmt          : deviateKeyword SEP replaceKeywordStr SEP?
                                      mandatoryStmt |
                                      minElementsStmt |
                                      maxElementsStmt)*
-                                 '}') stmtsep ;
-notSupportedKeywordStr      : notSupportedKeyword ;
-addKeywordStr               : addKeyword ;
-deleteKeywordStr            : deleteKeyword ;
-replaceKeywordStr           : replaceKeyword ;
+                                 CURLYBRC) stmtsep ;
+notSupportedKeywordStr      : NotSupportedKeyword ;
+addKeywordStr               : AddKeyword ;
+deleteKeywordStr            : DeleteKeyword ;
+replaceKeywordStr           : ReplaceKeyword ;
 
 // represents the usage of an extension
-unknownStatement            : prefix ':' identifier (SEP string)? SEP?
-                                (';' |
-                                    '{' SEP?
+unknownStatement            : prefix COLON ID (SEP string)? SEP?
+                                (SEMICOLON |
+                                    CURLYBRO SEP?
                                     ((yangStmt | unknownStatement) SEP?)*
-                                    '}') stmtsep ;
+                                    CURLYBRC) stmtsep ;
 
 yangStmt                    : actionStmt |
                                 anydataStmt |
@@ -693,21 +694,21 @@ dateArgStr                  : quotedString ;
 // schema node identifiers
 schemaNodeid                : absoluteSchemaNodeid |
                                 descendantSchemaNodeid ;
-absoluteSchemaNodeid        : ('/' nodeIdentifier)+ ;
+absoluteSchemaNodeid        : (SLASH nodeIdentifier)+ ;
 descendantSchemaNodeid      : nodeIdentifier
                                 (absoluteSchemaNodeid)? ;
-nodeIdentifier              : (prefix ':')? identifier ;
+nodeIdentifier              : (prefix COLON)? ID ;
 
 // instance identifiers
-instanceIdentifier          : ('/' (nodeIdentifier
+instanceIdentifier          : (SLASH (nodeIdentifier
                                 (   keyPredicate+ |
                                     leafListPredicate |
                                     pos)?))+ ;
-keyPredicate                : '[' WSP* keyPredicateExpr WSP* ']' ;
-keyPredicateExpr            : nodeIdentifier WSP* '=' WSP* quotedString ;
-leafListPredicate           : '[' WSP* leafListPredicateExpr WSP* ']' ;
-leafListPredicateExpr       : '.' WSP* '=' WSP* quotedString ;
-pos                         : '[' WSP* integerValue WSP* ']' ;
+keyPredicate                : SQRBRO WSP* keyPredicateExpr WSP* SQRBRC ;
+keyPredicateExpr            : nodeIdentifier WSP* EQ WSP* quotedString ;
+leafListPredicate           : SQRBRO WSP* leafListPredicateExpr WSP* SQRBRC ;
+leafListPredicateExpr       : DOT WSP* EQ WSP* quotedString ;
+pos                         : SQRBRO WSP* integerValue WSP* SQRBRC ;
 quotedString                : (DQUOTE dquoteContent DQUOTE) | (SQUOTE squoteContent SQUOTE) ;
 
 // leafref path
@@ -715,110 +716,16 @@ pathArgStr                  : quotedString ;
 
 // keywords, using the syntax for caseSensitive strings (RFC 7405)
 
-// statement keywords
-actionKeyword               : 'action';
-anydataKeyword              : 'anydata';
-anyxmlKeyword               : 'anyxml';
-argumentKeyword             : 'argument';
-augmentKeyword              : 'augment';
-baseKeyword                 : 'base';
-belongsToKeyword            : 'belongs-to';
-bitKeyword                  : 'bit';
-caseKeyword                 : 'case';
-choiceKeyword               : 'choice';
-configKeyword               : 'config';
-contactKeyword              : 'contact';
-containerKeyword            : 'container';
-defaultKeyword              : 'default';
-descriptionKeyword          : 'description';
-deviateKeyword              : 'deviate';
-deviationKeyword            : 'deviation';
-enumKeyword                 : 'enum';
-errorAppTagKeyword          : 'error-app-tag';
-errorMessageKeyword         : 'error-message';
-extensionKeyword            : 'extension';
-featureKeyword              : 'feature';
-fractionDigitsKeyword       : 'fraction-digits';
-groupingKeyword             : 'grouping';
-identityKeyword             : 'identity';
-ifFeatureKeyword            : 'if-feature';
-importKeyword               : 'import';
-includeKeyword              : 'include';
-inputKeyword                : 'input';
-keyKeyword                  : 'key';
-leafKeyword                 : 'leaf';
-leafListKeyword             : 'leaf-list';
-lengthKeyword               : 'length';
-listKeyword                 : 'list';
-mandatoryKeyword            : 'mandatory';
-maxElementsKeyword          : 'max-elements';
-minElementsKeyword          : 'min-elements';
-modifierKeyword             : 'modifier';
-moduleKeyword               : 'module';
-mustKeyword                 : 'must';
-namespaceKeyword            : 'namespace';
-notificationKeyword         : 'notification';
-orderedByKeyword            : 'ordered-by';
-organizationKeyword         : 'organization';
-outputKeyword               : 'output';
-pathKeyword                 : 'path';
-patternKeyword              : 'pattern';
-positionKeyword             : 'position';
-prefixKeyword               : 'prefix';
-presenceKeyword             : 'presence';
-rangeKeyword                : 'range';
-referenceKeyword            : 'reference';
-refineKeyword               : 'refine';
-requireInstanceKeyword      : 'require-instance';
-revisionKeyword             : 'revision';
-revisionDateKeyword         : 'revision-date';
-rpcKeyword                  : 'rpc';
-statusKeyword               : 'status';
-submoduleKeyword            : 'submodule';
-typeKeyword                 : 'type';
-typedefKeyword              : 'typedef';
-uniqueKeyword               : 'unique';
-unitsKeyword                : 'units';
-usesKeyword                 : 'uses';
-valueKeyword                : 'value';
-whenKeyword                 : 'when';
-yangVersionKeyword          : 'yang-version';
-yinElementKeyword           : 'yin-element';
-
-// other keywords
-addKeyword                  : 'add' ;
-currentKeyword              : 'current' ;
-deleteKeyword               : 'delete' ;
-deprecatedKeyword           : 'deprecated' ;
-falseKeyword                : 'false' ;
-invertMatchKeyword          : 'invertMatch' ;
-maxKeyword                  : 'max' ;
-minKeyword                  : 'min' ;
-notSupportedKeyword         : 'notSupported' ;
-obsoleteKeyword             : 'obsolete' ;
-replaceKeyword              : 'replace' ;
-systemKeyword               : 'system' ;
-trueKeyword                 : 'true' ;
-unboundedKeyword            : 'unbounded' ;
-userKeyword                 : 'user' ;
-andKeyword                  : 'and';
-orKeyword                   : 'or';
-notKeyword                  : 'not';
-
-currentFunctionInvocation   : currentKeyword WSP* '(' WSP* ')' ;
+currentFunctionInvocation   : CurrentKeyword WSP* BRO WSP* BRC ;
 
 // basic rules
 prefixArgStr                : prefixArg ;
 prefixArg                   : prefix ;
-prefix                      : identifier ;
-identifierArgStr            : identifierArg ;
-identifierArg               : identifier ;
-identifier                  : (ALPHA | UNDERSCORE)
-                                (ALPHA | DIGIT | UNDERSCORE | DASH | '.')* ;
+prefix                      : ID ;
 
 identifierRefArgStr         : quotedString | identifierRefArg ;
 identifierRefArg            : identifierRef ;
-identifierRef               : ( prefix ':' )? identifier ;
+identifierRef               : ( prefix COLON )? ID ;
                     
 string                      : yangString ;
                     
@@ -833,42 +740,6 @@ yangChar                    : WSP | LF | CR | EXTRA_CHAR;
 
 integerValue                : DIGIT+ ;
 
-stmtend             : SEP? ( ';' | '{' stmtsep '}' ) stmtsep ;
+stmtend             : SEP? ( SEMICOLON | CURLYBRO stmtsep CURLYBRC ) stmtsep ;
 stmtsep             : (SEP | unknownStatement)* ; //(WSP | LINEBREAK | unknownStatement)* ;
-decimalValue        : integerValue ('.' integerValue) ;
-
-// core rules from RFC 5234
-SEP                 : (WSP | LINEBREAK)+ ;                                // unconditional separator
-SQUOTE              : '\'' ;
-ALPHA               : [A-Za-z] ;
-LINEBREAK           : CRLF | LF ;
-CRLF                : CR LF ;                                               // internet standard newline
-CR                  : '\r' ;                                                // carriage return
-LF                  : '\n' ;                                                // line feed
-DIGIT               : [0-9] ;
-DASH                : '-';
-UNDERSCORE          : '_';
-DQUOTE              : '"' ;
-HTAB                : '\t' ;                                                // horizontal tab
-SP                  : ' ' ;                                                 // space
-WSP                 : (' ' | '\t');                                         // whitespace
-EXTRA_CHAR           : 
-                        [\u0020-\uD7FF]   |                         // exclude surrogate blocks %xD800DFFF
-                        [\uE000-\uFDCF]   |                         // exclude noncharacters %xFDD0FDEF
-                        [\uFDF0-\uFFFD] ;                           // exclude noncharacters %xFFFEFFFF
-//                        [\u10000-\u1FFFD] |                       // exclude noncharacters %x1FFFE-1FFFF
-//                        [\u20000-\u2FFFD] |                       // exclude noncharacters %x2FFFE-2FFFF
-//                        [\u30000-\u3FFFD] |                       // exclude noncharacters %x3FFFE-3FFFF
-//                        [\u40000-\u4FFFD] |                       // exclude noncharacters %x4FFFE-4FFFF
-//                        [\u50000-\u5FFFD] |                       // exclude noncharacters %x5FFFE-5FFFF
-//                        [\u60000-\u6FFFD] |                       // exclude noncharacters %x6FFFE-6FFFF
-//                        [\u70000-\u7FFFD] |                       // exclude noncharacters %x7FFFE-7FFFF
-//                        [\u80000-\u8FFFD] |                       // exclude noncharacters %x8FFFE-8FFFF
-//                        [\u90000-\u9FFFD] |                       // exclude noncharacters %x9FFFE-9FFFF
-//                        [\uA0000-\uAFFFD] |                       // exclude noncharacters %xAFFFEAFFFF
-//                        [\uB0000-\uBFFFD] |                       // exclude noncharacters %xBFFFEBFFFF
-//                        [\uC0000-\uCFFFD] |                       // exclude noncharacters %xCFFFECFFFF
-//                        [\uD0000-\uDFFFD] |                       // exclude noncharacters %xDFFFEDFFFF
-//                        [\uE0000-\uEFFFD] |                       // exclude noncharacters %xEFFFEEFFFF
-//                        [\uF0000-\uFFFFD] |                       // exclude noncharacters %xFFFFEFFFFF
-//                        [\u100000-\u10FFFD] ;                     // exclude noncharacters %x10FFFE-10FFFF
+decimalValue        : integerValue (DOT integerValue) ;

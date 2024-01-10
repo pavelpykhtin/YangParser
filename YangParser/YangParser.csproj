@@ -16,10 +16,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Antlr4 Include="YangRfcGrammar.g4">
+        <Antlr4 Include="YangRfcLexer.g4" />
+        <Antlr4 Include="YangRfcParser.g4">
             <Listener>False</Listener>
             <Visitor>True</Visitor>
         </Antlr4>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="obj\Debug" />
     </ItemGroup>
 
     <PropertyGroup>
