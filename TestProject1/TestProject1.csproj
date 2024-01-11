@@ -86,9 +86,6 @@
       <None Update="LeafStmt\data\leaf-if.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="LeafStmt\data\leaf-default.yang">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="ContainerStmt\data\container.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -132,6 +129,18 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="GroupingStmt\data\grouping-datadef.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="LeafListStmt\data\leaf-list.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="LeafListStmt\data\leaf-list-must.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="LeafListStmt\data\leaf-list-when.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="LeafListStmt\data\leaf-list-if.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

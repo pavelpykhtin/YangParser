@@ -51,8 +51,7 @@ body-stmts          = *(extension-stmt /
                        notification-stmt /
                        deviation-stmt)
 
-data-def-stmt       = container-stmt /
-                     leaf-stmt /
+data-def-stmt       = 
                      leaf-list-stmt /
                      list-stmt /
                      choice-stmt /
@@ -156,54 +155,10 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
                              *if-feature-stmt
                          "}") stmtsep
 
-  ordered-by-stmt     = ordered-by-keyword sep
-                        ordered-by-arg-str stmtend
-
-  ordered-by-arg-str  = < a string that matches the rule >
-                        < ordered-by-arg >
-
-  ordered-by-arg      = user-keyword / system-keyword
-
-  must-stmt           = must-keyword sep string optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             [error-message-stmt]
-                             [error-app-tag-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                          "}") stmtsep
-
-  error-message-stmt  = error-message-keyword sep string stmtend
-
-  error-app-tag-stmt  = error-app-tag-keyword sep string stmtend
-
-  min-elements-stmt   = min-elements-keyword sep
-                        min-value-arg-str stmtend
-
-  min-value-arg-str   = < a string that matches the rule >
-                        < min-value-arg >
-
-  min-value-arg       = non-negative-integer-value
-
-  max-elements-stmt   = max-elements-keyword sep
-                        max-value-arg-str stmtend
-
-  max-value-arg-str   = < a string that matches the rule >
-                        < max-value-arg >
-
-  max-value-arg       = unbounded-keyword /
-                        positive-integer-value
-
-
-  integer-value-str   = < a string that matches the rule >
-                        < integer-value >
-
   grouping-stmt       = grouping-keyword sep identifier-arg-str optsep
                         (";" /
                          "{" stmtsep
                              // these stmts can appear in any order
-                             *data-def-stmt
                              *action-stmt
                              *notification-stmt
                          "}") stmtsep
@@ -217,24 +172,6 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
                              *action-stmt
                              *notification-stmt
                          "}") stmtsep
-
-  leaf-list-stmt      = leaf-list-keyword sep identifier-arg-str optsep
-                        "{" stmtsep
-                            // these stmts can appear in any order
-                            [when-stmt]
-                            *if-feature-stmt
-                            type-stmt stmtsep
-                            [units-stmt]
-                            *must-stmt
-                            *default-stmt
-                            [config-stmt]
-                            [min-elements-stmt]
-                            [max-elements-stmt]
-                            [ordered-by-stmt]
-                            [status-stmt]
-                            [description-stmt]
-                            [reference-stmt]
-                         "}" stmtsep
 
   list-stmt           = list-keyword sep identifier-arg-str optsep
                         "{" stmtsep
@@ -684,96 +621,6 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
   leaf-list-predicate-expr = "." *WSP "=" *WSP quoted-string
 
   pos                 = "[" *WSP positive-integer-value *WSP "]"
-
-
-  //; Keywords, using the syntax for case-sensitive strings (RFC 7405)
-
-  // statement keywords
-  action-keyword           = %s"action"
-  anydata-keyword          = %s"anydata"
-  anyxml-keyword           = %s"anyxml"
-  argument-keyword         = %s"argument"
-  augment-keyword          = %s"augment"
-  base-keyword             = %s"base"
-  belongs-to-keyword       = %s"belongs-to"
-  bit-keyword              = %s"bit"
-  case-keyword             = %s"case"
-  choice-keyword           = %s"choice"
-  config-keyword           = %s"config"
-  contact-keyword          = %s"contact"
-  container-keyword        = %s"container"
-  default-keyword          = %s"default"
-  deviate-keyword          = %s"deviate"
-  deviation-keyword        = %s"deviation"
-  enum-keyword             = %s"enum"
-  error-app-tag-keyword    = %s"error-app-tag"
-  error-message-keyword    = %s"error-message"
-  extension-keyword        = %s"extension"
-  fraction-digits-keyword  = %s"fraction-digits"
-  grouping-keyword         = %s"grouping"
-  identity-keyword         = %s"identity"
-  if-feature-keyword       = %s"if-feature"
-  import-keyword           = %s"import"
-  include-keyword          = %s"include"
-  input-keyword            = %s"input"
-  key-keyword              = %s"key"
-  leaf-keyword             = %s"leaf"
-  leaf-list-keyword        = %s"leaf-list"
-  length-keyword           = %s"length"
-  list-keyword             = %s"list"
-  max-elements-keyword     = %s"max-elements"
-  min-elements-keyword     = %s"min-elements"
-  modifier-keyword         = %s"modifier"
-  module-keyword           = %s"module"
-  must-keyword             = %s"must"
-  namespace-keyword        = %s"namespace"
-  notification-keyword     = %s"notification"
-  ordered-by-keyword       = %s"ordered-by"
-  organization-keyword     = %s"organization"
-  output-keyword           = %s"output"
-  path-keyword             = %s"path"
-  pattern-keyword          = %s"pattern"
-  position-keyword         = %s"position"
-  prefix-keyword           = %s"prefix"
-  presence-keyword         = %s"presence"
-  refine-keyword           = %s"refine"
-  require-instance-keyword = %s"require-instance"
-  revision-keyword         = %s"revision"
-  revision-date-keyword    = %s"revision-date"
-  rpc-keyword              = %s"rpc"
-  status-keyword           = %s"status"
-  submodule-keyword        = %s"submodule"
-  type-keyword             = %s"type"
-  typedef-keyword          = %s"typedef"
-  unique-keyword           = %s"unique"
-  units-keyword            = %s"units"
-  uses-keyword             = %s"uses"
-  value-keyword            = %s"value"
-  when-keyword             = %s"when"
-  yang-version-keyword     = %s"yang-version"
-  yin-element-keyword      = %s"yin-element"
-
-  // other keywords
-
-  add-keyword              = %s"add"
-  current-keyword          = %s"current"
-  delete-keyword           = %s"delete"
-  deprecated-keyword       = %s"deprecated"
-  false-keyword            = %s"false"
-  invert-match-keyword     = %s"invert-match"
-  max-keyword              = %s"max"
-  min-keyword              = %s"min"
-  not-supported-keyword    = %s"not-supported"
-  obsolete-keyword         = %s"obsolete"
-  replace-keyword          = %s"replace"
-  system-keyword           = %s"system"
-  true-keyword             = %s"true"
-  unbounded-keyword        = %s"unbounded"
-  user-keyword             = %s"user"
-
-  and-keyword              = %s"and"
-  or-keyword               = %s"or"
-  not-keyword              = %s"not"
 
   current-function-invocation = current-keyword *WSP "(" *WSP ")"
 

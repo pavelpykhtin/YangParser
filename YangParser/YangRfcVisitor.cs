@@ -72,6 +72,36 @@ public class YangRfcVisitor: YangRfcParserBaseVisitor<INode>
         return leafNode;
     }
 
+    public override INode VisitLeafListStmt(YangRfcParser.LeafListStmtContext context)
+    {
+        var leafListNode = new LeafListNode
+        {
+            Identifier = context.ID().GetText(),
+            Type = (TypeNode)VisitTypeStmt(context.typeStmt().Single()),
+            Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
+            Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
+            Status = context.statusStmt().MapSingle(x => x.statusArgStr().GetText()).Map(x => Enum.Parse<Status>(x, true)),
+            Default = context.defaultStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+            Units = context.unitsStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+            Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
+            MinElements = context.minElementsStmt().MapSingle(x => int.Parse(x.minValueArgStr().GetText())),
+            MaxElements = context.maxElementsStmt().MapSingle(x => int.Parse(x.maxValueArgStr().GetText())),
+            OrderedBy = context.orderedByStmt().MapSingle(x => x.orderedByArgStr().GetText()).Map(x => (OrderedBy?)Enum.Parse<OrderedBy>(x, true)),
+            Must = new MustSpecificationNode
+            {
+                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
+            },
+            When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
+            IfFeatures = context.ifFeatureStmt()
+                .Select(x => x.ifFeatureExprStr())
+                .Select(x => VisitQuotedString(x.quotedString()))
+                .Select(x => x.StringValue()!)
+                .ToList()
+        };
+
+        return leafListNode;
+    }
+
     public override INode VisitContainerStmt(YangRfcParser.ContainerStmtContext context)
     {
         var leafNode = new ContainerNode
