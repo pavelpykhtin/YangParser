@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using FluentAssertions;
+using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
 
@@ -17,7 +18,7 @@ public class NotificationStmtTests
     [Fact]
     public void HandlesCoreProperties()
     {
-        var parser = CreateParser("NotificationStmt/data/notification.yang");
+        var parser = ParserHelpers.CreateParser("NotificationStmt/data/notification.yang");
 
         var notificationStmt = parser.notificationStmt();
         
@@ -32,7 +33,7 @@ public class NotificationStmtTests
     [Fact]
     public void HandlesGrouppings()
     {
-        YangRfcParser parser = CreateParser("NotificationStmt/data/notification-grouping.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("NotificationStmt/data/notification-grouping.yang");
 
         var context = parser.notificationStmt();
 
@@ -48,7 +49,7 @@ public class NotificationStmtTests
     [Fact]
     public void HandlesDataDefinitions()
     {
-        YangRfcParser parser = CreateParser("NotificationStmt/data/notification-datadef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("NotificationStmt/data/notification-datadef.yang");
 
         var context = parser.notificationStmt();
 
@@ -68,7 +69,7 @@ public class NotificationStmtTests
     [Fact]
     public void HandlesIfFeatures()
     {
-        YangRfcParser parser = CreateParser("NotificationStmt/data/notification-if.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("NotificationStmt/data/notification-if.yang");
 
         var context = parser.notificationStmt();
 
@@ -81,7 +82,7 @@ public class NotificationStmtTests
     [Fact]
     public void HandlesMustStatements()
     {
-        YangRfcParser parser = CreateParser("NotificationStmt/data/notification-must.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("NotificationStmt/data/notification-must.yang");
 
         var context = parser.notificationStmt();
 
@@ -100,7 +101,7 @@ public class NotificationStmtTests
     [Fact]
     public void HandlesTypedefs()
     {
-        YangRfcParser parser = CreateParser("NotificationStmt/data/notification-typedef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("NotificationStmt/data/notification-typedef.yang");
 
         var context = parser.notificationStmt();
 
@@ -110,17 +111,5 @@ public class NotificationStmtTests
         notificationNode.Typedefs[0].Identifier.Should().Be("percent");
         
         notificationNode.Typedefs[1].Identifier.Should().Be("minute");
-    }
-
-    private YangRfcParser CreateParser(string filePath)
-    {
-        using var input = File.OpenText(filePath);
-
-        AntlrInputStream inputStream = new AntlrInputStream(input);
-        YangRfcLexer lexer = new YangRfcLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        YangRfcParser parser = new YangRfcParser(commonTokenStream);
-
-        return parser;
     }
 }

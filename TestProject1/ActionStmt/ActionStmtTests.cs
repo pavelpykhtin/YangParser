@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using FluentAssertions;
+using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
 
@@ -19,7 +20,7 @@ public class ActionStmtTests
     [Fact]
     public void HandlesCoreProperties()
     {
-        var parser = CreateParser($"{Folder}/data/{Prefix}.yang");
+        var parser = ParserHelpers.CreateParser($"{Folder}/data/{Prefix}.yang");
 
         var actionStmt = parser.actionStmt();
         
@@ -34,7 +35,7 @@ public class ActionStmtTests
     [Fact]
     public void HandlesGrouppings()
     {
-        YangRfcParser parser = CreateParser($"{Folder}/data/{Prefix}-grouping.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser($"{Folder}/data/{Prefix}-grouping.yang");
 
         var context = parser.actionStmt();
 
@@ -50,7 +51,7 @@ public class ActionStmtTests
     [Fact]
     public void HandlesIfFeatures()
     {
-        YangRfcParser parser = CreateParser($"{Folder}/data/{Prefix}-if.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser($"{Folder}/data/{Prefix}-if.yang");
 
         var context = parser.actionStmt();
 
@@ -63,7 +64,7 @@ public class ActionStmtTests
     [Fact]
     public void HandlesTypedefs()
     {
-        YangRfcParser parser = CreateParser($"{Folder}/data/{Prefix}-typedef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser($"{Folder}/data/{Prefix}-typedef.yang");
 
         var context = parser.actionStmt();
 
@@ -78,7 +79,7 @@ public class ActionStmtTests
     [Fact]
     public void HandlesInputsAndOutputs()
     {
-        YangRfcParser parser = CreateParser($"{Folder}/data/{Prefix}-input-output.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser($"{Folder}/data/{Prefix}-input-output.yang");
 
         var context = parser.actionStmt();
 
@@ -91,17 +92,5 @@ public class ActionStmtTests
         actionNode.Output!.DataDefinitions.Should().HaveCount(1);
         ((LeafNode)actionNode.Output.DataDefinitions[0]).Identifier.Should().Be("output-value");
         ((LeafNode)actionNode.Output.DataDefinitions[0]).Type.Identifier.Should().Be("uint32");
-    }
-
-    private YangRfcParser CreateParser(string filePath)
-    {
-        using var input = File.OpenText(filePath);
-
-        AntlrInputStream inputStream = new AntlrInputStream(input);
-        YangRfcLexer lexer = new YangRfcLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        YangRfcParser parser = new YangRfcParser(commonTokenStream);
-
-        return parser;
     }
 }

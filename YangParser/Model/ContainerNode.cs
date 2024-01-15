@@ -15,4 +15,5 @@ public class ContainerNode: INode
     public List<NotificationNode> Notifications { get; set; } = new();
     public List<INode> DataDefinitions { get; init; } = new();
     public List<GroupingNode> Groupings { get; set; } = new();
+    public List<ActionNode> Actions { get; set; } = new();
 }

@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using FluentAssertions;
+using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
 
@@ -17,7 +18,7 @@ public class LeafListStmtTests
     [Fact]
     public void HandlesCoreProperties()
     {
-        YangRfcParser parser = CreateParser("LeafListStmt/data/leaf-list.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("LeafListStmt/data/leaf-list.yang");
 
         var context = parser.leafListStmt();
 
@@ -39,7 +40,7 @@ public class LeafListStmtTests
     [Fact]
     public void HandlesIfFeatures()
     {
-        YangRfcParser parser = CreateParser("LeafListStmt/data/leaf-list-if.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("LeafListStmt/data/leaf-list-if.yang");
 
         var context = parser.leafListStmt();
 
@@ -52,7 +53,7 @@ public class LeafListStmtTests
     [Fact]
     public void HandlesWhenStatement()
     {
-        YangRfcParser parser = CreateParser("LeafListStmt/data/leaf-list-when.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("LeafListStmt/data/leaf-list-when.yang");
 
         var context = parser.leafListStmt();
 
@@ -66,7 +67,7 @@ public class LeafListStmtTests
     [Fact]
     public void HandlesMustStatements()
     {
-        YangRfcParser parser = CreateParser("LeafListStmt/data/leaf-list-must.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("LeafListStmt/data/leaf-list-must.yang");
 
         var context = parser.leafListStmt();
 
@@ -80,17 +81,5 @@ public class LeafListStmtTests
         leafListNode.Must.Statements[0].ErrorAppTag.Should().Be("Dummy error app tag");
 
         leafListNode.Must.Statements[1].Condition.Should().Be("be enabled");
-    }
-
-    private YangRfcParser CreateParser(string filePath)
-    {
-        using var input = File.OpenText(filePath);
-
-        AntlrInputStream inputStream = new AntlrInputStream(input);
-        YangRfcLexer lexer = new YangRfcLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        YangRfcParser parser = new YangRfcParser(commonTokenStream);
-
-        return parser;
     }
 }

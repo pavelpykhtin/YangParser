@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using FluentAssertions;
+using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
 
@@ -17,7 +18,7 @@ public class TypeStmtTests
     [Fact]
     public void HandlesTypeWithNumericalRestrictions()
     {
-        YangRfcParser parser = CreateParser("TypeStmt/data/type-numerical.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("TypeStmt/data/type-numerical.yang");
 
         var context = parser.typeStmt();
 
@@ -34,7 +35,7 @@ public class TypeStmtTests
     [Fact]
     public void HandlesTypeWithDecimalRestrictions()
     {
-        YangRfcParser parser = CreateParser("TypeStmt/data/type-decimal.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("TypeStmt/data/type-decimal.yang");
 
         var context = parser.typeStmt();
 
@@ -52,7 +53,7 @@ public class TypeStmtTests
     [Fact]
     public void HandlesTypeWithStringRestrictions()
     {
-        YangRfcParser parser = CreateParser("TypeStmt/data/type-string.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("TypeStmt/data/type-string.yang");
 
         var context = parser.typeStmt();
 
@@ -87,7 +88,7 @@ public class TypeStmtTests
     [Fact]
     public void HandlesTypeWithEnumSpecification()
     {
-        YangRfcParser parser = CreateParser("TypeStmt/data/type-enum.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("TypeStmt/data/type-enum.yang");
 
         var context = parser.typeStmt();
 
@@ -116,7 +117,7 @@ public class TypeStmtTests
     [Fact]
     public void HandlesTypeWithLeafRef()
     {
-        YangRfcParser parser = CreateParser("TypeStmt/data/type-leafref.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("TypeStmt/data/type-leafref.yang");
 
         var context = parser.typeStmt();
 
@@ -130,7 +131,7 @@ public class TypeStmtTests
     [Fact]
     public void HandlesTypeWithIdentityRef()
     {
-        YangRfcParser parser = CreateParser("TypeStmt/data/type-identityref.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("TypeStmt/data/type-identityref.yang");
 
         var context = parser.typeStmt();
 
@@ -143,7 +144,7 @@ public class TypeStmtTests
     [Fact]
     public void HandlesTypeWithBitsSpecification()
     {
-        YangRfcParser parser = CreateParser("TypeStmt/data/type-bits.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("TypeStmt/data/type-bits.yang");
 
         var context = parser.typeStmt();
 
@@ -165,7 +166,7 @@ public class TypeStmtTests
     [Fact]
     public void HandlesTypeWithBinarySpecification()
     {
-        YangRfcParser parser = CreateParser("TypeStmt/data/type-binary.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("TypeStmt/data/type-binary.yang");
 
         var context = parser.typeStmt();
 
@@ -182,7 +183,7 @@ public class TypeStmtTests
     [Fact]
     public void HandlesTypeWithUnionSpecification()
     {
-        YangRfcParser parser = CreateParser("TypeStmt/data/type-union.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("TypeStmt/data/type-union.yang");
 
         var context = parser.typeStmt();
 
@@ -192,17 +193,5 @@ public class TypeStmtTests
         typeNode.UnionSpecification!.Types.Should().HaveCount(2);
         typeNode.UnionSpecification!.Types[0].Identifier.Should().Be("int32");
         typeNode.UnionSpecification!.Types[1].Identifier.Should().Be("enumeration");
-    }
-
-    private YangRfcParser CreateParser(string filePath)
-    {
-        using var input = File.OpenText(filePath);
-
-        AntlrInputStream inputStream = new AntlrInputStream(input);
-        YangRfcLexer lexer = new YangRfcLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        YangRfcParser parser = new YangRfcParser(commonTokenStream);
-
-        return parser;
     }
 }

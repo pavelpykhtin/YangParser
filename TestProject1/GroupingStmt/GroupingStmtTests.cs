@@ -1,6 +1,7 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using FluentAssertions;
+using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
 
@@ -18,7 +19,7 @@ public class GroupingStmtTests
     [Fact]
     public void HandlesCoreProperties()
     {
-        var parser = CreateParser("GroupingStmt/data/grouping.yang");
+        var parser = ParserHelpers.CreateParser("GroupingStmt/data/grouping.yang");
 
         var groupingStmt = parser.groupingStmt();
         
@@ -33,7 +34,7 @@ public class GroupingStmtTests
     [Fact]
     public void HandlesNotifications()
     {
-        var parser = CreateParser("GroupingStmt/data/grouping-notification.yang");
+        var parser = ParserHelpers.CreateParser("GroupingStmt/data/grouping-notification.yang");
 
         var groupingStmt = parser.groupingStmt();
         
@@ -42,11 +43,27 @@ public class GroupingStmtTests
         groupingNode.Notifications.Should().HaveCount(1);
         groupingNode.Notifications[0].Identifier.Should().Be("if-damp-suppress");
     }
+    
+    [Fact]
+    public void HandlesActions()
+    {
+        YangRfcParser parser = ParserHelpers.CreateParser("GroupingStmt/data/grouping-action.yang");
+
+        var context = parser.groupingStmt();
+
+        var groupingNode = (GroupingNode)_visitor.Visit(context);
+
+        groupingNode.Actions.Should().HaveCount(2);
+        
+        groupingNode.Actions[0].Identifier.Should().Be("action-a");
+        
+        groupingNode.Actions[1].Identifier.Should().Be("action-b");
+    }
 
     [Fact]
     public void HandlesTypedefs()
     {
-        YangRfcParser parser = CreateParser("GroupingStmt/data/grouping-typedef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("GroupingStmt/data/grouping-typedef.yang");
 
         var context = parser.groupingStmt();
 
@@ -61,7 +78,7 @@ public class GroupingStmtTests
     [Fact]
     public void HandlesNestedGroupings()
     {
-        YangRfcParser parser = CreateParser("GroupingStmt/data/grouping-grouping.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("GroupingStmt/data/grouping-grouping.yang");
 
         var context = parser.groupingStmt();
 
@@ -78,7 +95,7 @@ public class GroupingStmtTests
     [Fact]
     public void HandlesDataDefinitions()
     {
-        YangRfcParser parser = CreateParser("GroupingStmt/data/grouping-datadef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("GroupingStmt/data/grouping-datadef.yang");
 
         var context = parser.groupingStmt();
 
@@ -101,18 +118,5 @@ public class GroupingStmtTests
         
         listNode.Identifier.Should().Be("nested-list");
         listNode.Description.Should().Be("list description");
-    }
-
-    private YangRfcParser CreateParser(string filePath)
-    {
-        using var input = File.OpenText(filePath);
-
-        AntlrInputStream inputStream = new AntlrInputStream(input);
-        YangRfcLexer lexer = new YangRfcLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        YangRfcParser parser = new YangRfcParser(commonTokenStream);
-        parser.Interpreter.PredictionMode = PredictionMode.LlExactAmbigDetection;
-
-        return parser;
     }
 }

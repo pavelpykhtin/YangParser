@@ -1,6 +1,7 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using FluentAssertions;
+using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
 
@@ -18,7 +19,7 @@ public class FeatureStmtTests
     [Fact]
     public void HandlesCoreProperties()
     {
-        YangRfcParser parser = CreateParser("FeatureStmt/data/feature.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("FeatureStmt/data/feature.yang");
 
         var context = parser.featureStmt();
 
@@ -32,7 +33,7 @@ public class FeatureStmtTests
     [Fact]
     public void HandlesIfFeatures()
     {
-        YangRfcParser parser = CreateParser("FeatureStmt/data/feature-if.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("FeatureStmt/data/feature-if.yang");
         
         var context = parser.featureStmt();
         
@@ -41,17 +42,5 @@ public class FeatureStmtTests
         featureNode.IfFeatures.Should().HaveCount(1);
         featureNode.IfFeatures[0].Should().Be("ssh");
 
-    }
-
-    private YangRfcParser CreateParser(string filePath)
-    {
-        using var input = File.OpenText(filePath);
-
-        AntlrInputStream inputStream = new AntlrInputStream(input);
-        YangRfcLexer lexer = new YangRfcLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        YangRfcParser parser = new YangRfcParser(commonTokenStream);
-
-        return parser;
     }
 }

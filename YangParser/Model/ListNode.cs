@@ -18,4 +18,6 @@ public class ListNode: INode
     public List<INode> DataDefinitions { get; set; } = new();
     public List<string> Keys { get; set; } = new();
     public List<NotificationNode> Notifications { get; set; } = new();
+    public List<ActionNode> Actions { get; set; } = new();
+    public List<string> UniqueConstraints { get; set; } = new();
 }

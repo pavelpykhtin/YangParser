@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using FluentAssertions;
+using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
 
@@ -17,7 +18,7 @@ public class LeafStmtTests
     [Fact]
     public void HandlesCoreProperties()
     {
-        YangRfcParser parser = CreateParser("LeafStmt/data/leaf.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("LeafStmt/data/leaf.yang");
 
         var context = parser.leafStmt();
 
@@ -37,7 +38,7 @@ public class LeafStmtTests
     [Fact]
     public void HandlesIfFeatures()
     {
-        YangRfcParser parser = CreateParser("LeafStmt/data/leaf-if.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("LeafStmt/data/leaf-if.yang");
 
         var context = parser.leafStmt();
 
@@ -50,7 +51,7 @@ public class LeafStmtTests
     [Fact]
     public void HandlesWhenStatement()
     {
-        YangRfcParser parser = CreateParser("LeafStmt/data/leaf-when.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("LeafStmt/data/leaf-when.yang");
 
         var context = parser.leafStmt();
 
@@ -64,7 +65,7 @@ public class LeafStmtTests
     [Fact]
     public void HandlesMustStatements()
     {
-        YangRfcParser parser = CreateParser("LeafStmt/data/leaf-must.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("LeafStmt/data/leaf-must.yang");
 
         var context = parser.leafStmt();
 
@@ -78,17 +79,5 @@ public class LeafStmtTests
         leafNode.Must.Statements[0].ErrorAppTag.Should().Be("Dummy error app tag");
 
         leafNode.Must.Statements[1].Condition.Should().Be("be enabled");
-    }
-
-    private YangRfcParser CreateParser(string filePath)
-    {
-        using var input = File.OpenText(filePath);
-
-        AntlrInputStream inputStream = new AntlrInputStream(input);
-        YangRfcLexer lexer = new YangRfcLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        YangRfcParser parser = new YangRfcParser(commonTokenStream);
-
-        return parser;
     }
 }

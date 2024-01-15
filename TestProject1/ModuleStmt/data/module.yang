@@ -1,0 +1,16 @@
+﻿module dummy-module {
+    feature dummy-extension;
+    feature dummy-feature;
+    feature dummy-identity;
+    typedef dummy-typedef {
+        type string;
+    }
+    grouping dummy-grouping;
+    leaf dummy-datadef {
+        type uint32;
+    }
+    feature dummy-augment;
+    feature dummy-rpc;
+    notification dummy-notification;
+    feature dummy-deviation;
+}

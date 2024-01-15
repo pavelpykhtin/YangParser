@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using FluentAssertions;
+using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
 
@@ -17,7 +18,7 @@ public class ContainerStmtTests
     [Fact]
     public void HandlesCoreProperties()
     {
-        var parser = CreateParser("ContainerStmt/data/container.yang");
+        var parser = ParserHelpers.CreateParser("ContainerStmt/data/container.yang");
 
         var containerStmt = parser.containerStmt();
         
@@ -34,7 +35,7 @@ public class ContainerStmtTests
     [Fact]
     public void HandlesIfFeatures()
     {
-        YangRfcParser parser = CreateParser("ContainerStmt/data/container-if.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ContainerStmt/data/container-if.yang");
 
         var context = parser.containerStmt();
 
@@ -47,7 +48,7 @@ public class ContainerStmtTests
     [Fact]
     public void HandlesWhenStatement()
     {
-        YangRfcParser parser = CreateParser("ContainerStmt/data/container-when.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ContainerStmt/data/container-when.yang");
 
         var context = parser.containerStmt();
 
@@ -61,7 +62,7 @@ public class ContainerStmtTests
     [Fact]
     public void HandlesMustStatements()
     {
-        YangRfcParser parser = CreateParser("ContainerStmt/data/container-must.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ContainerStmt/data/container-must.yang");
 
         var context = parser.containerStmt();
 
@@ -80,7 +81,7 @@ public class ContainerStmtTests
     [Fact]
     public void HandlesTypedefs()
     {
-        YangRfcParser parser = CreateParser("ContainerStmt/data/container-typedef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ContainerStmt/data/container-typedef.yang");
 
         var context = parser.containerStmt();
 
@@ -95,7 +96,7 @@ public class ContainerStmtTests
     [Fact]
     public void HandlesGrouppings()
     {
-        YangRfcParser parser = CreateParser("ContainerStmt/data/container-grouping.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ContainerStmt/data/container-grouping.yang");
 
         var context = parser.containerStmt();
 
@@ -111,7 +112,7 @@ public class ContainerStmtTests
     [Fact]
     public void HandlesDataDefinitions()
     {
-        YangRfcParser parser = CreateParser("ContainerStmt/data/container-datadef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ContainerStmt/data/container-datadef.yang");
 
         var context = parser.containerStmt();
 
@@ -129,9 +130,25 @@ public class ContainerStmtTests
     }
 
     [Fact]
+    public void HandlesActions()
+    {
+        YangRfcParser parser = ParserHelpers.CreateParser("ContainerStmt/data/container-action.yang");
+
+        var context = parser.containerStmt();
+
+        var containerNode = (ContainerNode)_visitor.Visit(context);
+
+        containerNode.Actions.Should().HaveCount(2);
+        
+        containerNode.Actions[0].Identifier.Should().Be("action-a");
+        
+        containerNode.Actions[1].Identifier.Should().Be("action-b");
+    }
+
+    [Fact]
     public void HandlesNotifications()
     {
-        var parser = CreateParser("ContainerStmt/data/container-notification.yang");
+        var parser = ParserHelpers.CreateParser("ContainerStmt/data/container-notification.yang");
 
         var containerStmt = parser.containerStmt();
         
@@ -139,17 +156,5 @@ public class ContainerStmtTests
         
         containerNode.Notifications.Should().HaveCount(1);
         containerNode.Notifications[0].Identifier.Should().Be("if-damp-suppress");
-    }
-
-    private YangRfcParser CreateParser(string filePath)
-    {
-        using var input = File.OpenText(filePath);
-
-        AntlrInputStream inputStream = new AntlrInputStream(input);
-        YangRfcLexer lexer = new YangRfcLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        YangRfcParser parser = new YangRfcParser(commonTokenStream);
-
-        return parser;
     }
 }

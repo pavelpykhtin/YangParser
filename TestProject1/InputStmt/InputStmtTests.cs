@@ -1,6 +1,7 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using FluentAssertions;
+using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
 
@@ -18,7 +19,7 @@ public class InputStmtTests
     [Fact]
     public void HandlesMustStatements()
     {
-        YangRfcParser parser = CreateParser("InputStmt/data/input-must.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("InputStmt/data/input-must.yang");
 
         var context = parser.inputStmt();
 
@@ -37,7 +38,7 @@ public class InputStmtTests
     [Fact]
     public void HandlesTypedefs()
     {
-        YangRfcParser parser = CreateParser("InputStmt/data/input-typedef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("InputStmt/data/input-typedef.yang");
 
         var context = parser.inputStmt();
 
@@ -52,7 +53,7 @@ public class InputStmtTests
     [Fact]
     public void HandlesGrouppings()
     {
-        YangRfcParser parser = CreateParser("InputStmt/data/input-grouping.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("InputStmt/data/input-grouping.yang");
 
         var context = parser.inputStmt();
 
@@ -68,7 +69,7 @@ public class InputStmtTests
     [Fact]
     public void HandlesDataDefinitions()
     {
-        YangRfcParser parser = CreateParser("InputStmt/data/input-datadef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("InputStmt/data/input-datadef.yang");
 
         var context = parser.inputStmt();
 
@@ -83,18 +84,5 @@ public class InputStmtTests
         
         leafNode.Identifier.Should().Be("nested-leaf");
         leafNode.Description.Should().Be("leaf description");
-    }
-
-    private YangRfcParser CreateParser(string filePath)
-    {
-        using var input = File.OpenText(filePath);
-
-        AntlrInputStream inputStream = new AntlrInputStream(input);
-        YangRfcLexer lexer = new YangRfcLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        YangRfcParser parser = new YangRfcParser(commonTokenStream);
-        parser.Interpreter.PredictionMode = PredictionMode.LlExactAmbigDetection;
-
-        return parser;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using FluentAssertions;
+using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
 
@@ -17,7 +18,7 @@ public class ListStmtTests
     [Fact]
     public void HandlesCoreProperties()
     {
-        YangRfcParser parser = CreateParser("ListStmt/data/list.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list.yang");
 
         var context = parser.listStmt();
 
@@ -36,7 +37,7 @@ public class ListStmtTests
     [Fact]
     public void HandlesIfFeatures()
     {
-        YangRfcParser parser = CreateParser("ListStmt/data/list-if.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list-if.yang");
 
         var context = parser.listStmt();
 
@@ -49,7 +50,7 @@ public class ListStmtTests
     [Fact]
     public void HandlesWhenStatement()
     {
-        YangRfcParser parser = CreateParser("ListStmt/data/list-when.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list-when.yang");
 
         var context = parser.listStmt();
 
@@ -63,7 +64,7 @@ public class ListStmtTests
     [Fact]
     public void HandlesMustStatements()
     {
-        YangRfcParser parser = CreateParser("ListStmt/data/list-must.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list-must.yang");
 
         var context = parser.listStmt();
 
@@ -82,7 +83,7 @@ public class ListStmtTests
     [Fact]
     public void HandlesTypedefs()
     {
-        YangRfcParser parser = CreateParser("ListStmt/data/list-typedef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list-typedef.yang");
 
         var context = parser.listStmt();
 
@@ -98,7 +99,7 @@ public class ListStmtTests
     [Fact]
     public void HandlesKeys()
     {
-        YangRfcParser parser = CreateParser("ListStmt/data/list-key.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list-key.yang");
 
         var context = parser.listStmt();
 
@@ -110,7 +111,7 @@ public class ListStmtTests
     [Fact]
     public void HandlesGrouppings()
     {
-        YangRfcParser parser = CreateParser("ListStmt/data/list-grouping.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list-grouping.yang");
 
         var context = parser.listStmt();
 
@@ -126,7 +127,7 @@ public class ListStmtTests
     [Fact]
     public void HandlesDataDefinitions()
     {
-        YangRfcParser parser = CreateParser("ListStmt/data/list-datadef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list-datadef.yang");
 
         var context = parser.listStmt();
 
@@ -146,7 +147,7 @@ public class ListStmtTests
     [Fact]
     public void HandlesNotifications()
     {
-        var parser = CreateParser("ListStmt/data/list-notification.yang");
+        var parser = ParserHelpers.CreateParser("ListStmt/data/list-notification.yang");
 
         var listStmt = parser.listStmt();
         
@@ -156,15 +157,34 @@ public class ListStmtTests
         listNode.Notifications[0].Identifier.Should().Be("if-damp-suppress");
     }
 
-    private YangRfcParser CreateParser(string filePath)
+    [Fact]
+    public void HandlesActions()
     {
-        using var input = File.OpenText(filePath);
+        YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list-action.yang");
 
-        AntlrInputStream inputStream = new AntlrInputStream(input);
-        YangRfcLexer lexer = new YangRfcLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        YangRfcParser parser = new YangRfcParser(commonTokenStream);
+        var context = parser.listStmt();
 
-        return parser;
+        var listNode = (ListNode)_visitor.Visit(context);
+
+        listNode.Actions.Should().HaveCount(2);
+        
+        listNode.Actions[0].Identifier.Should().Be("action-a");
+        
+        listNode.Actions[1].Identifier.Should().Be("action-b");
+    }
+
+    [Fact]
+    public void HandlesUnique()
+    {
+        YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list-unique.yang");
+
+        var context = parser.listStmt();
+
+        var listNode = (ListNode)_visitor.Visit(context);
+
+        listNode.UniqueConstraints.Should().HaveCount(2);
+        
+        listNode.UniqueConstraints[0].Should().Be("ip port");
+        listNode.UniqueConstraints[1].Should().Be("version");
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using FluentAssertions;
+using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
 
@@ -18,7 +19,7 @@ public class OutputStmtTests
     [Fact]
     public void HandlesMustStatements()
     {
-        YangRfcParser parser = CreateParser("OutputStmt/data/output-must.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("OutputStmt/data/output-must.yang");
 
         var context = parser.outputStmt();
 
@@ -37,7 +38,7 @@ public class OutputStmtTests
     [Fact]
     public void HandlesTypedefs()
     {
-        YangRfcParser parser = CreateParser("OutputStmt/data/output-typedef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("OutputStmt/data/output-typedef.yang");
 
         var context = parser.outputStmt();
 
@@ -52,7 +53,7 @@ public class OutputStmtTests
     [Fact]
     public void HandlesGrouppings()
     {
-        YangRfcParser parser = CreateParser("OutputStmt/data/output-grouping.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("OutputStmt/data/output-grouping.yang");
 
         var context = parser.outputStmt();
 
@@ -68,7 +69,7 @@ public class OutputStmtTests
     [Fact]
     public void HandlesDataDefinitions()
     {
-        YangRfcParser parser = CreateParser("OutputStmt/data/output-datadef.yang");
+        YangRfcParser parser = ParserHelpers.CreateParser("OutputStmt/data/output-datadef.yang");
 
         var context = parser.outputStmt();
 
@@ -83,18 +84,5 @@ public class OutputStmtTests
         
         leafNode.Identifier.Should().Be("nested-leaf");
         leafNode.Description.Should().Be("leaf description");
-    }
-
-    private YangRfcParser CreateParser(string filePath)
-    {
-        using var input = File.OpenText(filePath);
-
-        AntlrInputStream inputStream = new AntlrInputStream(input);
-        YangRfcLexer lexer = new YangRfcLexer(inputStream);
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        YangRfcParser parser = new YangRfcParser(commonTokenStream);
-        parser.Interpreter.PredictionMode = PredictionMode.LlExactAmbigDetection;
-
-        return parser;
     }
 }

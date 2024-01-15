@@ -371,9 +371,7 @@ keyStmt                     : KeyKeyword SEP keyArgStr stmtend ;
 keyArgStr                   : keyArg ;
 keyArg                      : nodeIdentifier (SEP nodeIdentifier)* ;
 uniqueStmt                  : UniqueKeyword SEP uniqueArgStr stmtend ;
-uniqueArgStr                : uniqueArg ;
-uniqueArg                   : descendantSchemaNodeid
-                                (SEP descendantSchemaNodeid)* ;
+uniqueArgStr                : quotedString ;
 choiceStmt                  : ChoiceKeyword SEP identifier SEP?
                                 (SEMICOLON |
                                  CURLYBRO stmtsep

@@ -9,7 +9,8 @@ public class YangRfcVisitor: YangRfcParserBaseVisitor<INode>
     {
         var moduleNode = new ModuleNode
         {
-            Identifier = context.identifier().GetText()
+            Identifier = context.identifier().GetText(),
+            Body = context.bodyStmts().Map(ParseBodyStmts) ?? new List<INode>(),
         };
         
         base.VisitModuleStmt(context);
@@ -122,7 +123,12 @@ public class YangRfcVisitor: YangRfcParserBaseVisitor<INode>
                 .Map(x => x.nodeIdentifier())
                 .Map(x => x.Select(i => i.GetText()).ToList()) 
                    ?? new(),
-            Notifications = context.notificationStmt().Select(x => (NotificationNode)VisitNotificationStmt(x)).ToList()
+            Notifications = context.notificationStmt().Select(x => (NotificationNode)VisitNotificationStmt(x)).ToList(),
+            Actions = context.actionStmt().Select(x => (ActionNode)VisitActionStmt(x)).ToList(),
+            UniqueConstraints = context.uniqueStmt()
+                .Select(x => (StringNode)VisitUniqueStmt(x))
+                .Select(x => x.Value!)
+                .ToList()
         };
 
         return leafListNode;
@@ -147,7 +153,8 @@ public class YangRfcVisitor: YangRfcParserBaseVisitor<INode>
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
             Notifications = context.notificationStmt().Select(x => (NotificationNode)VisitNotificationStmt(x)).ToList(),
-            Groupings = context.groupingStmt().Select(x => (GroupingNode)VisitGroupingStmt(x)).ToList()
+            Groupings = context.groupingStmt().Select(x => (GroupingNode)VisitGroupingStmt(x)).ToList(),
+            Actions = context.actionStmt().Select(x => (ActionNode)VisitActionStmt(x)).ToList(),
         };
 
         return leafNode;
@@ -179,6 +186,7 @@ public class YangRfcVisitor: YangRfcParserBaseVisitor<INode>
             Groupings = context.groupingStmt().Select(x => (GroupingNode)VisitGroupingStmt(x)).ToList(),
             DataDefinitions = context.dataDefStmt().Select(VisitDataDefStmt).ToList(),
             Notifications = context.notificationStmt().Select(x => (NotificationNode)VisitNotificationStmt(x)).ToList(),
+            Actions = context.actionStmt().Select(x => (ActionNode)VisitActionStmt(x)).ToList(),
         };
     }
 
@@ -405,16 +413,31 @@ public class YangRfcVisitor: YangRfcParserBaseVisitor<INode>
         };
     }
 
+    public override INode VisitUniqueStmt(YangRfcParser.UniqueStmtContext context) => context.uniqueArgStr().Map(x => VisitQuotedString(x.quotedString()))!;
+
     public override INode VisitQuotedString(YangRfcParser.QuotedStringContext context) => new StringNode(context.GetContentText());
     public override INode VisitDescriptionStmt(YangRfcParser.DescriptionStmtContext context) => context.Map(x => VisitQuotedString(x.quotedString()))!;
     public override INode VisitReferenceStmt(YangRfcParser.ReferenceStmtContext context) => context.Map(x => VisitQuotedString(x.quotedString()))!;
     
-    private List<string> ParseIfFeatures(IEnumerable<YangRfcParser.IfFeatureStmtContext> context)
-    {
-        return context
+    private List<string> ParseIfFeatures(IEnumerable<YangRfcParser.IfFeatureStmtContext> context) =>
+        context
             .Select(x => x.ifFeatureExprStr())
             .Select(x => VisitQuotedString(x.quotedString()))
             .Select(x => x.StringValue()!)
             .ToList();
-    }
+
+    private List<INode> ParseBodyStmts(YangRfcParser.BodyStmtsContext context) =>
+        context.children
+            .Select(x => x switch
+            {
+                YangRfcParser.FeatureStmtContext featureContext => VisitFeatureStmt(featureContext),
+                YangRfcParser.TypedefStmtContext typedefStmtContext => VisitTypedefStmt(typedefStmtContext),
+                YangRfcParser.GroupingStmtContext groupingStmtContext => VisitGroupingStmt(groupingStmtContext),
+                YangRfcParser.DataDefStmtContext dataDefStmtContext => VisitDataDefStmt(dataDefStmtContext),
+                YangRfcParser.NotificationStmtContext notificationStmtContext => VisitNotificationStmt(notificationStmtContext),
+                _ => null
+            })
+            .Where(x => x != null)
+            .Select(x => x!)
+            .ToList();
 }

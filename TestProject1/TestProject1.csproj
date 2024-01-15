@@ -38,9 +38,6 @@
 
     <ItemGroup>
       <None Remove="YANGParser\**" />
-      <None Update="YangRfcParserTests\sample1.yang">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="TypeStmt\data\type-binary.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -255,6 +252,21 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="ActionStmt\data\action-input-output.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="ContainerStmt\data\container-action.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="GroupingStmt\data\grouping-action.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="ListStmt\data\list-action.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="ListStmt\data\list-unique.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="ModuleStmt\data\module.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
