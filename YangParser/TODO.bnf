@@ -52,8 +52,6 @@ body-stmts          = *(extension-stmt /
                        deviation-stmt)
 
 data-def-stmt       = 
-                     leaf-list-stmt /
-                     list-stmt /
                      choice-stmt /
                      anydata-stmt /
                      anyxml-stmt /
@@ -148,58 +146,26 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
                              [reference-stmt]
                          "}") stmtsep
 
-  feature-stmt        = feature-keyword sep identifier-arg-str optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             *if-feature-stmt
-                         "}") stmtsep
-
   grouping-stmt       = grouping-keyword sep identifier-arg-str optsep
                         (";" /
                          "{" stmtsep
                              // these stmts can appear in any order
                              *action-stmt
-                             *notification-stmt
                          "}") stmtsep
 
   container-stmt      = container-keyword sep identifier-arg-str optsep
                         (";" /
                          "{" stmtsep
                              // these stmts can appear in any order
-                             *(grouping-stmt)
-                             *data-def-stmt
                              *action-stmt
-                             *notification-stmt
                          "}") stmtsep
 
   list-stmt           = list-keyword sep identifier-arg-str optsep
                         "{" stmtsep
                             // these stmts can appear in any order
-                            [when-stmt]
-                            *if-feature-stmt
-                            *must-stmt
-                            [key-stmt]
                             *unique-stmt
-                            [config-stmt]
-                            [min-elements-stmt]
-                            [max-elements-stmt]
-                            [ordered-by-stmt]
-                            [status-stmt]
-                            [description-stmt]
-                            [reference-stmt]
-                            *(typedef-stmt / grouping-stmt)
-                            1*data-def-stmt
                             *action-stmt
-                            *notification-stmt
                          "}" stmtsep
-
-  key-stmt            = key-keyword sep key-arg-str stmtend
-
-  key-arg-str         = < a string that matches the rule >
-                        < key-arg >
-
-  key-arg             = node-identifier *(sep node-identifier)
 
   unique-stmt         = unique-keyword sep unique-arg-str stmtend
 
@@ -342,14 +308,6 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
 
   augment-arg         = absolute-schema-nodeid
 
-  when-stmt           = when-keyword sep string optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             [description-stmt]
-                             [reference-stmt]
-                          "}") stmtsep
-
   rpc-stmt            = rpc-keyword sep identifier-arg-str optsep
                         (";" /
                          "{" stmtsep
@@ -368,45 +326,9 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
                         (";" /
                          "{" stmtsep
                              // these stmts can appear in any order
-                             *if-feature-stmt
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                             *(typedef-stmt / grouping-stmt)
                              [input-stmt]
                              [output-stmt]
                          "}") stmtsep
-
-  input-stmt          = input-keyword optsep
-                        "{" stmtsep
-                            // these stmts can appear in any order
-                            *must-stmt
-                            *(typedef-stmt / grouping-stmt)
-                            1*data-def-stmt
-                        "}" stmtsep
-
-  output-stmt         = output-keyword optsep
-                        "{" stmtsep
-                            // these stmts can appear in any order
-                            *must-stmt
-                            *(typedef-stmt / grouping-stmt)
-                            1*data-def-stmt
-                        "}" stmtsep
-
-  notification-stmt   = notification-keyword sep
-                        identifier-arg-str optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             *if-feature-stmt
-                             *must-stmt
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                             *(typedef-stmt / grouping-stmt)
-                             *data-def-stmt
-                         "}") stmtsep
-
 
   deviation-stmt      = deviation-keyword sep
                         deviation-arg-str optsep
@@ -603,8 +525,6 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
                         node-identifier
                         [absolute-schema-nodeid]
 
-  node-identifier     = [prefix ":"] identifier
-
   // Instance Identifiers
 
   instance-identifier = 1*("/" (node-identifier
@@ -623,18 +543,3 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
   pos                 = "[" *WSP positive-integer-value *WSP "]"
 
   current-function-invocation = current-keyword *WSP "(" *WSP ")"
-
-
-
-  string              = < an unquoted string, as returned by >
-                        < the scanner, that matches the rule >
-                        < yang-string >
-
-  yang-string         = *yang-char
-  
-  stmtsep             = *(WSP / line-break / unknown-statement)
-
-  non-zero-digit      = %x31-39
-
-  decimal-value       = integer-value ("." zero-integer-value)
-

@@ -92,6 +92,55 @@ public class ContainerStmtTests
         containerNode.Typedefs[1].Identifier.Should().Be("minute");
     }
 
+    [Fact]
+    public void HandlesGrouppings()
+    {
+        YangRfcParser parser = CreateParser("ContainerStmt/data/container-grouping.yang");
+
+        var context = parser.containerStmt();
+
+        var containerNode = (ContainerNode)_visitor.Visit(context);
+
+        containerNode.Groupings.Should().HaveCount(2);
+        
+        containerNode.Groupings[0].Identifier.Should().Be("grouping-a");
+        
+        containerNode.Groupings[1].Identifier.Should().Be("grouping-b");
+    }
+    
+    [Fact]
+    public void HandlesDataDefinitions()
+    {
+        YangRfcParser parser = CreateParser("ContainerStmt/data/container-datadef.yang");
+
+        var context = parser.containerStmt();
+
+        var containerNode = (ContainerNode)_visitor.Visit(context);
+        var nestedContainerNode = (ContainerNode)containerNode.DataDefinitions[0];
+        var leafNode = (LeafNode)containerNode.DataDefinitions[1];
+
+        containerNode.DataDefinitions.Should().HaveCount(2);
+        
+        nestedContainerNode.Identifier.Should().Be("nested-container");
+        nestedContainerNode.Description.Should().Be("container description");
+        
+        leafNode.Identifier.Should().Be("nested-leaf");
+        leafNode.Description.Should().Be("leaf description");
+    }
+
+    [Fact]
+    public void HandlesNotifications()
+    {
+        var parser = CreateParser("ContainerStmt/data/container-notification.yang");
+
+        var containerStmt = parser.containerStmt();
+        
+        var containerNode = (ContainerNode)_visitor.Visit(containerStmt);
+        
+        containerNode.Notifications.Should().HaveCount(1);
+        containerNode.Notifications[0].Identifier.Should().Be("if-damp-suppress");
+    }
+
     private YangRfcParser CreateParser(string filePath)
     {
         using var input = File.OpenText(filePath);

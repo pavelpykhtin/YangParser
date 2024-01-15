@@ -1,0 +1,7 @@
+﻿notification if-damp-suppress {
+    status current;
+    description
+      "The state of interface changed from unsuppress to suppress.";
+    reference
+        "Dummy reference";
+}

@@ -9,4 +9,5 @@ public class GroupingNode: INode
     public List<TypedefNode> Typedefs { get; set; } = new();
     public List<GroupingNode> Groupings { get; set; } = new();
     public List<INode> DataDefinitions { get; set; } = new();
+    public List<NotificationNode> Notifications { get; set; } = new();
 }

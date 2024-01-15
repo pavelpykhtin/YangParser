@@ -1,0 +1,12 @@
+﻿action ping {
+    input {
+        leaf input-value {
+            type string;
+        }
+    }
+    output {
+        leaf output-value {
+            type uint32;
+        }
+    }
+}

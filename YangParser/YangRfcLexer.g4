@@ -73,8 +73,6 @@ WhenKeyword                 : 'when';
 YangVersionKeyword          : 'yang-version';
 YinElementKeyword           : 'yin-element';
 
-ID                          : (ALPHA | UNDERSCORE)
-                              (ALPHA | DIGIT | UNDERSCORE | DASH | DOT)*;
                               
 // other keywords
 AddKeyword                  : 'add' ;
@@ -95,6 +93,9 @@ UserKeyword                 : 'user' ;
 AndKeyword                  : 'and';
 OrKeyword                   : 'or';
 NotKeyword                  : 'not';
+
+ID                          : (ALPHA | UNDERSCORE)
+                              (ALPHA | DIGIT | UNDERSCORE | DASH | DOT)*;
 
 // core rules from RFC 5234
 SEP                 : (WSP | LINEBREAK)+ ;                                // unconditional separator

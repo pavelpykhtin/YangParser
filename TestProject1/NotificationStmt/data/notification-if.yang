@@ -1,0 +1,3 @@
+﻿notification if-damp-suppress {
+        if-feature "ssh";
+}

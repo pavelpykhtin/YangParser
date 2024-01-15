@@ -1,0 +1,3 @@
+﻿feature proxy {
+  if-feature "ssh";
+}

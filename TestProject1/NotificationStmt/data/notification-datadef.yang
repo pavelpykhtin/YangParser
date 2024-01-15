@@ -1,0 +1,10 @@
+﻿notification if-damp-suppress {
+    container nested-container {
+        description "container description";
+    }
+    
+    leaf nested-leaf {
+        type uint32;
+        description "leaf description";
+    }    
+}

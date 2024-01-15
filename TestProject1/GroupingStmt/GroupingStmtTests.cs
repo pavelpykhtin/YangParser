@@ -31,6 +31,19 @@ public class GroupingStmtTests
     }
 
     [Fact]
+    public void HandlesNotifications()
+    {
+        var parser = CreateParser("GroupingStmt/data/grouping-notification.yang");
+
+        var groupingStmt = parser.groupingStmt();
+        
+        var groupingNode = (GroupingNode)_visitor.Visit(groupingStmt);
+        
+        groupingNode.Notifications.Should().HaveCount(1);
+        groupingNode.Notifications[0].Identifier.Should().Be("if-damp-suppress");
+    }
+
+    [Fact]
     public void HandlesTypedefs()
     {
         YangRfcParser parser = CreateParser("GroupingStmt/data/grouping-typedef.yang");
@@ -72,14 +85,22 @@ public class GroupingStmtTests
         var groupingNode = (GroupingNode)_visitor.Visit(context);
         var containerNode = (ContainerNode)groupingNode.DataDefinitions[0];
         var leafNode = (LeafNode)groupingNode.DataDefinitions[1];
+        var leafListNode = (LeafListNode)groupingNode.DataDefinitions[2];
+        var listNode = (ListNode)groupingNode.DataDefinitions[3];
 
-        groupingNode.DataDefinitions.Should().HaveCount(2);
+        groupingNode.DataDefinitions.Should().HaveCount(4);
         
         containerNode.Identifier.Should().Be("nested-container");
         containerNode.Description.Should().Be("container description");
         
         leafNode.Identifier.Should().Be("nested-leaf");
         leafNode.Description.Should().Be("leaf description");
+        
+        leafListNode.Identifier.Should().Be("nested-leaf-list");
+        leafListNode.Description.Should().Be("leaf-list description");
+        
+        listNode.Identifier.Should().Be("nested-list");
+        listNode.Description.Should().Be("list description");
     }
 
     private YangRfcParser CreateParser(string filePath)

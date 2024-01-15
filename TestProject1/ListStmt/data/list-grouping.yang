@@ -1,0 +1,7 @@
+﻿list context-engine-id {
+    grouping grouping-a {
+        description
+            "Message given at start of login session.";
+    }
+    grouping grouping-b;
+}

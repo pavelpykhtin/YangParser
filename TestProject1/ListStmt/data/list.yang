@@ -1,0 +1,14 @@
+﻿list context-engine-id {
+        must "be enabled";
+        default "1.2.3.4";
+        units "ipv4";
+        config true;
+        min-elements: 13;
+        max-elements: 42;
+        ordered-by: system;
+        reference
+          "RFC 3413: Simple Network Management Protocol (SNMP).
+             Applications.
+             SNMP-PROXY-MIB.snmpProxyContextEngineID";
+        description "Dummy description";
+}

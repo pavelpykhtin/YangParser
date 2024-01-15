@@ -7,4 +7,13 @@
         type uint32;
         description "leaf description";
     }
+    
+    leaf-list nested-leaf-list {
+        type uint32;
+        description "leaf-list description"
+    }
+    
+    list nested-list {
+        description "list description"
+    }
 }
