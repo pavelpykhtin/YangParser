@@ -30,7 +30,7 @@ public class ModuleStmtTests
             .Which.Identifier.Should().Be("dummy-extension");
         moduleNode.Body[1].Should().BeOfType<FeatureNode>()
             .Which.Identifier.Should().Be("dummy-feature");
-        moduleNode.Body[2].Should().BeOfType<FeatureNode>()
+        moduleNode.Body[2].Should().BeOfType<IdentityNode>()
             .Which.Identifier.Should().Be("dummy-identity");
         moduleNode.Body[3].Should().BeOfType<TypedefNode>()
             .Which.Identifier.Should().Be("dummy-typedef");
@@ -40,7 +40,7 @@ public class ModuleStmtTests
             .Which.Identifier.Should().Be("dummy-datadef");
         moduleNode.Body[6].Should().BeOfType<FeatureNode>()
             .Which.Identifier.Should().Be("dummy-augment");
-        moduleNode.Body[7].Should().BeOfType<FeatureNode>()
+        moduleNode.Body[7].Should().BeOfType<RpcNode>()
             .Which.Identifier.Should().Be("dummy-rpc");
         moduleNode.Body[8].Should().BeOfType<NotificationNode>()
             .Which.Identifier.Should().Be("dummy-notification");

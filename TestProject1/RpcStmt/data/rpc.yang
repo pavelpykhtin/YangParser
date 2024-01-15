@@ -1,0 +1,7 @@
+﻿rpc ping {
+    status current;
+    description
+      "Dummy description";
+    reference
+        "Dummy reference";
+}

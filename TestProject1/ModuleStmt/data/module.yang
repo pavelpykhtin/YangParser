@@ -1,7 +1,7 @@
 ﻿module dummy-module {
     feature dummy-extension;
     feature dummy-feature;
-    feature dummy-identity;
+    identity dummy-identity;
     typedef dummy-typedef {
         type string;
     }
@@ -10,7 +10,7 @@
         type uint32;
     }
     feature dummy-augment;
-    feature dummy-rpc;
+    rpc dummy-rpc;
     notification dummy-notification;
     feature dummy-deviation;
 }

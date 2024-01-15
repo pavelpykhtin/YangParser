@@ -1,0 +1,3 @@
+﻿rpc ping {
+    if-feature "ssh";
+}

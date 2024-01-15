@@ -1,0 +1,3 @@
+﻿identity dummy-identity {
+    if-feature "ssh";
+}

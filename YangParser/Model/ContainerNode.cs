@@ -1,6 +1,6 @@
 ﻿namespace YangParser.Model;
 
-public class ContainerNode: INode
+public class ContainerNode: IIdentifiableNode
 {
     public string Identifier { get; set; } = null!;
     public string? Description { get; set; }

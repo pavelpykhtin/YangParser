@@ -1,6 +1,6 @@
 ﻿namespace YangParser.Model;
 
-public class TypedefNode: INode
+public class TypedefNode: IIdentifiableNode
 {
     public string Identifier { get; set; } = null!;
     public TypeNode Type { get; set; } = null!;

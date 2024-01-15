@@ -1,6 +1,6 @@
 ﻿namespace YangParser.Model;
 
-public class SubmoduleNode : INode
+public class SubmoduleNode : IIdentifiableNode
 {
-    public string Identifier { get; set; }
+    public string Identifier { get; set; } = null!;
 }

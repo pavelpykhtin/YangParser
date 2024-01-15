@@ -1,0 +1,5 @@
+﻿identity dummy-identity {
+        reference "Dummy reference";
+        description "Dummy description";
+        status current;
+}

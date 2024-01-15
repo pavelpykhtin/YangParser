@@ -1,7 +1,7 @@
 ﻿namespace YangParser.Model;
 
-public class ModuleNode : INode
+public class ModuleNode : IIdentifiableNode
 {
-    public string Identifier { get; set; }
+    public string Identifier { get; set; } = null!;
     public List<INode> Body { get; set; } = new();
 }

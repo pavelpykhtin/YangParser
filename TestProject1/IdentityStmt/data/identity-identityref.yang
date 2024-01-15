@@ -1,0 +1,4 @@
+﻿identity identityref {
+   base "crypto:crypto-alg";
+   base ssh;
+}

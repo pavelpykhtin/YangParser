@@ -41,9 +41,7 @@ linkage-stmts       = // these stmts can appear in any order
 revision-stmts      = *revision-stmt
 
 body-stmts          = *(extension-stmt /
-                       identity-stmt /
                        augment-stmt /
-                       rpc-stmt /
                        deviation-stmt)
 
 data-def-stmt       = 
@@ -129,17 +127,6 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
                         < yin-element-arg >
 
   yin-element-arg     = true-keyword / false-keyword
-
-  identity-stmt       = identity-keyword sep identifier-arg-str optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             *if-feature-stmt
-                             *base-stmt
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                         "}") stmtsep
 
   choice-stmt         = choice-keyword sep identifier-arg-str optsep
                         (";" /
@@ -272,19 +259,6 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
                         < augment-arg >
 
   augment-arg         = absolute-schema-nodeid
-
-  rpc-stmt            = rpc-keyword sep identifier-arg-str optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             *if-feature-stmt
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                             *(typedef-stmt / grouping-stmt)
-                             [input-stmt]
-                             [output-stmt]
-                         "}") stmtsep
 
 
   deviation-stmt      = deviation-keyword sep
