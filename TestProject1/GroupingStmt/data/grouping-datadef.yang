@@ -20,4 +20,12 @@
     choice nested-choice {
         description "choice description"
     }
+    
+    anydata nested-anydata {
+        description "anydata description";
+    }
+    
+    anyxml nested-anyxml {
+        description "anyxml description";
+    }
 }

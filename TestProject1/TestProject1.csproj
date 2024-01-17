@@ -407,6 +407,30 @@
       <None Update="ModuleStmt\data\module-revision.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="AnyDataStmt\data\anydata.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="AnyDataStmt\data\anydata-must.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="AnyDataStmt\data\anydata-when.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="AnyDataStmt\data\anydata-if.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="AnyXmlStmt\data\anyxml.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="AnyXmlStmt\data\anyxml-must.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="AnyXmlStmt\data\anyxml-when.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="AnyXmlStmt\data\anyxml-if.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

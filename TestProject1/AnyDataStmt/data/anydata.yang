@@ -1,0 +1,10 @@
+﻿anydata context-engine-id {
+        status obsolete;
+        mandatory true;
+        config true;
+        reference
+          "RFC 3413: Simple Network Management Protocol (SNMP).
+             Applications.
+             SNMP-PROXY-MIB.snmpProxyContextEngineID";
+        description "Dummy description";
+}

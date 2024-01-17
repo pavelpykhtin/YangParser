@@ -80,9 +80,9 @@ public class ChoiceStmtTests
             .Which.Identifier.Should().Be("dummy-leaf-list");
         choiceNode.ShortCases[4].Should().BeOfType<ListNode>()
             .Which.Identifier.Should().Be("dummy-list");
-        choiceNode.ShortCases[5].Should().BeOfType<ContainerNode>()
+        choiceNode.ShortCases[5].Should().BeOfType<AnyDataNode>()
             .Which.Identifier.Should().Be("dummy-anydata");
-        choiceNode.ShortCases[6].Should().BeOfType<ContainerNode>()
+        choiceNode.ShortCases[6].Should().BeOfType<AnyXmlNode>()
             .Which.Identifier.Should().Be("dummy-anyxml");
     }
     

@@ -28,8 +28,6 @@ body-stmts          = *(augment-stmt /
                        deviation-stmt)
 
 data-def-stmt       = 
-                     anydata-stmt /
-                     anyxml-stmt /
                      uses-stmt
 
 import-stmt         = import-keyword sep identifier-arg-str optsep
@@ -55,38 +53,6 @@ belongs-to-stmt     = belongs-to-keyword sep identifier-arg-str
                      "{" stmtsep
                          prefix-stmt
                      "}" stmtsep
-
-  short-case-stmt     = anydata-stmt /
-                        anyxml-stmt
-
-
-  anydata-stmt        = anydata-keyword sep identifier-arg-str optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             [when-stmt]
-                             *if-feature-stmt
-                             *must-stmt
-                             [config-stmt]
-                             [mandatory-stmt]
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                          "}") stmtsep
-
-  anyxml-stmt         = anyxml-keyword sep identifier-arg-str optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             [when-stmt]
-                             *if-feature-stmt
-                             *must-stmt
-                             [config-stmt]
-                             [mandatory-stmt]
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                          "}") stmtsep
 
   uses-stmt           = uses-keyword sep identifier-ref-arg-str optsep
                         (";" /

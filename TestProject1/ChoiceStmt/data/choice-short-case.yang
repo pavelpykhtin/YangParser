@@ -8,6 +8,6 @@
         type string;
     }
     list dummy-list {} 
-    container dummy-anydata; 
-    container dummy-anyxml;
+    anydata dummy-anydata; 
+    anyxml dummy-anyxml;
 }
