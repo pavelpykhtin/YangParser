@@ -104,8 +104,9 @@ public class GroupingStmtTests
         var leafNode = (LeafNode)groupingNode.DataDefinitions[1];
         var leafListNode = (LeafListNode)groupingNode.DataDefinitions[2];
         var listNode = (ListNode)groupingNode.DataDefinitions[3];
+        var choiceNode = (ChoiceNode)groupingNode.DataDefinitions[4];
 
-        groupingNode.DataDefinitions.Should().HaveCount(4);
+        groupingNode.DataDefinitions.Should().HaveCount(5);
         
         containerNode.Identifier.Should().Be("nested-container");
         containerNode.Description.Should().Be("container description");
@@ -118,5 +119,8 @@ public class GroupingStmtTests
         
         listNode.Identifier.Should().Be("nested-list");
         listNode.Description.Should().Be("list description");
+        
+        choiceNode.Identifier.Should().Be("nested-choice");
+        choiceNode.Description.Should().Be("choice description");
     }
 }

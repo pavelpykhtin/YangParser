@@ -1,0 +1,15 @@
+﻿choice context-engine-id {
+        if-feature "ssh";
+        when "../mode='ipv4-ipv6-address'"{
+            description "Dummy description";
+            reference "Dummy reference";
+        }
+        mandatory true;
+        default "1.2.3.4";
+        config true;
+        reference
+          "RFC 3413: Simple Network Management Protocol (SNMP).
+             Applications.
+             SNMP-PROXY-MIB.snmpProxyContextEngineID";
+        description "Dummy description";
+}

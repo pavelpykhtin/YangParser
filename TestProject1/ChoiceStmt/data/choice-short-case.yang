@@ -1,0 +1,13 @@
+﻿choice context-engine-id {
+    choice dummy-choice;
+    container dummy-container; 
+    leaf dummy-leaf {
+        type uint32;
+    }
+    leaf-list dummy-leaf-list {
+        type string;
+    }
+    list dummy-list {} 
+    container dummy-anydata; 
+    container dummy-anyxml;
+}

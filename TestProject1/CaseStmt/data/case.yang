@@ -1,0 +1,5 @@
+﻿case login {
+    status current;
+    description "Dummy description";
+    reference "Dummy reference";
+}

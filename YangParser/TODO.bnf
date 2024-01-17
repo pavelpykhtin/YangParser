@@ -1,10 +1,7 @@
 ﻿module-stmt         = optsep module-keyword sep identifier-arg-str
                          optsep
                          "{" stmtsep
-                             module-header-stmts
                              linkage-stmts
-                             meta-stmts
-                             revision-stmts
                              body-stmts
                          "}" optsep
 
@@ -18,45 +15,22 @@ submodule-stmt      = optsep submodule-keyword sep identifier-arg-str
                          body-stmts
                      "}" optsep
 
-module-header-stmts = // these stmts can appear in any order
-                     yang-version-stmt
-                     namespace-stmt
-                     prefix-stmt
-
 submodule-header-stmts =
                      // these stmts can appear in any order
                      yang-version-stmt
                      belongs-to-stmt
-                         
- meta-stmts          = // these stmts can appear in any order
-                         [organization-stmt]
-                         [contact-stmt]
-                         [description-stmt]
-                         [reference-stmt]
 
 linkage-stmts       = // these stmts can appear in any order
                      *import-stmt
                      *include-stmt
 
-revision-stmts      = *revision-stmt
-
-body-stmts          = *(extension-stmt /
-                       augment-stmt /
+body-stmts          = *(augment-stmt /
                        deviation-stmt)
 
 data-def-stmt       = 
-                     choice-stmt /
                      anydata-stmt /
                      anyxml-stmt /
                      uses-stmt
-
-yang-version-stmt   = yang-version-keyword sep yang-version-arg-str
-                     stmtend
-
-yang-version-arg-str = < a string that matches the rule >
-                      < yang-version-arg >
-
-yang-version-arg    = "1.1"
 
 import-stmt         = import-keyword sep identifier-arg-str optsep
                      "{" stmtsep
@@ -76,92 +50,14 @@ include-stmt        = include-keyword sep identifier-arg-str optsep
                           [reference-stmt]
                       "}") stmtsep
 
-namespace-stmt      = namespace-keyword sep uri-str stmtend
-
-uri-str             = < a string that matches the rule >
-                     < URI in RFC 3986 >
-
-prefix-stmt         = prefix-keyword sep prefix-arg-str stmtend
-
 belongs-to-stmt     = belongs-to-keyword sep identifier-arg-str
                      optsep
                      "{" stmtsep
                          prefix-stmt
                      "}" stmtsep
 
-organization-stmt   = organization-keyword sep string stmtend
-
-contact-stmt        = contact-keyword sep string stmtend
-
-revision-stmt       = revision-keyword sep revision-date optsep
-                     (";" /
-                      "{" stmtsep
-                          // these stmts can appear in any order
-                          [description-stmt]
-                          [reference-stmt]
-                      "}") stmtsep
-
-revision-date       = date-arg-str
-
-revision-date-stmt  = revision-date-keyword sep revision-date stmtend
-  extension-stmt      = extension-keyword sep identifier-arg-str optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             [argument-stmt]
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                         "}") stmtsep
-
-  argument-stmt       = argument-keyword sep identifier-arg-str optsep
-                        (";" /
-                         "{" stmtsep
-                             [yin-element-stmt]
-                         "}") stmtsep
-
-  yin-element-stmt    = yin-element-keyword sep yin-element-arg-str
-                        stmtend
-
-  yin-element-arg-str = < a string that matches the rule >
-                        < yin-element-arg >
-
-  yin-element-arg     = true-keyword / false-keyword
-
-  choice-stmt         = choice-keyword sep identifier-arg-str optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             [when-stmt]
-                             *if-feature-stmt
-                             [default-stmt]
-                             [config-stmt]
-                             [mandatory-stmt]
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                             *(short-case-stmt / case-stmt)
-                         "}") stmtsep
-
-  short-case-stmt     = choice-stmt /
-                        container-stmt /
-                        leaf-stmt /
-                        leaf-list-stmt /
-                        list-stmt /
-                        anydata-stmt /
+  short-case-stmt     = anydata-stmt /
                         anyxml-stmt
-
-  case-stmt           = case-keyword sep identifier-arg-str optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             [when-stmt]
-                             *if-feature-stmt
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                             *data-def-stmt
-                         "}") stmtsep
 
 
   anydata-stmt        = anydata-keyword sep identifier-arg-str optsep
@@ -437,13 +333,6 @@ revision-date-stmt  = revision-date-keyword sep revision-date stmtend
 
   length-boundary     = min-keyword / max-keyword /
                         non-negative-integer-value
-
-  // Date
-
-  date-arg-str        = < a string that matches the rule >
-                        < date-arg >
-
-  date-arg            = 4DIGIT "-" 2DIGIT "-" 2DIGIT
 
   // Schema Node Identifiers
 

@@ -1,0 +1,5 @@
+﻿extension context-engine-id {
+    reference "Dummy reference";
+    description "Dummy description";
+    status obsolete;
+}

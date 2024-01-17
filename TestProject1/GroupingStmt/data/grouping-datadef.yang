@@ -16,4 +16,8 @@
     list nested-list {
         description "list description"
     }
+        
+    choice nested-choice {
+        description "choice description"
+    }
 }

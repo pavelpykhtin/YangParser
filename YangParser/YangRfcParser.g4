@@ -81,8 +81,8 @@ belongsToStmt               : BelongsToKeyword SEP identifier
                                  CURLYBRO stmtsep
                                      prefixStmt
                                  CURLYBRC stmtsep ;
-organizationStmt            : OrganizationKeyword SEP string stmtend ;
-contactStmt                 : ContactKeyword SEP string stmtend ;
+organizationStmt            : OrganizationKeyword SEP quotedString stmtend ;
+contactStmt                 : ContactKeyword SEP quotedString stmtend ;
 descriptionStmt             : DescriptionKeyword SEP quotedString stmtend ;
 referenceStmt               : ReferenceKeyword SEP quotedString stmtend ;
 unitsStmt                   : UnitsKeyword SEP quotedString stmtend ;
@@ -687,7 +687,11 @@ lengthArgStr                : quotedString ;
 patternArgStr               : quotedString ;
 
 // date
-dateArgStr                  : quotedString ;
+dateArgStr                  : DIGIT DIGIT DIGIT DIGIT 
+                                DASH 
+                                DIGIT DIGIT
+                                DASH
+                                DIGIT DIGIT;
 
 // schema node identifiers
 schemaNodeid                : absoluteSchemaNodeid |
@@ -717,7 +721,7 @@ pathArgStr                  : quotedString ;
 currentFunctionInvocation   : CurrentKeyword WSP* BRO WSP* BRC ;
 
 // basic rules
-prefixArgStr                : prefixArg ;
+prefixArgStr                : prefixArg | quotedString ;
 prefixArg                   : prefix ;
 prefix                      : identifier ;
 

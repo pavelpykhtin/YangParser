@@ -1,0 +1,20 @@
+﻿module dummy-module {
+    yang-version "1.1";
+    namespace "urn:example:rock";
+    prefix "example";
+    
+    extension dummy-extension;
+    feature dummy-feature;
+    identity dummy-identity;
+    typedef dummy-typedef {
+        type string;
+    }
+    grouping dummy-grouping;
+    leaf dummy-datadef {
+        type uint32;
+    }
+    feature dummy-augment;
+    rpc dummy-rpc;
+    notification dummy-notification;
+    feature dummy-deviation;
+}
