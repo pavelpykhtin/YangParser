@@ -1,4 +1,4 @@
-﻿container context-engine-id {
+﻿refine "dummy-refine" {
         must "be available" {            
             error-message "Dummy error message";
             error-app-tag "Dummy error app tag";

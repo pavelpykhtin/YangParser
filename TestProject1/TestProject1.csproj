@@ -431,6 +431,45 @@
       <None Update="AnyXmlStmt\data\anyxml-if.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="КуаштуStmt\data\container.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="КуаштуStmt\data\container-if.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="КуаштуStmt\data\container-when.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="КуаштуStmt\data\container-must.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="КуаштуStmt\data\container-typedef.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="КуаштуStmt\data\container-action.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="КуаштуStmt\data\container-datadef.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="КуаштуStmt\data\container-grouping.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="КуаштуStmt\data\container-notification.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RefineStmt\data\refine.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RefineStmt\data\refine-if.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RefineStmt\data\refine-must.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="RefineStmt\data\refine-default.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

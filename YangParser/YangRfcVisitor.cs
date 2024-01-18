@@ -508,6 +508,30 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
         };
     }
 
+    public override INode VisitRefineStmt(YangRfcParser.RefineStmtContext context)
+    {
+        return new RefineNode
+        {
+            Argument = context.refineArgStr().Map(x => VisitQuotedString(x.quotedString())).StringValue()!,
+            Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
+            Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
+            Presence = context.presenceStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue()!,
+            Config = context.configStmt().MapSingle(x => x.configArgStr().GetText()).Map(bool.Parse),
+            Mandatory = context.mandatoryStmt().MapSingle(x => x.mandatoryArgStr().GetText()).Map(bool.Parse),
+            Default = context.defaultStmt()
+                .Select(x => VisitQuotedString(x.quotedString()))
+                .Select(x => x.StringValue()!)
+                .ToList(),
+            MinElements = context.minElementsStmt().MapSingle(x => int.Parse(x.minValueArgStr().GetText())),
+            MaxElements = context.maxElementsStmt().MapSingle(x => int.Parse(x.maxValueArgStr().GetText())),
+            Must = new MustSpecificationNode
+            {
+                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
+            },
+            IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
+        };
+    }
+
     public override INode VisitUniqueStmt(YangRfcParser.UniqueStmtContext context) => context.uniqueArgStr().Map(x => VisitQuotedString(x.quotedString()))!;
 
     public override INode VisitQuotedString(YangRfcParser.QuotedStringContext context) => new StringNode(context.GetContentText());

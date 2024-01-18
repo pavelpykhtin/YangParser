@@ -457,8 +457,7 @@ refineStmt                  : RefineKeyword SEP refineArgStr SEP?
                                      descriptionStmt |
                                      referenceStmt)*
                                    CURLYBRC stmtsep ;
-refineArgStr                : refineArg ;
-refineArg                   : descendantSchemaNodeid ;
+refineArgStr                : quotedString ;
 usesAugmentStmt             : AugmentKeyword SEP usesAugmentArgStr SEP?
                                 CURLYBRO stmtsep
                                     // these stmts can appear in any order

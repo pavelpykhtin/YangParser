@@ -1,4 +1,4 @@
-﻿refine login {
+﻿refine "dummy-refine" {
     default "123";
     default "456";
 }

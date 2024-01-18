@@ -1,9 +1,9 @@
-﻿container login {
+﻿refine "dummy-refine" {
     config true;
-    status current;
     presence "Enable global loop-detect.";
-    description
-        "Message given at start of login session.";
-    reference
-        "Dummy reference";
+    mandatory true;
+    description "Message given at start of login session.";
+    reference "Dummy reference";
+    min-elements 13;
+    max-elements 42;
 }
