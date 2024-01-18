@@ -1,0 +1,9 @@
+﻿container login {
+    config true;
+    status current;
+    presence "Enable global loop-detect.";
+    description
+        "Message given at start of login session.";
+    reference
+        "Dummy reference";
+}

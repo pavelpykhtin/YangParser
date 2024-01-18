@@ -1,0 +1,9 @@
+﻿container context-engine-id {
+        must "be available" {            
+            error-message "Dummy error message";
+            error-app-tag "Dummy error app tag";
+            description "Dummy description";
+            reference "Dummy reference";
+        }
+        must "be enabled";
+}
