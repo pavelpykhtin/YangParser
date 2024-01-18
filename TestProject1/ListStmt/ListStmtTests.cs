@@ -1,5 +1,4 @@
-﻿using Antlr4.Runtime;
-using FluentAssertions;
+﻿using FluentAssertions;
 using TestProject1.Helpers;
 using YangParser;
 using YangParser.Model;
@@ -25,7 +24,7 @@ public class ListStmtTests
         var listNode = (ListNode)_visitor.Visit(context);
 
         listNode.Identifier.Should().Be("context-engine-id");
-        listNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP).\r\n             Applications.\r\n             SNMP-PROXY-MIB.snmpProxyContextEngineID");
+        listNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP).\n             Applications.\n             SNMP-PROXY-MIB.snmpProxyContextEngineID");
         listNode.Description.Should().Be("Dummy description");
         listNode.MinElements.Should().Be(13);
         listNode.MaxElements.Should().Be(42);

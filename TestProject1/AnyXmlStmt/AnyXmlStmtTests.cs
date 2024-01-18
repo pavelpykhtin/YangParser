@@ -25,7 +25,7 @@ public class AnyXmlStmtTests
 
         anyXmlNode.Identifier.Should().Be("context-engine-id");
         anyXmlNode.Mandatory.Should().BeTrue();
-        anyXmlNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP).\r\n             Applications.\r\n             SNMP-PROXY-MIB.snmpProxyContextEngineID");
+        anyXmlNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP).\n             Applications.\n             SNMP-PROXY-MIB.snmpProxyContextEngineID");
         anyXmlNode.Description.Should().Be("Dummy description");
         anyXmlNode.Config.Should().BeTrue();
         anyXmlNode.Status.Should().Be(Status.Obsolete);

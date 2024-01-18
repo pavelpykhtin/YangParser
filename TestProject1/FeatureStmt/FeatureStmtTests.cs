@@ -26,7 +26,7 @@ public class FeatureStmtTests
         var featureNode = (FeatureNode)_visitor.Visit(context);
 
         featureNode.Description.Should().Be("A server implements this feature if it can act as an SNMP proxy.");
-        featureNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP)\r\n       Applications");
+        featureNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP)\n       Applications");
         featureNode.Status.Should().Be(Status.Current);
     }
 

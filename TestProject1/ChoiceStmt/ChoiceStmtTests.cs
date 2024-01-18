@@ -26,7 +26,7 @@ public class ChoiceStmtTests
         choiceNode.Identifier.Should().Be("context-engine-id");
         choiceNode.Mandatory.Should().BeTrue();
         choiceNode.Default.Should().Be("1.2.3.4");
-        choiceNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP).\r\n             Applications.\r\n             SNMP-PROXY-MIB.snmpProxyContextEngineID");
+        choiceNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP).\n             Applications.\n             SNMP-PROXY-MIB.snmpProxyContextEngineID");
         choiceNode.Description.Should().Be("Dummy description");
         choiceNode.Config.Should().BeTrue();
         choiceNode.Status.Should().Be(Status.Current);

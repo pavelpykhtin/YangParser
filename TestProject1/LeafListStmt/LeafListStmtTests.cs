@@ -28,7 +28,7 @@ public class LeafListStmtTests
         leafListNode.Type.Identifier.Should().Be("snmp:engine-id");
         leafListNode.Default.Should().Be("1.2.3.4");
         leafListNode.Units.Should().Be("ipv4");
-        leafListNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP).\r\n             Applications.\r\n             SNMP-PROXY-MIB.snmpProxyContextEngineID");
+        leafListNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP).\n             Applications.\n             SNMP-PROXY-MIB.snmpProxyContextEngineID");
         leafListNode.Description.Should().Be("Dummy description");
         leafListNode.MinElements.Should().Be(13);
         leafListNode.MaxElements.Should().Be(42);

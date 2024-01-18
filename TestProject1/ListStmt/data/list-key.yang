@@ -1,3 +1,3 @@
 ﻿list context-engine-id {
-    key: scope1:key1 scope2:key2 key3;
+    key scope1:key1 scope2:key2 key3;
 }

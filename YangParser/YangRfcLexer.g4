@@ -80,7 +80,7 @@ CurrentKeyword              : 'current' ;
 DeleteKeyword               : 'delete' ;
 DeprecatedKeyword           : 'deprecated' ;
 FalseKeyword                : 'false' ;
-InvertMatchKeyword          : 'invertMatch' ;
+InvertMatchKeyword          : 'invert-match' ;
 MaxKeyword                  : 'max' ;
 MinKeyword                  : 'min' ;
 NotSupportedKeyword         : 'notSupported' ;

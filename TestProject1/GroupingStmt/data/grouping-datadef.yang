@@ -10,15 +10,15 @@
     
     leaf-list nested-leaf-list {
         type uint32;
-        description "leaf-list description"
+        description "leaf-list description";
     }
     
     list nested-list {
-        description "list description"
+        description "list description";
     }
         
     choice nested-choice {
-        description "choice description"
+        description "choice description";
     }
     
     anydata nested-anydata {

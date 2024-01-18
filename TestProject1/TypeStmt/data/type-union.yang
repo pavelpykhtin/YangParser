@@ -1,6 +1,6 @@
 ﻿type union {
     type int32;
     type enumeration {
-        enum "unbounded";
+        enum unbounded;
     }
 }
