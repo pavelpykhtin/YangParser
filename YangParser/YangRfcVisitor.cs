@@ -532,6 +532,21 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
         };
     }
 
+    public override INode VisitAugmentStmt(YangRfcParser.AugmentStmtContext context) =>
+        new AugmentNode
+        {
+            Argument = context.augmentArgStr().Map(x => VisitQuotedString(x.quotedString())).StringValue()!,
+            Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
+            Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
+            Status = context.statusStmt().MapSingle(ParseStatus),
+            IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
+            When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
+            DataDefinitions = context.dataDefStmt().Select(VisitDataDefStmt).ToList(),
+            Cases = context.caseStmt().Select(x => (CaseNode)VisitCaseStmt(x)).ToList(),
+            Actions = context.actionStmt().Select(x => (ActionNode)VisitActionStmt(x)).ToList(),
+            Notifications = context.notificationStmt().Select(x => (NotificationNode)VisitNotificationStmt(x)).ToList()
+        };
+
     public override INode VisitUniqueStmt(YangRfcParser.UniqueStmtContext context) => context.uniqueArgStr().Map(x => VisitQuotedString(x.quotedString()))!;
 
     public override INode VisitQuotedString(YangRfcParser.QuotedStringContext context) => new StringNode(context.GetContentText());

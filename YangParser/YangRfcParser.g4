@@ -482,8 +482,7 @@ augmentStmt                 : AugmentKeyword SEP augmentArgStr SEP?
                                     (dataDefStmt | caseStmt |
                                        actionStmt | notificationStmt)+)*
                                  CURLYBRC stmtsep ;
-augmentArgStr               : augmentArg ;
-augmentArg                  : absoluteSchemaNodeid ;
+augmentArgStr               : quotedString ;
 whenStmt                    : WhenKeyword SEP quotedString SEP?
                                 (SEMICOLON |
                                  CURLYBRO stmtsep

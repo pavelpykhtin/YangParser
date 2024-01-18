@@ -83,26 +83,7 @@ belongs-to-stmt     = belongs-to-keyword sep identifier-arg-str
                          < uses-augment-arg >
 
   uses-augment-arg    = descendant-schema-nodeid
-
-
-  augment-stmt        = augment-keyword sep augment-arg-str optsep
-                        "{" stmtsep
-                            // these stmts can appear in any order
-                            [when-stmt]
-                            *if-feature-stmt
-                            [status-stmt]
-                            [description-stmt]
-                            [reference-stmt]
-                            1*(data-def-stmt / case-stmt /
-                               action-stmt / notification-stmt)
-                         "}" stmtsep
-
-  augment-arg-str     = < a string that matches the rule >
-                        < augment-arg >
-
-  augment-arg         = absolute-schema-nodeid
-
-
+  
   deviation-stmt      = deviation-keyword sep
                         deviation-arg-str optsep
                         "{" stmtsep
