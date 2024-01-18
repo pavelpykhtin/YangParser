@@ -1,0 +1,4 @@
+﻿uses example:context-engine-id {
+    augment "foo" { }
+    augment "bar" { }
+}

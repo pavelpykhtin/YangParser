@@ -27,9 +27,6 @@ linkage-stmts       = // these stmts can appear in any order
 body-stmts          = *(augment-stmt /
                        deviation-stmt)
 
-data-def-stmt       = 
-                     uses-stmt
-
 import-stmt         = import-keyword sep identifier-arg-str optsep
                      "{" stmtsep
                          // these stmts can appear in any order
@@ -53,36 +50,6 @@ belongs-to-stmt     = belongs-to-keyword sep identifier-arg-str
                      "{" stmtsep
                          prefix-stmt
                      "}" stmtsep
-
-  uses-stmt           = uses-keyword sep identifier-ref-arg-str optsep
-                        (";" /
-                         "{" stmtsep
-                             // these stmts can appear in any order
-                             [when-stmt]
-                             *if-feature-stmt
-                             [status-stmt]
-                             [description-stmt]
-                             [reference-stmt]
-                             *refine-stmt
-                             *uses-augment-stmt
-                         "}") stmtsep
-
-  uses-augment-stmt   = augment-keyword sep uses-augment-arg-str optsep
-                        "{" stmtsep
-                            // these stmts can appear in any order
-                            [when-stmt]
-                            *if-feature-stmt
-                            [status-stmt]
-                            [description-stmt]
-                            [reference-stmt]
-                            1*(data-def-stmt / case-stmt /
-                               action-stmt / notification-stmt)
-                         "}" stmtsep
-
-  uses-augment-arg-str = < a string that matches the rule >
-                         < uses-augment-arg >
-
-  uses-augment-arg    = descendant-schema-nodeid
   
   deviation-stmt      = deviation-keyword sep
                         deviation-arg-str optsep

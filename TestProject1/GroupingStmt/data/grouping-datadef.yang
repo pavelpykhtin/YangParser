@@ -28,4 +28,8 @@
     anyxml nested-anyxml {
         description "anyxml description";
     }
+    
+    uses "nested-uses" {
+        description "uses description";
+    }
 }

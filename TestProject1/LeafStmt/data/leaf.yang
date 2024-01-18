@@ -1,24 +1,24 @@
 ﻿leaf context-engine-id {
-        type snmp:engine-id;        
-        if-feature "ssh";
-        when "../mode='ipv4-ipv6-address'"{
-            description "Dummy description";
-            reference "Dummy reference";
-        }
-        must "be available" {            
-            error-message "Dummy error message";
-            error-app-tag "Dummy error app tag";
-            description "Dummy description";
-            reference "Dummy reference";
-        }
-        must "be enabled";
-        mandatory true;
-        default "1.2.3.4";
-        units "ipv4";
-        config true;
-        reference
-          "RFC 3413: Simple Network Management Protocol (SNMP).
-             Applications.
-             SNMP-PROXY-MIB.snmpProxyContextEngineID";
+    type snmp:engine-id;        
+    if-feature "ssh";
+    when "../mode='ipv4-ipv6-address'"{
         description "Dummy description";
+        reference "Dummy reference";
+    }
+    must "be available" {            
+        error-message "Dummy error message";
+        error-app-tag "Dummy error app tag";
+        description "Dummy description";
+        reference "Dummy reference";
+    }
+    must "be enabled";
+    mandatory true;
+    default "1.2.3.4";
+    units "ipv4";
+    config true;
+    reference
+      "RFC 3413: Simple Network Management Protocol (SNMP).
+         Applications.
+         SNMP-PROXY-MIB.snmpProxyContextEngineID";
+    description "Dummy description";
 }

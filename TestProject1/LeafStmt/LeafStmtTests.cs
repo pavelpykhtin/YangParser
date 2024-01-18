@@ -29,7 +29,7 @@ public class LeafStmtTests
         leafNode.Mandatory.Should().BeTrue();
         leafNode.Default.Should().Be("1.2.3.4");
         leafNode.Units.Should().Be("ipv4");
-        leafNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP).\n             Applications.\n             SNMP-PROXY-MIB.snmpProxyContextEngineID");
+        leafNode.Reference.Should().Be("RFC 3413: Simple Network Management Protocol (SNMP).\n         Applications.\n         SNMP-PROXY-MIB.snmpProxyContextEngineID");
         leafNode.Description.Should().Be("Dummy description");
         leafNode.Config.Should().BeTrue();
         leafNode.Status.Should().Be(Status.Current);

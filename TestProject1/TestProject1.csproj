@@ -491,6 +491,21 @@
       <None Update="AugmentStmt\data\augment-notification.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="UsesStmt\data\uses.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="UsesStmt\data\uses-when.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="UsesStmt\data\uses-if.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="UsesStmt\data\uses-refine.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="UsesStmt\data\uses-augment.yang">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

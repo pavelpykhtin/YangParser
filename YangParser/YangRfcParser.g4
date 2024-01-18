@@ -435,13 +435,13 @@ usesStmt                    : UsesKeyword SEP identifierRefArgStr SEP?
                                 (SEMICOLON |
                                  CURLYBRO stmtsep
                                      // these stmts can appear in any order
-                                     (whenStmt
-                                     ifFeatureStmt
-                                     statusStmt
-                                     descriptionStmt
-                                     referenceStmt
-                                     refineStmt
-                                     usesAugmentStmt)*
+                                     (whenStmt |
+                                     ifFeatureStmt |
+                                     statusStmt |
+                                     descriptionStmt |
+                                     referenceStmt |
+                                     refineStmt |
+                                     augmentStmt)*
                                  CURLYBRC) stmtsep ;
 refineStmt                  : RefineKeyword SEP refineArgStr SEP?
                                  CURLYBRO stmtsep
@@ -458,19 +458,6 @@ refineStmt                  : RefineKeyword SEP refineArgStr SEP?
                                      referenceStmt)*
                                    CURLYBRC stmtsep ;
 refineArgStr                : quotedString ;
-usesAugmentStmt             : AugmentKeyword SEP usesAugmentArgStr SEP?
-                                CURLYBRO stmtsep
-                                    // these stmts can appear in any order
-                                    (whenStmt |
-                                    ifFeatureStmt |
-                                    statusStmt |
-                                    descriptionStmt |
-                                    referenceStmt |
-                                    (dataDefStmt | caseStmt |
-                                       actionStmt | notificationStmt)+)*
-                                 CURLYBRC stmtsep ;
-usesAugmentArgStr           : usesAugmentArg ;
-usesAugmentArg              : descendantSchemaNodeid;
 augmentStmt                 : AugmentKeyword SEP augmentArgStr SEP?
                                 CURLYBRO stmtsep
                                     // these stmts can appear in any order
@@ -668,7 +655,6 @@ yangStmt                    : actionStmt |
                                 typeStmt |
                                 uniqueStmt |
                                 unitsStmt |
-                                usesAugmentStmt |
                                 usesStmt |
                                 valueStmt |
                                 whenStmt |

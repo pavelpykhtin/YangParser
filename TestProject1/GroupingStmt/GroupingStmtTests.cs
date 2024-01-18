@@ -107,8 +107,9 @@ public class GroupingStmtTests
         var choiceNode = (ChoiceNode)groupingNode.DataDefinitions[4];
         var anyDataNode = (AnyDataNode)groupingNode.DataDefinitions[5];
         var anyXmlNode = (AnyXmlNode)groupingNode.DataDefinitions[6];
+        var usesNode = (UsesNode)groupingNode.DataDefinitions[7];
 
-        groupingNode.DataDefinitions.Should().HaveCount(7);
+        groupingNode.DataDefinitions.Should().HaveCount(8);
         
         containerNode.Identifier.Should().Be("nested-container");
         containerNode.Description.Should().Be("container description");
@@ -130,5 +131,8 @@ public class GroupingStmtTests
         
         anyXmlNode.Identifier.Should().Be("nested-anyxml");
         anyXmlNode.Description.Should().Be("anyxml description");
+        
+        usesNode.Identifier.Should().Be("nested-uses");
+        usesNode.Description.Should().Be("uses description");
     }
 }
