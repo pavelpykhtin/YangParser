@@ -64,8 +64,8 @@ public class ModuleStmtTests
             .Which.Identifier.Should().Be("dummy-rpc");
         moduleNode.Body[8].Should().BeOfType<NotificationNode>()
             .Which.Identifier.Should().Be("dummy-notification");
-        moduleNode.Body[9].Should().BeOfType<FeatureNode>()
-            .Which.Identifier.Should().Be("dummy-deviation");
+        moduleNode.Body[9].Should().BeOfType<DeviationNode>()
+            .Which.Argument.Should().Be("dummy-deviation");
     }
 
     [Fact]

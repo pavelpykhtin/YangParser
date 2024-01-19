@@ -529,7 +529,7 @@ notificationStmt            : NotificationKeyword SEP
                                      dataDefStmt)*
                                  CURLYBRC) stmtsep ;
 deviationStmt               : DeviationKeyword SEP
-                                deviationArgStr SEP?
+                                quotedString SEP?
                                 CURLYBRO stmtsep
                                     // these stmts can appear in any order
                                     (descriptionStmt |

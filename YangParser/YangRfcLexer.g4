@@ -83,7 +83,7 @@ FalseKeyword                : 'false' ;
 InvertMatchKeyword          : 'invert-match' ;
 MaxKeyword                  : 'max' ;
 MinKeyword                  : 'min' ;
-NotSupportedKeyword         : 'notSupported' ;
+NotSupportedKeyword         : 'not-supported' ;
 ObsoleteKeyword             : 'obsolete' ;
 ReplaceKeyword              : 'replace' ;
 SystemKeyword               : 'system' ;

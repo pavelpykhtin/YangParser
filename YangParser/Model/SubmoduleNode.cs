@@ -12,4 +12,5 @@ public class SubmoduleNode : IIdentifiableNode
     public List<RevisionNode> Revisions { get; set; } = new();
     public List<IncludeNode> Includes { get; set; } = new();
     public List<ImportNode> Imports { get; set; } = new();
+    public BelongsToNode BelongsTo { get; set; }
 }

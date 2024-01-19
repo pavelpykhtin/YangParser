@@ -1,5 +1,8 @@
 ﻿submodule dummy-submodule {
     yang-version 1.1;
+    belongs-to dummy-belongs-to {
+        prefix dummy-prefix; 
+    }
     
     organization "dummy-organization";
     contact "dummy-contact";

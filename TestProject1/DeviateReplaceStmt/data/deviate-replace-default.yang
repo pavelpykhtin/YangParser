@@ -1,0 +1,4 @@
+﻿deviate replace {
+    default "123";
+    default "456";
+}

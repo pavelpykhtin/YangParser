@@ -16,5 +16,6 @@
     augment "dummy-augment"{}
     rpc dummy-rpc;
     notification dummy-notification;
-    feature dummy-deviation;
+    deviation "dummy-deviation" {        
+    }
 }

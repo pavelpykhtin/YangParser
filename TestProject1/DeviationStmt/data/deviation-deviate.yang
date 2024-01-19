@@ -1,0 +1,12 @@
+﻿deviation "dummy-argument" {
+    deviate add {
+        units "seconds";
+    }
+    deviate delete {
+        units "minutes";
+    }
+    deviate replace {
+        units "hours";
+    }
+    deviate not-supported;
+}

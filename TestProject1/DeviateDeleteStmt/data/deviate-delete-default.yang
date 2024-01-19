@@ -1,0 +1,4 @@
+﻿deviate delete {
+    default "123";
+    default "456";
+}

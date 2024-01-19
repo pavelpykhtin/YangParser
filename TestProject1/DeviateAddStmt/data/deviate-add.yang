@@ -1,0 +1,7 @@
+﻿deviate add {
+    mandatory true;
+    config true;
+    units "minutes";
+    min-elements 11;
+    max-elements 42;
+}

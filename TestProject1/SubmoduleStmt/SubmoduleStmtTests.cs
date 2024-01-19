@@ -110,4 +110,17 @@ public class SubmoduleStmtTests
         submoduleNode.Imports[0].Identifier.Should().Be("dummy-import-1");
         submoduleNode.Imports[1].Identifier.Should().Be("dummy-import-2");
     }
+
+    [Fact]
+    public void HandlesBelongsTo()
+    {
+        YangRfcParser parser = ParserHelpers.CreateParser("SubmoduleStmt/data/submodule-belongs-to.yang");
+
+        var context = parser.submoduleStmt();
+
+        var submoduleNode = (SubmoduleNode)_visitor.Visit(context);
+
+        submoduleNode.BelongsTo.Identifier.Should().Be("dummy-belongs-to");
+        submoduleNode.BelongsTo.Prefix.Should().Be("dummy-prefix");
+    }
 }

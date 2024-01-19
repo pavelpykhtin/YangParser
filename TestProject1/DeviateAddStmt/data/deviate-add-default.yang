@@ -1,0 +1,4 @@
+﻿deviate add {
+    default "123";
+    default "456";
+}
