@@ -58,8 +58,8 @@ public class ModuleStmtTests
             .Which.Identifier.Should().Be("dummy-grouping");
         moduleNode.Body[5].Should().BeOfType<LeafNode>()
             .Which.Identifier.Should().Be("dummy-datadef");
-        moduleNode.Body[6].Should().BeOfType<FeatureNode>()
-            .Which.Identifier.Should().Be("dummy-augment");
+        moduleNode.Body[6].Should().BeOfType<AugmentNode>()
+            .Which.Argument.Should().Be("dummy-augment");
         moduleNode.Body[7].Should().BeOfType<RpcNode>()
             .Which.Identifier.Should().Be("dummy-rpc");
         moduleNode.Body[8].Should().BeOfType<NotificationNode>()
@@ -81,5 +81,35 @@ public class ModuleStmtTests
 
         moduleNode.Revisions[0].Date.Should().Be(new DateOnly(2024, 01, 17));
         moduleNode.Revisions[1].Date.Should().Be(new DateOnly(2023, 12, 11));
+    }
+
+    [Fact]
+    public void HandlesIncludes()
+    {
+        YangRfcParser parser = ParserHelpers.CreateParser("ModuleStmt/data/module-include.yang");
+
+        var context = parser.moduleStmt();
+
+        var moduleNode = (ModuleNode)_visitor.Visit(context);
+
+        moduleNode.Includes.Should().HaveCount(2);
+
+        moduleNode.Includes[0].Identifier.Should().Be("dummy-include-1");
+        moduleNode.Includes[1].Identifier.Should().Be("dummy-include-2");
+    }
+
+    [Fact]
+    public void HandlesImports()
+    {
+        YangRfcParser parser = ParserHelpers.CreateParser("ModuleStmt/data/module-import.yang");
+
+        var context = parser.moduleStmt();
+
+        var moduleNode = (ModuleNode)_visitor.Visit(context);
+
+        moduleNode.Imports.Should().HaveCount(2);
+
+        moduleNode.Imports[0].Identifier.Should().Be("dummy-import-1");
+        moduleNode.Imports[1].Identifier.Should().Be("dummy-import-2");
     }
 }

@@ -37,13 +37,45 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
                             .Map(x => x.revisionStmt())
                             .Map(x => x.Select(r => (RevisionNode)VisitRevisionStmt(r)).ToList())
                         ?? new List<RevisionNode>(),
+            Imports = context.linkageStmts()
+                .Map(x => x.importStmt())
+                .Map(x => x.Select(i => (ImportNode)VisitImportStmt(i)).ToList()) ?? new List<ImportNode>(),
+            Includes = context.linkageStmts()
+                .Map(x => x.includeStmt())
+                .Map(x => x.Select(i => (IncludeNode)VisitIncludeStmt(i)).ToList()) ?? new List<IncludeNode>(),
             Body = context.bodyStmts().Map(ParseBodyStmts) ?? new List<INode>(),
         };
 
     public override INode VisitSubmoduleStmt(YangRfcParser.SubmoduleStmtContext context) =>
         new SubmoduleNode
         {
-            Identifier = context.identifier().GetText()
+            Identifier = context.identifier().GetText(),
+            YangVersion = context.submoduleHeaderStmts()
+                .yangVersionStmt()
+                .MapSingle(x => x.yangVersionArgStr().GetText())!,
+            Organization = context.metaStmts()
+                .organizationStmt()
+                .MapSingle(x => VisitQuotedString(x.quotedString()).StringValue())!,
+            Contact = context.metaStmts()
+                .contactStmt()
+                .MapSingle(x => VisitQuotedString(x.quotedString()).StringValue())!,
+            Description = context.metaStmts()
+                .descriptionStmt()
+                .MapSingle(x => VisitQuotedString(x.quotedString()).StringValue())!,
+            Reference = context.metaStmts()
+                .referenceStmt()
+                .MapSingle(x => VisitQuotedString(x.quotedString()).StringValue())!,
+            Revisions = context.revisionStmts()
+                            .Map(x => x.revisionStmt())
+                            .Map(x => x.Select(r => (RevisionNode)VisitRevisionStmt(r)).ToList())
+                        ?? new List<RevisionNode>(),
+            Imports = context.linkageStmts()
+                .Map(x => x.importStmt())
+                .Map(x => x.Select(i => (ImportNode)VisitImportStmt(i)).ToList()) ?? new List<ImportNode>(),
+            Includes = context.linkageStmts()
+                .Map(x => x.includeStmt())
+                .Map(x => x.Select(i => (IncludeNode)VisitIncludeStmt(i)).ToList()) ?? new List<IncludeNode>(),
+            Body = context.bodyStmts().Map(ParseBodyStmts) ?? new List<INode>(),
         };
 
     public override INode VisitFeatureStmt(YangRfcParser.FeatureStmtContext context) =>
@@ -262,7 +294,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
         ?? context.anydataStmt().Map(VisitAnydataStmt)
         ?? context.anyxmlStmt().Map(VisitAnyxmlStmt)
         ?? context.usesStmt().Map(VisitUsesStmt)
-        ?? throw new NotImplementedException("Unknown data-definition type");
+        ?? throw new NotSupportedException("Unknown data-definition type");
 
     public override INode VisitTypeStmt(YangRfcParser.TypeStmtContext context)
     {
@@ -561,6 +593,25 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Augment = context.augmentStmt().Select(x => (AugmentNode)VisitAugmentStmt(x)).ToList(),
         };
 
+    public override INode VisitImportStmt(YangRfcParser.ImportStmtContext context) =>
+        new ImportNode
+        {
+            Identifier = context.identifier().Map(x => x.GetText())!,
+            Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
+            Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
+            Prefix = context.prefixStmt().MapSingle(x => x.prefixArgStr().GetText())!,
+            RevisionDate = context.revisionDateStmt().MapSingle(x => DateOnly.ParseExact(x.revisionDate().GetText(), "yyyy-MM-dd")),
+        };
+
+    public override INode VisitIncludeStmt(YangRfcParser.IncludeStmtContext context) =>
+        new IncludeNode
+        {
+            Identifier = context.identifier().Map(x => x.GetText())!,
+            Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
+            Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
+            RevisionDate = context.revisionDateStmt().MapSingle(x => DateOnly.ParseExact(x.revisionDate().GetText(), "yyyy-MM-dd")),
+        };
+
     public override INode VisitUniqueStmt(YangRfcParser.UniqueStmtContext context) => context.uniqueArgStr().Map(x => VisitQuotedString(x.quotedString()))!;
 
     public override INode VisitQuotedString(YangRfcParser.QuotedStringContext context) => new StringNode(context.GetContentText());
@@ -598,6 +649,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             YangRfcParser.TypedefStmtContext typedefStmtContext => VisitTypedefStmt(typedefStmtContext),
             YangRfcParser.GroupingStmtContext groupingStmtContext => VisitGroupingStmt(groupingStmtContext),
             YangRfcParser.DataDefStmtContext dataDefStmtContext => VisitDataDefStmt(dataDefStmtContext),
+            YangRfcParser.AugmentStmtContext augmentStmtContext => VisitAugmentStmt(augmentStmtContext),
             YangRfcParser.RpcStmtContext rpcStmtContext => VisitRpcStmt(rpcStmtContext),
             YangRfcParser.NotificationStmtContext notificationStmtContext => VisitNotificationStmt(notificationStmtContext),
             _ => null

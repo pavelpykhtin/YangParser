@@ -12,4 +12,6 @@ public class ModuleNode : IIdentifiableNode
     public string? Reference { get; set; }
     public List<INode> Body { get; set; } = new();
     public List<RevisionNode> Revisions { get; set; } = new();
+    public List<IncludeNode> Includes { get; set; } = new();
+    public List<ImportNode> Imports { get; set; } = new();
 }

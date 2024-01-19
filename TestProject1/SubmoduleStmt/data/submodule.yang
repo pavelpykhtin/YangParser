@@ -1,0 +1,8 @@
+﻿submodule dummy-submodule {
+    yang-version 1.1;
+    
+    organization "dummy-organization";
+    contact "dummy-contact";
+    description "dummy-description";
+    reference "dummy-reference";
+}

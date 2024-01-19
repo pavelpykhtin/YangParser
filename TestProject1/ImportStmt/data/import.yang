@@ -1,0 +1,5 @@
+﻿import dummy-import {
+    description "Dummy description";
+    reference "Dummy reference";
+    revision-date 2024-01-19;
+}

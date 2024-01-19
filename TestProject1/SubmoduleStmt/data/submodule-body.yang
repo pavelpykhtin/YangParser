@@ -1,7 +1,5 @@
-﻿module dummy-module {
+﻿submodule dummy-submodule {
     yang-version 1.1;
-    namespace "urn:example:rock";
-    prefix "example";
     
     extension dummy-extension;
     feature dummy-feature;

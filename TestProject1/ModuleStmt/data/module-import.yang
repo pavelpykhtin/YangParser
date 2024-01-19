@@ -1,0 +1,12 @@
+﻿module dummy-module {
+    yang-version 1.1;
+    namespace "urn:example:rock";
+    prefix "example";
+    
+    import dummy-import-1 {
+        prefix "import-1";
+    }
+    import dummy-import-2 {
+        prefix "import-2";
+    }
+}

@@ -1,7 +1,6 @@
 ﻿module-stmt         = optsep module-keyword sep identifier-arg-str
                          optsep
                          "{" stmtsep
-                             linkage-stmts
                              body-stmts
                          "}" optsep
 
@@ -9,41 +8,13 @@ submodule-stmt      = optsep submodule-keyword sep identifier-arg-str
                      optsep
                      "{" stmtsep
                          submodule-header-stmts
-                         linkage-stmts
-                         meta-stmts
-                         revision-stmts
-                         body-stmts
                      "}" optsep
 
 submodule-header-stmts =
                      // these stmts can appear in any order
-                     yang-version-stmt
                      belongs-to-stmt
 
-linkage-stmts       = // these stmts can appear in any order
-                     *import-stmt
-                     *include-stmt
-
-body-stmts          = *(augment-stmt /
-                       deviation-stmt)
-
-import-stmt         = import-keyword sep identifier-arg-str optsep
-                     "{" stmtsep
-                         // these stmts can appear in any order
-                         prefix-stmt
-                         [revision-date-stmt]
-                         [description-stmt]
-                         [reference-stmt]
-                     "}" stmtsep
-                     
-include-stmt        = include-keyword sep identifier-arg-str optsep
-                     (";" /
-                      "{" stmtsep
-                          // these stmts can appear in any order
-                          [revision-date-stmt]
-                          [description-stmt]
-                          [reference-stmt]
-                      "}") stmtsep
+body-stmts          = *(deviation-stmt)
 
 belongs-to-stmt     = belongs-to-keyword sep identifier-arg-str
                      optsep
@@ -202,31 +173,6 @@ belongs-to-stmt     = belongs-to-keyword sep identifier-arg-str
                         yang-version-stmt /
                         yin-element-stmt
 
-  // Ranges
-
-  range-arg-str       = < a string that matches the rule >
-                        < range-arg >
-
-  range-arg           = range-part *(optsep "|" optsep range-part)
-
-  range-part          = range-boundary
-                        [optsep ".." optsep range-boundary]
-
-  range-boundary      = min-keyword / max-keyword /
-                        integer-value / decimal-value
-
-  // Lengths
-
-  length-arg-str      = < a string that matches the rule >
-                        < length-arg >
-
-  length-arg          = length-part *(optsep "|" optsep length-part)
-
-  length-part         = length-boundary
-                        [optsep ".." optsep length-boundary]
-
-  length-boundary     = min-keyword / max-keyword /
-                        non-negative-integer-value
 
   // Schema Node Identifiers
 
@@ -238,22 +184,3 @@ belongs-to-stmt     = belongs-to-keyword sep identifier-arg-str
   descendant-schema-nodeid =
                         node-identifier
                         [absolute-schema-nodeid]
-
-  // Instance Identifiers
-
-  instance-identifier = 1*("/" (node-identifier
-                                [1*key-predicate /
-                                 leaf-list-predicate /
-                                 pos]))
-
-  key-predicate       = "[" *WSP key-predicate-expr *WSP "]"
-
-  key-predicate-expr  = node-identifier *WSP "=" *WSP quoted-string
-
-  leaf-list-predicate = "[" *WSP leaf-list-predicate-expr *WSP "]"
-
-  leaf-list-predicate-expr = "." *WSP "=" *WSP quoted-string
-
-  pos                 = "[" *WSP positive-integer-value *WSP "]"
-
-  current-function-invocation = current-keyword *WSP "(" *WSP ")"
