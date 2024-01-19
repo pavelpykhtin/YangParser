@@ -8,7 +8,7 @@ public class ContainerNode: IIdentifiableNode
     public Status Status { get; set; }
     public bool? Config { get; set; }
     public string? Presence { get; set; }
-    public MustSpecificationNode Must { get; init; } = new();
+    public List<MustNode> Must { get; init; } = new();
     public WhenNode? When { get; set; }
     public List<string> IfFeatures { get; set; } = new();
     public List<TypedefNode> Typedefs { get; set; } = new();

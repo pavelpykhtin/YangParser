@@ -25,14 +25,14 @@ public class InputStmtTests
 
         var inputNode = (InputNode)_visitor.Visit(context);
 
-        inputNode.Must.Statements.Should().HaveCount(2);
-        inputNode.Must.Statements[0].Condition.Should().Be("be available");
-        inputNode.Must.Statements[0].Description.Should().Be("Dummy description");
-        inputNode.Must.Statements[0].Reference.Should().Be("Dummy reference");
-        inputNode.Must.Statements[0].ErrorMessage.Should().Be("Dummy error message");
-        inputNode.Must.Statements[0].ErrorAppTag.Should().Be("Dummy error app tag");
+        inputNode.Must.Should().HaveCount(2);
+        inputNode.Must[0].Condition.Should().Be("be available");
+        inputNode.Must[0].Description.Should().Be("Dummy description");
+        inputNode.Must[0].Reference.Should().Be("Dummy reference");
+        inputNode.Must[0].ErrorMessage.Should().Be("Dummy error message");
+        inputNode.Must[0].ErrorAppTag.Should().Be("Dummy error app tag");
 
-        inputNode.Must.Statements[1].Condition.Should().Be("be enabled");
+        inputNode.Must[1].Condition.Should().Be("be enabled");
     }
 
     [Fact]

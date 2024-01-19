@@ -67,13 +67,13 @@ public class RefineStmtTests
 
         var refineNode = (RefineNode)_visitor.Visit(context);
 
-        refineNode.Must.Statements.Should().HaveCount(2);
-        refineNode.Must.Statements[0].Condition.Should().Be("be available");
-        refineNode.Must.Statements[0].Description.Should().Be("Dummy description");
-        refineNode.Must.Statements[0].Reference.Should().Be("Dummy reference");
-        refineNode.Must.Statements[0].ErrorMessage.Should().Be("Dummy error message");
-        refineNode.Must.Statements[0].ErrorAppTag.Should().Be("Dummy error app tag");
+        refineNode.Must.Should().HaveCount(2);
+        refineNode.Must[0].Condition.Should().Be("be available");
+        refineNode.Must[0].Description.Should().Be("Dummy description");
+        refineNode.Must[0].Reference.Should().Be("Dummy reference");
+        refineNode.Must[0].ErrorMessage.Should().Be("Dummy error message");
+        refineNode.Must[0].ErrorAppTag.Should().Be("Dummy error app tag");
 
-        refineNode.Must.Statements[1].Condition.Should().Be("be enabled");
+        refineNode.Must[1].Condition.Should().Be("be enabled");
     }
 }

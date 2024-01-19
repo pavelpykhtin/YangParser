@@ -25,14 +25,14 @@ public class OutputStmtTests
 
         var outputNode = (OutputNode)_visitor.Visit(context);
 
-        outputNode.Must.Statements.Should().HaveCount(2);
-        outputNode.Must.Statements[0].Condition.Should().Be("be available");
-        outputNode.Must.Statements[0].Description.Should().Be("Dummy description");
-        outputNode.Must.Statements[0].Reference.Should().Be("Dummy reference");
-        outputNode.Must.Statements[0].ErrorMessage.Should().Be("Dummy error message");
-        outputNode.Must.Statements[0].ErrorAppTag.Should().Be("Dummy error app tag");
+        outputNode.Must.Should().HaveCount(2);
+        outputNode.Must[0].Condition.Should().Be("be available");
+        outputNode.Must[0].Description.Should().Be("Dummy description");
+        outputNode.Must[0].Reference.Should().Be("Dummy reference");
+        outputNode.Must[0].ErrorMessage.Should().Be("Dummy error message");
+        outputNode.Must[0].ErrorAppTag.Should().Be("Dummy error app tag");
 
-        outputNode.Must.Statements[1].Condition.Should().Be("be enabled");
+        outputNode.Must[1].Condition.Should().Be("be enabled");
     }
 
     [Fact]

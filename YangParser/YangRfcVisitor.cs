@@ -100,10 +100,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Default = context.defaultStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
             Units = context.unitsStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
             Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
-            Must = new MustSpecificationNode
-            {
-                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
-            },
+            Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt())
         };
@@ -122,10 +119,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             MinElements = context.minElementsStmt().MapSingle(x => int.Parse(x.minValueArgStr().GetText())),
             MaxElements = context.maxElementsStmt().MapSingle(x => int.Parse(x.maxValueArgStr().GetText())),
             OrderedBy = context.orderedByStmt().MapSingle(ParseOrderedBy),
-            Must = new MustSpecificationNode
-            {
-                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
-            },
+            Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt())
         };
@@ -141,10 +135,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             MinElements = context.minElementsStmt().MapSingle(x => int.Parse(x.minValueArgStr().GetText())),
             MaxElements = context.maxElementsStmt().MapSingle(x => int.Parse(x.maxValueArgStr().GetText())),
             OrderedBy = context.orderedByStmt().MapSingle(ParseOrderedBy),
-            Must = new MustSpecificationNode
-            {
-                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
-            },
+            Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
             Typedefs = context.typedefStmt().Select(x => (TypedefNode)VisitTypedefStmt(x)).ToList(),
@@ -175,10 +166,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Presence = context.presenceStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
             Typedefs = context.typedefStmt().Select(x => (TypedefNode)VisitTypedefStmt(x)).ToList(),
             DataDefinitions = context.dataDefStmt().Select(VisitDataDefStmt).ToList(),
-            Must = new MustSpecificationNode
-            {
-                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
-            },
+            Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
             Notifications = context.notificationStmt().Select(x => (NotificationNode)VisitNotificationStmt(x)).ToList(),
@@ -222,10 +210,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Status = context.statusStmt().MapSingle(ParseStatus),
             Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
             Mandatory = context.mandatoryStmt().MapSingle(x => bool.Parse(x.mandatoryArgStr().GetText())),
-            Must = new MustSpecificationNode
-            {
-                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
-            },
+            Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
         };
@@ -241,10 +226,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Status = context.statusStmt().MapSingle(ParseStatus),
             Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
             Mandatory = context.mandatoryStmt().MapSingle(x => bool.Parse(x.mandatoryArgStr().GetText())),
-            Must = new MustSpecificationNode
-            {
-                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
-            },
+            Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
         };
@@ -276,10 +258,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Status = context.statusStmt().MapSingle(ParseStatus),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
-            Must = new MustSpecificationNode
-            {
-                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
-            },
+            Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             DataDefinitions = context.dataDefStmt().Select(VisitDataDefStmt).ToList(),
             Groupings = context.groupingStmt().Select(x => (GroupingNode)VisitGroupingStmt(x)).ToList(),
             Typedefs = context.typedefStmt().Select(x => (TypedefNode)VisitTypedefStmt(x)).ToList()
@@ -478,10 +457,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
     public override INode VisitInputStmt(YangRfcParser.InputStmtContext context) =>
         new InputNode
         {
-            Must = new MustSpecificationNode
-            {
-                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
-            },
+            Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             DataDefinitions = context.dataDefStmt().Select(VisitDataDefStmt).ToList(),
             Groupings = context.groupingStmt().Select(x => (GroupingNode)VisitGroupingStmt(x)).ToList(),
             Typedefs = context.typedefStmt().Select(x => (TypedefNode)VisitTypedefStmt(x)).ToList()
@@ -490,10 +466,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
     public override INode VisitOutputStmt(YangRfcParser.OutputStmtContext context) =>
         new OutputNode
         {
-            Must = new MustSpecificationNode
-            {
-                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
-            },
+            Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             DataDefinitions = context.dataDefStmt().Select(VisitDataDefStmt).ToList(),
             Groupings = context.groupingStmt().Select(x => (GroupingNode)VisitGroupingStmt(x)).ToList(),
             Typedefs = context.typedefStmt().Select(x => (TypedefNode)VisitTypedefStmt(x)).ToList()
@@ -557,10 +530,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
                 .ToList(),
             MinElements = context.minElementsStmt().MapSingle(x => int.Parse(x.minValueArgStr().GetText())),
             MaxElements = context.maxElementsStmt().MapSingle(x => int.Parse(x.maxValueArgStr().GetText())),
-            Must = new MustSpecificationNode
-            {
-                Statements = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList()
-            },
+            Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
         };
     }

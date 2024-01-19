@@ -68,14 +68,14 @@ public class ContainerStmtTests
 
         var containerNode = (ContainerNode)_visitor.Visit(context);
 
-        containerNode.Must.Statements.Should().HaveCount(2);
-        containerNode.Must.Statements[0].Condition.Should().Be("be available");
-        containerNode.Must.Statements[0].Description.Should().Be("Dummy description");
-        containerNode.Must.Statements[0].Reference.Should().Be("Dummy reference");
-        containerNode.Must.Statements[0].ErrorMessage.Should().Be("Dummy error message");
-        containerNode.Must.Statements[0].ErrorAppTag.Should().Be("Dummy error app tag");
+        containerNode.Must.Should().HaveCount(2);
+        containerNode.Must[0].Condition.Should().Be("be available");
+        containerNode.Must[0].Description.Should().Be("Dummy description");
+        containerNode.Must[0].Reference.Should().Be("Dummy reference");
+        containerNode.Must[0].ErrorMessage.Should().Be("Dummy error message");
+        containerNode.Must[0].ErrorAppTag.Should().Be("Dummy error app tag");
 
-        containerNode.Must.Statements[1].Condition.Should().Be("be enabled");
+        containerNode.Must[1].Condition.Should().Be("be enabled");
     }
 
     [Fact]

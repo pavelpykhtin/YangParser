@@ -88,14 +88,14 @@ public class NotificationStmtTests
 
         var notificationNode = (NotificationNode)_visitor.Visit(context);
 
-        notificationNode.Must.Statements.Should().HaveCount(2);
-        notificationNode.Must.Statements[0].Condition.Should().Be("be available");
-        notificationNode.Must.Statements[0].Description.Should().Be("Dummy description");
-        notificationNode.Must.Statements[0].Reference.Should().Be("Dummy reference");
-        notificationNode.Must.Statements[0].ErrorMessage.Should().Be("Dummy error message");
-        notificationNode.Must.Statements[0].ErrorAppTag.Should().Be("Dummy error app tag");
+        notificationNode.Must.Should().HaveCount(2);
+        notificationNode.Must[0].Condition.Should().Be("be available");
+        notificationNode.Must[0].Description.Should().Be("Dummy description");
+        notificationNode.Must[0].Reference.Should().Be("Dummy reference");
+        notificationNode.Must[0].ErrorMessage.Should().Be("Dummy error message");
+        notificationNode.Must[0].ErrorAppTag.Should().Be("Dummy error app tag");
 
-        notificationNode.Must.Statements[1].Condition.Should().Be("be enabled");
+        notificationNode.Must[1].Condition.Should().Be("be enabled");
     }
 
     [Fact]

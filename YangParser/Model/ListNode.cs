@@ -6,7 +6,7 @@ public class ListNode: IIdentifiableNode
     public string? Description { get; set; }
     public string? Reference { get; set; }
     public Status Status { get; set; }
-    public MustSpecificationNode Must { get; init; } = new();
+    public List<MustNode> Must { get; init; } = new();
     public WhenNode? When { get; set; }
     public List<string> IfFeatures { get; set; } = new();
     public bool? Config { get; set; }

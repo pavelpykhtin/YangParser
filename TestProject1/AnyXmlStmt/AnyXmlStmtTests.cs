@@ -67,13 +67,13 @@ public class AnyXmlStmtTests
 
         var anyXmlNode = (AnyXmlNode)_visitor.Visit(context);
 
-        anyXmlNode.Must.Statements.Should().HaveCount(2);
-        anyXmlNode.Must.Statements[0].Condition.Should().Be("be available");
-        anyXmlNode.Must.Statements[0].Description.Should().Be("Dummy description");
-        anyXmlNode.Must.Statements[0].Reference.Should().Be("Dummy reference");
-        anyXmlNode.Must.Statements[0].ErrorMessage.Should().Be("Dummy error message");
-        anyXmlNode.Must.Statements[0].ErrorAppTag.Should().Be("Dummy error app tag");
+        anyXmlNode.Must.Should().HaveCount(2);
+        anyXmlNode.Must[0].Condition.Should().Be("be available");
+        anyXmlNode.Must[0].Description.Should().Be("Dummy description");
+        anyXmlNode.Must[0].Reference.Should().Be("Dummy reference");
+        anyXmlNode.Must[0].ErrorMessage.Should().Be("Dummy error message");
+        anyXmlNode.Must[0].ErrorAppTag.Should().Be("Dummy error app tag");
 
-        anyXmlNode.Must.Statements[1].Condition.Should().Be("be enabled");
+        anyXmlNode.Must[1].Condition.Should().Be("be enabled");
     }
 }

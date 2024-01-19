@@ -67,13 +67,13 @@ public class AnyDataStmtTests
 
         var anyDataNode = (AnyDataNode)_visitor.Visit(context);
 
-        anyDataNode.Must.Statements.Should().HaveCount(2);
-        anyDataNode.Must.Statements[0].Condition.Should().Be("be available");
-        anyDataNode.Must.Statements[0].Description.Should().Be("Dummy description");
-        anyDataNode.Must.Statements[0].Reference.Should().Be("Dummy reference");
-        anyDataNode.Must.Statements[0].ErrorMessage.Should().Be("Dummy error message");
-        anyDataNode.Must.Statements[0].ErrorAppTag.Should().Be("Dummy error app tag");
+        anyDataNode.Must.Should().HaveCount(2);
+        anyDataNode.Must[0].Condition.Should().Be("be available");
+        anyDataNode.Must[0].Description.Should().Be("Dummy description");
+        anyDataNode.Must[0].Reference.Should().Be("Dummy reference");
+        anyDataNode.Must[0].ErrorMessage.Should().Be("Dummy error message");
+        anyDataNode.Must[0].ErrorAppTag.Should().Be("Dummy error app tag");
 
-        anyDataNode.Must.Statements[1].Condition.Should().Be("be enabled");
+        anyDataNode.Must[1].Condition.Should().Be("be enabled");
     }
 }

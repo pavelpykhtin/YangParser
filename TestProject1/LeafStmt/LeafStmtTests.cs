@@ -71,13 +71,13 @@ public class LeafStmtTests
 
         var leafNode = (LeafNode)_visitor.Visit(context);
 
-        leafNode.Must.Statements.Should().HaveCount(2);
-        leafNode.Must.Statements[0].Condition.Should().Be("be available");
-        leafNode.Must.Statements[0].Description.Should().Be("Dummy description");
-        leafNode.Must.Statements[0].Reference.Should().Be("Dummy reference");
-        leafNode.Must.Statements[0].ErrorMessage.Should().Be("Dummy error message");
-        leafNode.Must.Statements[0].ErrorAppTag.Should().Be("Dummy error app tag");
+        leafNode.Must.Should().HaveCount(2);
+        leafNode.Must[0].Condition.Should().Be("be available");
+        leafNode.Must[0].Description.Should().Be("Dummy description");
+        leafNode.Must[0].Reference.Should().Be("Dummy reference");
+        leafNode.Must[0].ErrorMessage.Should().Be("Dummy error message");
+        leafNode.Must[0].ErrorAppTag.Should().Be("Dummy error app tag");
 
-        leafNode.Must.Statements[1].Condition.Should().Be("be enabled");
+        leafNode.Must[1].Condition.Should().Be("be enabled");
     }
 }

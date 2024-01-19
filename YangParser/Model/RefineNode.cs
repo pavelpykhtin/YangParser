@@ -12,5 +12,5 @@ public class RefineNode: INode
     public int? MinElements { get; set; }
     public List<string> IfFeatures { get; set; } = new();
     public List<string> Default { get; set; } = new();
-    public MustSpecificationNode Must { get; init; } = new();
+    public List<MustNode> Must { get; init; } = new();
 }

@@ -69,14 +69,14 @@ public class ListStmtTests
 
         var listNode = (ListNode)_visitor.Visit(context);
 
-        listNode.Must.Statements.Should().HaveCount(2);
-        listNode.Must.Statements[0].Condition.Should().Be("be available");
-        listNode.Must.Statements[0].Description.Should().Be("Dummy description");
-        listNode.Must.Statements[0].Reference.Should().Be("Dummy reference");
-        listNode.Must.Statements[0].ErrorMessage.Should().Be("Dummy error message");
-        listNode.Must.Statements[0].ErrorAppTag.Should().Be("Dummy error app tag");
+        listNode.Must.Should().HaveCount(2);
+        listNode.Must[0].Condition.Should().Be("be available");
+        listNode.Must[0].Description.Should().Be("Dummy description");
+        listNode.Must[0].Reference.Should().Be("Dummy reference");
+        listNode.Must[0].ErrorMessage.Should().Be("Dummy error message");
+        listNode.Must[0].ErrorAppTag.Should().Be("Dummy error app tag");
 
-        listNode.Must.Statements[1].Condition.Should().Be("be enabled");
+        listNode.Must[1].Condition.Should().Be("be enabled");
     }
     
     [Fact]
