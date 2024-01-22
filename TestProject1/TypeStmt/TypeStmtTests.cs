@@ -95,7 +95,7 @@ public class TypeStmtTests
         var typeNode = (TypeNode)_visitor.Visit(context);
 
         typeNode.Identifier.Should().Be("enumeration");
-        typeNode.EnumSpecification!.Members.Should().HaveCount(4);
+        typeNode.EnumSpecification!.Members.Should().HaveCount(5);
         
         typeNode.EnumSpecification!.Members[0].Key.Should().Be("zero");
         typeNode.EnumSpecification!.Members[0].Value.Should().NotHaveValue();
@@ -112,6 +112,9 @@ public class TypeStmtTests
         
         typeNode.EnumSpecification!.Members[3].Key.Should().Be("eight");
         typeNode.EnumSpecification!.Members[3].Value.Should().NotHaveValue();
+        
+        typeNode.EnumSpecification!.Members[4].Key.Should().Be("quoted-nine");
+        typeNode.EnumSpecification!.Members[4].Value.Should().NotHaveValue();
     }
 
     [Fact]

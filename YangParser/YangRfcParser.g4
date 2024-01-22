@@ -1,6 +1,8 @@
 ﻿parser grammar YangRfcParser;
 
 options { tokenVocab = YangRfcLexer; }
+
+rootStmt                    : SEP* (moduleStmt | submoduleStmt) SEP*;
                                 
 moduleStmt                  : SEP? ModuleKeyword SEP identifier
                                  SEP?
@@ -56,7 +58,7 @@ dataDefStmt                 : containerStmt |
                                  usesStmt ;
 yangVersionStmt             : YangVersionKeyword SEP yangVersionArgStr
                                 stmtend ;
-yangVersionArgStr           : YangVersion;
+yangVersionArgStr           : DIGIT+ ( DOT DIGIT+)*;
 importStmt                  : ImportKeyword SEP identifier SEP?
                                  CURLYBRO stmtsep
                                      // these stmts can appear in any order
@@ -204,7 +206,7 @@ modifierArgStr              : modifierArg ;
 modifierArg                 : InvertMatchKeyword ;
 defaultStmt                 : DefaultKeyword SEP quotedString stmtend ;
 enumSpecification           : enumStmt+ ;
-enumStmt                    : EnumKeyword SEP identifier SEP?
+enumStmt                    : EnumKeyword SEP identifierOrQuotedString SEP?
                                 (SEMICOLON |
                                  CURLYBRO stmtsep
                                      // these stmts can appear in any order
@@ -368,7 +370,7 @@ listStmt                    : ListKeyword SEP identifier SEP?
                                     notificationStmt)*
                                  CURLYBRC stmtsep ;
 keyStmt                     : KeyKeyword SEP keyArgStr stmtend ;
-keyArgStr                   : keyArg ;
+keyArgStr                   : quotedString | keyArg ;
 keyArg                      : nodeIdentifier (SEP nodeIdentifier)* ;
 uniqueStmt                  : UniqueKeyword SEP uniqueArgStr stmtend ;
 uniqueArgStr                : quotedString ;
@@ -583,7 +585,7 @@ deleteKeywordStr            : DeleteKeyword ;
 replaceKeywordStr           : ReplaceKeyword ;
 
 // represents the usage of an extension
-unknownStatement            : prefix COLON identifier (SEP string)? SEP?
+unknownStatement            : prefix COLON identifier (SEP quotedString)? SEP?
                                 (SEMICOLON |
                                     CURLYBRO SEP?
                                     ((yangStmt | unknownStatement) SEP?)*
@@ -729,6 +731,8 @@ integerValue                : DIGIT+ ;
 stmtend             : SEP? ( SEMICOLON | CURLYBRO stmtsep CURLYBRC ) stmtsep ;
 stmtsep             : (SEP | unknownStatement)* ; //(WSP | LINEBREAK | unknownStatement)* ;
 decimalValue        : integerValue (DOT integerValue) ;
+
+identifierOrQuotedString    : identifier | quotedString;
 
 identifier          : ID |
                         ActionKeyword |

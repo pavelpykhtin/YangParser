@@ -8,4 +8,5 @@
     reference "Dummy reference";
   }
   enum eight;
+  enum "quoted-nine";
 }

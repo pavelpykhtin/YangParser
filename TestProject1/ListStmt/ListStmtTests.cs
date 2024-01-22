@@ -106,6 +106,18 @@ public class ListStmtTests
 
         listNode.Keys.Should().Contain("scope1:key1", "scope2:key2", "key3");
     }
+    
+    [Fact]
+    public void HandlesQuotedKeys()
+    {
+        YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list-key-quoted.yang");
+
+        var context = parser.listStmt();
+
+        var listNode = (ListNode)_visitor.Visit(context);
+
+        listNode.Keys.Should().Contain("scope1:key1", "scope2:key2", "key3");
+    }
 
     [Fact]
     public void HandlesGrouppings()

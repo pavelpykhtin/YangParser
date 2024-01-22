@@ -145,12 +145,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Typedefs = context.typedefStmt().Select(x => (TypedefNode)VisitTypedefStmt(x)).ToList(),
             Groupings = context.groupingStmt().Select(x => (GroupingNode)VisitGroupingStmt(x)).ToList(),
             DataDefinitions = context.dataDefStmt().Select(VisitDataDefStmt).ToList(),
-            Keys = context.keyStmt()
-                       .MapSingle(x => x.keyArgStr())
-                       .Map(x => x.keyArg())
-                       .Map(x => x.nodeIdentifier())
-                       .Map(x => x.Select(i => i.GetText()).ToList())
-                   ?? new(),
+            Keys = context.keyStmt().MapSingle(x => ParseKeysArgStr(x.keyArgStr()))!,
             Notifications = context.notificationStmt().Select(x => (NotificationNode)VisitNotificationStmt(x)).ToList(),
             Actions = context.actionStmt().Select(x => (ActionNode)VisitActionStmt(x)).ToList(),
             UniqueConstraints = context.uniqueStmt()
@@ -392,7 +387,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
     public override INode VisitEnumStmt(YangRfcParser.EnumStmtContext context) =>
         new EnumSpecifiationMemberNode
         {
-            Key = context.identifier().GetText(),
+            Key = context.identifierOrQuotedString().Map(VisitIdentifierOrQuotedString).StringValue()!,
             Value = context.valueStmt()?.MapSingle(x => (int?)int.Parse(x.integerValueStr().GetText())),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
@@ -506,9 +501,8 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
                 .Map(x => (bool?)bool.Parse(x.GetText())),
         };
 
-    public override INode VisitRevisionStmt(YangRfcParser.RevisionStmtContext context)
-    {
-        return new RevisionNode
+    public override INode VisitRevisionStmt(YangRfcParser.RevisionStmtContext context) =>
+        new RevisionNode
         {
             Date = context.revisionDate()
                 .Map(x => x.GetText())
@@ -516,7 +510,6 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Description = context.descriptionStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
             Reference = context.referenceStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue()
         };
-    }
 
     public override INode VisitRefineStmt(YangRfcParser.RefineStmtContext context)
     {
@@ -673,6 +666,9 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             .Select(x => VisitIdentifierRefArgStr(x.identifierRefArgStr()).StringValue()!)
             .ToList();
     
+    public override INode VisitIdentifierOrQuotedString(YangRfcParser.IdentifierOrQuotedStringContext context) => 
+        context.quotedString().Map(VisitQuotedString) ?? new StringNode(context.GetText());
+
     public override INode VisitIdentifierRefArgStr(YangRfcParser.IdentifierRefArgStrContext context) => 
         context.quotedString().Map(VisitQuotedString) ?? new StringNode(context.GetText());
 
@@ -682,6 +678,20 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             .Select(x => VisitQuotedString(x.quotedString()))
             .Select(x => x.StringValue()!)
             .ToList();
+    
+    private List<string> ParseKeysArgStr(YangRfcParser.KeyArgStrContext context) =>
+        context.quotedString()
+            .Map(VisitQuotedString)
+            .StringValue()
+            .Map(x => x.Split(
+                    new[] { ' ', '\t', '\r', '\n' }, 
+                    StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                .ToList())
+        ?? context
+            .Map(x => x.keyArg())
+            .Map(x => x.nodeIdentifier())
+            .Map(x => x.Select(i => i.GetText()).ToList())
+        ?? new();
 
     private List<INode> ParseBodyStmts(YangRfcParser.BodyStmtsContext context) =>
         (context.children ?? new List<IParseTree>())
@@ -703,15 +713,13 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
         .Select(x => x!)
         .ToList();
 
-    public override INode VisitShortCaseStmt(YangRfcParser.ShortCaseStmtContext context)
-    {
-        return context.choiceStmt().Map(VisitChoiceStmt)
-               ?? context.containerStmt().Map(VisitContainerStmt)
-               ?? context.leafStmt().Map(VisitLeafStmt)
-               ?? context.leafListStmt().Map(VisitLeafListStmt)
-               ?? context.listStmt().Map(VisitListStmt)
-               ?? context.anydataStmt().Map(VisitAnydataStmt)
-               ?? context.anyxmlStmt().Map(VisitAnyxmlStmt)
-               ?? throw new NotImplementedException();
-    }
+    public override INode VisitShortCaseStmt(YangRfcParser.ShortCaseStmtContext context) =>
+        context.choiceStmt().Map(VisitChoiceStmt)
+        ?? context.containerStmt().Map(VisitContainerStmt)
+        ?? context.leafStmt().Map(VisitLeafStmt)
+        ?? context.leafListStmt().Map(VisitLeafListStmt)
+        ?? context.listStmt().Map(VisitListStmt)
+        ?? context.anydataStmt().Map(VisitAnydataStmt)
+        ?? context.anyxmlStmt().Map(VisitAnyxmlStmt)
+        ?? throw new NotImplementedException();
 }

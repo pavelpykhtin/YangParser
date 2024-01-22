@@ -11,7 +11,7 @@
                         argument-stmt /
                         augment-stmt /
                         base-stmt /
-                        belongs-to-stmt /
+                        belon   `gs-to-stmt /
                         bit-stmt /
                         case-stmt /
                         choice-stmt /
