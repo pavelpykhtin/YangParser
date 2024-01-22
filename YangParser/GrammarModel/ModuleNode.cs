@@ -5,7 +5,7 @@ public class ModuleNode : IIdentifiableNode
     public string Identifier { get; set; } = null!;
     public string Namespace { get; set; } = null!;
     public string Prefix { get; set; } = null!;
-    public string YangVersion { get; set; } = null!;
+    public string? YangVersion { get; set; } = null!;
     public string? Organization { get; set; }
     public string? Contact { get; set; }
     public string? Description { get; set; }

@@ -58,7 +58,8 @@ dataDefStmt                 : containerStmt |
                                  usesStmt ;
 yangVersionStmt             : YangVersionKeyword SEP yangVersionArgStr
                                 stmtend ;
-yangVersionArgStr           : DIGIT+ ( DOT DIGIT+)*;
+yangVersionArgStr           : yangVersionArg | quotedString ;
+yangVersionArg              : DIGIT+ ( DOT DIGIT+)* ;
 importStmt                  : ImportKeyword SEP identifier SEP?
                                  CURLYBRO stmtsep
                                      // these stmts can appear in any order
@@ -113,7 +114,7 @@ argumentStmt                : ArgumentKeyword SEP identifier SEP?
                                  CURLYBRC) stmtsep ;
 yinElementStmt              : YinElementKeyword SEP yinElementArgStr
                                 stmtend ;
-yinElementArgStr            : yinElementArg ;
+yinElementArgStr            : yinElementArg | quotedString ;
 yinElementArg               : TrueKeyword | FalseKeyword ;
 identityStmt                : IdentityKeyword SEP identifier SEP?
                                 (SEMICOLON |
@@ -177,7 +178,7 @@ rangeStmt                   : RangeKeyword SEP rangeArgStr SEP?
                                   CURLYBRC) stmtsep ;
 fractionDigitsStmt          : FractionDigitsKeyword SEP
                                 fractionDigitsArgStr stmtend ;
-fractionDigitsArgStr        : integerValue ;
+fractionDigitsArgStr        : integerValue | quotedString ;
 stringRestrictions          :
                                 // these stmts can appear in any order
                                 (lengthStmt |
@@ -202,9 +203,11 @@ patternStmt                 : PatternKeyword SEP patternArgStr SEP?
                                      referenceStmt)*
                                   CURLYBRC) stmtsep ;
 modifierStmt                : ModifierKeyword SEP modifierArgStr stmtend ;
-modifierArgStr              : modifierArg ;
+modifierArgStr              : modifierArg | quotedString ;
 modifierArg                 : InvertMatchKeyword ;
-defaultStmt                 : DefaultKeyword SEP quotedString stmtend ;
+defaultStmt                 : DefaultKeyword SEP defaultArgStr stmtend ;
+defaultArgStr               : defaultArg | quotedString ;
+defaultArg                  : ~(SQUOTE | DQUOTE)  ~WSP+;
 enumSpecification           : enumStmt+ ;
 enumStmt                    : EnumKeyword SEP identifierOrQuotedString SEP?
                                 (SEMICOLON |
@@ -225,7 +228,7 @@ leafrefSpecification        :
 pathStmt                    : PathKeyword SEP pathArgStr stmtend ;
 requireInstanceStmt         : RequireInstanceKeyword SEP
                                 requireInstanceArgStr stmtend ;
-requireInstanceArgStr       : requireInstanceArg ;
+requireInstanceArgStr       : requireInstanceArg | quotedString ;
 requireInstanceArg          : TrueKeyword | FalseKeyword ; 
 instanceIdentifierSpecification   : requireInstanceStmt? ;
 identityrefSpecification    : baseStmt+ ;
@@ -244,25 +247,25 @@ bitStmt                     : BitKeyword SEP identifier SEP?
                                  CURLYBRC) stmtsep ;
 positionStmt                : PositionKeyword SEP
                                 positionValueArgStr stmtend ;
-positionValueArgStr         : positionValueArg ; 
+positionValueArgStr         : positionValueArg | quotedString ; 
 positionValueArg            : integerValue ;
 statusStmt                  : StatusKeyword SEP statusArgStr stmtend ;
-statusArgStr                : statusArg ;
+statusArgStr                : statusArg | quotedString ;
 statusArg                   : CurrentKeyword |
                                 ObsoleteKeyword |
                                 DeprecatedKeyword ;
 configStmt                  : ConfigKeyword SEP
                                 configArgStr stmtend ;
-configArgStr                : configArg ;
+configArgStr                : configArg | quotedString ;
 configArg                   : TrueKeyword | FalseKeyword ;
 mandatoryStmt               : MandatoryKeyword SEP 
                                 mandatoryArgStr stmtend ;
-mandatoryArgStr             : mandatoryArg ;
+mandatoryArgStr             : mandatoryArg | quotedString ;
 mandatoryArg                : TrueKeyword | FalseKeyword ;
 presenceStmt                : PresenceKeyword SEP quotedString stmtend ;
 orderedByStmt               : OrderedByKeyword SEP
                                 orderedByArgStr stmtend ;
-orderedByArgStr             : orderedByArg ;
+orderedByArgStr             : orderedByArg | quotedString ;
 orderedByArg                : UserKeyword | SystemKeyword ;
 mustStmt                    : MustKeyword SEP quotedString SEP?
                                 (SEMICOLON |
@@ -278,11 +281,11 @@ errorMessageStmt            : ErrorMessageKeyword SEP quotedString stmtend;
 errorAppTagStmt             : ErrorAppTagKeyword SEP quotedString stmtend;
 minElementsStmt             : MinElementsKeyword SEP
                                 minValueArgStr stmtend ;
-minValueArgStr              : minValueArg ;
-minValueArg                 : integerValue ;
+minValueArgStr              : minValueArg | quotedString;
+minValueArg                 : integerValue;
 maxElementsStmt             : MaxElementsKeyword SEP
                                 maxValueArgStr stmtend;
-maxValueArgStr              : maxValueArg ;
+maxValueArgStr              : maxValueArg | quotedString ;
 maxValueArg                 : UnboundedKeyword |
                                 integerValue ;
 valueStmt                   : ValueKeyword SEP integerValueStr stmtend ;
@@ -370,10 +373,11 @@ listStmt                    : ListKeyword SEP identifier SEP?
                                     notificationStmt)*
                                  CURLYBRC stmtsep ;
 keyStmt                     : KeyKeyword SEP keyArgStr stmtend ;
-keyArgStr                   : quotedString | keyArg ;
+keyArgStr                   : keyArg | quotedString ;
 keyArg                      : nodeIdentifier (SEP nodeIdentifier)* ;
 uniqueStmt                  : UniqueKeyword SEP uniqueArgStr stmtend ;
-uniqueArgStr                : quotedString ;
+uniqueArgStr                : uniqueArg | quotedString ;
+uniqueArg                   : ~(SQUOTE | DQUOTE)  ~WSP+?;
 choiceStmt                  : ChoiceKeyword SEP identifier SEP?
                                 (SEMICOLON |
                                  CURLYBRO stmtsep
@@ -459,7 +463,8 @@ refineStmt                  : RefineKeyword SEP refineArgStr SEP?
                                      descriptionStmt |
                                      referenceStmt)*
                                    CURLYBRC stmtsep ;
-refineArgStr                : quotedString ;
+refineArgStr                : refineArg | quotedString ;
+refineArg                   : ~(SQUOTE | DQUOTE)  ~WSP+?;
 augmentStmt                 : AugmentKeyword SEP augmentArgStr SEP?
                                 CURLYBRO stmtsep
                                     // these stmts can appear in any order
@@ -471,7 +476,8 @@ augmentStmt                 : AugmentKeyword SEP augmentArgStr SEP?
                                     (dataDefStmt | caseStmt |
                                        actionStmt | notificationStmt)+)*
                                  CURLYBRC stmtsep ;
-augmentArgStr               : quotedString ;
+augmentArgStr               : augmentArg | quotedString ;
+augmentArg                  : descendantSchemaNodeid;
 whenStmt                    : WhenKeyword SEP quotedString SEP?
                                 (SEMICOLON |
                                  CURLYBRO stmtsep
@@ -542,7 +548,7 @@ deviationStmt               : DeviationKeyword SEP
                                     deviateDeleteStmt)*
                                 CURLYBRC stmtsep ;
 deviationArgStr             : deviationArg ;
-deviationArg                : absoluteSchemaNodeid ;
+deviationArg                : absoluteSchemaNodeid | quotedString;
 deviateNotSupportedStmt     :   DeviateKeyword SEP
                                     notSupportedKeywordStr stmtend ;
 deviateAddStmt              : DeviateKeyword SEP addKeywordStr SEP?
@@ -673,11 +679,12 @@ lengthArgStr                : quotedString ;
 patternArgStr               : quotedString ;
 
 // date
-dateArgStr                  : DIGIT DIGIT DIGIT DIGIT 
-                                DASH 
-                                DIGIT DIGIT
-                                DASH
-                                DIGIT DIGIT;
+dateArgStr                  : dateArg | quotedString;
+dateArg                     : DIGIT DIGIT DIGIT DIGIT 
+                                  DASH 
+                                  DIGIT DIGIT
+                                  DASH
+                                  DIGIT DIGIT;
 
 // schema node identifiers
 schemaNodeid                : absoluteSchemaNodeid |
@@ -700,7 +707,8 @@ pos                         : SQRBRO WSP* integerValue WSP* SQRBRC ;
 quotedString                : (DQUOTE dquoteContent DQUOTE) | (SQUOTE squoteContent SQUOTE) ;
 
 // leafref path
-pathArgStr                  : quotedString ;
+pathArgStr                  : pathArg | quotedString ;
+pathArg                     : ~(SQUOTE | DQUOTE)  ~WSP+?;
 
 // keywords, using the syntax for caseSensitive strings (RFC 7405)
 
@@ -711,15 +719,15 @@ prefixArgStr                : prefixArg | quotedString ;
 prefixArg                   : prefix ;
 prefix                      : identifier ;
 
-identifierRefArgStr         : quotedString | identifierRefArg ;
+identifierRefArgStr         : identifierRefArg | quotedString ;
 identifierRefArg            : identifierRef ;
 identifierRef               : ( prefix COLON )? identifier ;
                     
 string                      : yangString ;
                     
 yangString                  : yangChar* ;
-squoteContent               : ~SQUOTE*;
-dquoteContent               : ~DQUOTE*;
+squoteContent               : ( ~SQUOTE | EscapedChar )*?;
+dquoteContent               : ( ~DQUOTE | EscapedChar )*?;
 
 // any unicode or ISO/IEC 10646 character, including tab, carriage
 // return, and line feed but excluding the other C0 control

@@ -124,7 +124,8 @@ SP                  : ' ' ;                                                 // s
 WSP                 : (' ' | '\t');                                         // whitespace
 BlockComment        : '/*' .*? '*/' -> channel(HIDDEN);
 //LineComment         : '//' ~[\r\n]* -> channel(HIDDEN);
-EXTRA_CHAR           : 
+EscapedChar         : '\\' ["'];
+EXTRA_CHAR          :  
                         [\u0020-\uD7FF]   |                         // exclude surrogate blocks %xD800DFFF
                         [\uE000-\uFDCF]   |                         // exclude noncharacters %xFDD0FDEF
                         [\uFDF0-\uFFFD] ;                           // exclude noncharacters %xFFFEFFFF

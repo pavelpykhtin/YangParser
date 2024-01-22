@@ -13,14 +13,16 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Namespace = context.moduleHeaderStmts()
                 .namespaceStmt()
                 .Select(x => x.uriStr())
-                .MapSingle(x => VisitQuotedString(x.quotedString()).StringValue())!,
+                .Select(x => VisitQuotedString(x.quotedString()).StringValue()!)
+                .Single(),
             Prefix = context.moduleHeaderStmts()
                 .prefixStmt()
-                .Select(x => x.prefixArgStr())
-                .MapSingle(x => x.quotedString().Map(VisitQuotedString).StringValue() ?? x.GetText())!,
+                .Select(x => ParseOptionalQuotedString(x.prefixArgStr(), q => q.quotedString())!)
+                .Single(),
             YangVersion = context.moduleHeaderStmts()
                 .yangVersionStmt()
-                .MapSingle(x => x.yangVersionArgStr().GetText())!,
+                .Select(x => ParseOptionalQuotedString(x.yangVersionArgStr(), q => q.quotedString())!)
+                .SingleOrDefault(),
             Organization = context.metaStmts()
                 .organizationStmt()
                 .MapSingle(x => VisitQuotedString(x.quotedString()).StringValue())!,
@@ -52,7 +54,8 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Identifier = context.identifier().GetText(),
             YangVersion = context.submoduleHeaderStmts()
                 .yangVersionStmt()
-                .MapSingle(x => x.yangVersionArgStr().GetText())!,
+                .Select(x => ParseOptionalQuotedString(x.yangVersionArgStr(), q => q.quotedString())!)
+                .Single(),
             BelongsTo = context.submoduleHeaderStmts()
                 .belongsToStmt()
                 .Select(x => (BelongsToNode)VisitBelongsToStmt(x))
@@ -101,9 +104,9 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Mandatory = context.mandatoryStmt().MapSingle(x => bool.Parse(x.mandatoryArgStr().GetText())),
             Status = context.statusStmt().MapSingle(ParseStatus),
-            Default = context.defaultStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+            Default = context.defaultStmt().MapSingle(ParseDefault),
             Units = context.unitsStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
-            Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
+            Config = context.configStmt().MapSingle(ParseConfig),
             Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt())
@@ -117,11 +120,11 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Status = context.statusStmt().MapSingle(ParseStatus),
-            Default = context.defaultStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+            Default = context.defaultStmt().MapSingle(ParseDefault),
             Units = context.unitsStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
-            Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
-            MinElements = context.minElementsStmt().MapSingle(x => int.Parse(x.minValueArgStr().GetText())),
-            MaxElements = context.maxElementsStmt().MapSingle(x => int.Parse(x.maxValueArgStr().GetText())),
+            Config = context.configStmt().MapSingle(ParseConfig),
+            MinElements = context.minElementsStmt().MapSingle(x => ParseMinValue(x.minValueArgStr())),
+            MaxElements = context.maxElementsStmt().MapSingle(x => ParseMaxValue(x.maxValueArgStr())),
             OrderedBy = context.orderedByStmt().MapSingle(ParseOrderedBy),
             Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
@@ -136,8 +139,8 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Status = context.statusStmt().MapSingle(ParseStatus),
             Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
-            MinElements = context.minElementsStmt().MapSingle(x => int.Parse(x.minValueArgStr().GetText())),
-            MaxElements = context.maxElementsStmt().MapSingle(x => int.Parse(x.maxValueArgStr().GetText())),
+            MinElements = context.minElementsStmt().MapSingle(x => ParseMinValue(x.minValueArgStr())),
+            MaxElements = context.maxElementsStmt().MapSingle(x => ParseMaxValue(x.maxValueArgStr())),
             OrderedBy = context.orderedByStmt().MapSingle(ParseOrderedBy),
             Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
@@ -149,8 +152,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Notifications = context.notificationStmt().Select(x => (NotificationNode)VisitNotificationStmt(x)).ToList(),
             Actions = context.actionStmt().Select(x => (ActionNode)VisitActionStmt(x)).ToList(),
             UniqueConstraints = context.uniqueStmt()
-                .Select(x => (StringNode)VisitUniqueStmt(x))
-                .Select(x => x.Value!)
+                .Select(x => ParseUnique(x)!)
                 .ToList()
         };
 
@@ -161,7 +163,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Status = context.statusStmt().MapSingle(ParseStatus),
-            Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
+            Config = context.configStmt().MapSingle(ParseConfig),
             Presence = context.presenceStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
             Typedefs = context.typedefStmt().Select(x => (TypedefNode)VisitTypedefStmt(x)).ToList(),
             DataDefinitions = context.dataDefStmt().Select(VisitDataDefStmt).ToList(),
@@ -181,7 +183,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Status = context.statusStmt().MapSingle(ParseStatus),
-            Default = context.defaultStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+            Default = context.defaultStmt().MapSingle(ParseDefault),
             Units = context.unitsStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
         };
 
@@ -207,7 +209,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Status = context.statusStmt().MapSingle(ParseStatus),
-            Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
+            Config = context.configStmt().MapSingle(ParseConfig),
             Mandatory = context.mandatoryStmt().MapSingle(x => bool.Parse(x.mandatoryArgStr().GetText())),
             Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
@@ -223,7 +225,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Status = context.statusStmt().MapSingle(ParseStatus),
-            Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
+            Config = context.configStmt().MapSingle(ParseConfig),
             Mandatory = context.mandatoryStmt().MapSingle(x => bool.Parse(x.mandatoryArgStr().GetText())),
             Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
@@ -241,8 +243,8 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Status = context.statusStmt().MapSingle(ParseStatus),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
             When = context.whenStmt().MapSingle(x => (WhenNode)VisitWhenStmt(x)),
-            Config = context.configStmt().MapSingle(x => bool.Parse(x.configArgStr().GetText())),
-            Default = context.defaultStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
+            Config = context.configStmt().MapSingle(ParseConfig),
+            Default = context.defaultStmt().MapSingle(ParseDefault),
             Mandatory = context.mandatoryStmt().MapSingle(x => bool.Parse(x.mandatoryArgStr().GetText())),
             ShortCases = context.shortCaseStmt().Select(VisitShortCaseStmt).ToList(),
             Cases = context.caseStmt().Select(stmtContext => (CaseNode)VisitCaseStmt(stmtContext)).ToList(),
@@ -289,8 +291,10 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             BitsSpecification = body?.bitsSpecification().Map(x => (BitsSpecificationNode)VisitBitsSpecification(x)),
             BinarySpecification = body?.binarySpecification().Map(x => (BinarySpecificationNode)VisitBinarySpecification(x)),
             UnionSpecification = body?.unionSpecification().Map(x => (UnionSpecificationNode)VisitUnionSpecification(x)),
-            Path = leafrefContext?.pathStmt().MapSingle(x => x.pathArgStr()).Map(x => VisitQuotedString(x.quotedString())).StringValue(),
-            RequireInstance = leafrefContext?.requireInstanceStmt().MapSingle(x => (bool?)bool.Parse(x.requireInstanceArgStr().GetText())),
+            Path = leafrefContext?.pathStmt().MapSingle(x => ParseOptionalQuotedString(x.pathArgStr(), q => q.quotedString())),
+            RequireInstance = leafrefContext?.requireInstanceStmt()
+                .MapSingle(x => ParseOptionalQuotedString(x.requireInstanceArgStr(), q => q.quotedString()))
+                .Map(x => (bool?)bool.Parse(x)),
         };
     }
 
@@ -346,7 +350,9 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
         var rangeContext = context.rangeStmt().SingleOrDefault();
         return new NumericRestrictionsNode
         {
-            FractionDigits = context.fractionDigitsStmt().MapSingle(x => int.Parse(x.fractionDigitsArgStr().GetText())),
+            FractionDigits = context.fractionDigitsStmt()
+                .MapSingle(x => ParseOptionalQuotedString(x.fractionDigitsArgStr(), q => q.quotedString()))
+                .Map(x => (int?)int.Parse(x)),
             Range = rangeContext?.rangeArgStr().Map(x => VisitQuotedString(x.quotedString()))?.StringValue(),
             ErrorMessage = rangeContext?.errorMessageStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
             ErrorAppTag = rangeContext?.errorAppTagStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
@@ -369,7 +375,9 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
         new PatternNode
         {
             Value = context.patternArgStr().Map(x => VisitQuotedString(x.quotedString())).StringValue()!,
-            Modifier = context.modifierStmt().MapSingle(x => x.modifierArgStr())?.GetText() == "invert-match"
+            Modifier = context.modifierStmt()
+                .MapSingle(x => x.modifierArgStr())
+                .Map(x => ParseOptionalQuotedString(x, q => q.quotedString())) == "invert-match"
                 ? PatternModifier.InvertMatch
                 : PatternModifier.None,
             ErrorMessage = context.errorMessageStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
@@ -413,8 +421,8 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
         new BitSpecificationNode
         {
             Position = context.positionStmt()
-                .MapSingle(x => x.positionValueArgStr())
-                .Map(x => (int?)int.Parse(x.GetText())),
+                .MapSingle(x => ParseOptionalQuotedString(x.positionValueArgStr(), q => q.quotedString()))
+                .Map(x => (int?)int.Parse(x)),
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Status = context.statusStmt().MapSingle(ParseStatus),
@@ -498,14 +506,15 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Identifier = context.identifier().GetText(),
             YinElement = context.yinElementStmt()
                 .Map(x => x.yinElementArgStr())
-                .Map(x => (bool?)bool.Parse(x.GetText())),
+                .Map(x => ParseOptionalQuotedString(x, q => q.quotedString()))
+                .Map(x => (bool?)bool.Parse(x)),
         };
 
     public override INode VisitRevisionStmt(YangRfcParser.RevisionStmtContext context) =>
         new RevisionNode
         {
             Date = context.revisionDate()
-                .Map(x => x.GetText())
+                .Map(x => ParseOptionalQuotedString(x.dateArgStr(), q => q.quotedString()))
                 .Map(x => DateOnly.ParseExact(x, "yyyy-MM-dd")),
             Description = context.descriptionStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
             Reference = context.referenceStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue()
@@ -515,18 +524,17 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
     {
         return new RefineNode
         {
-            Argument = context.refineArgStr().Map(x => VisitQuotedString(x.quotedString())).StringValue()!,
+            Argument = ParseOptionalQuotedString(context.refineArgStr(), q => q.quotedString())!,
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Presence = context.presenceStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue()!,
-            Config = context.configStmt().MapSingle(x => x.configArgStr().GetText()).Map(bool.Parse),
+            Config = context.configStmt().MapSingle(ParseConfig),
             Mandatory = context.mandatoryStmt().MapSingle(x => x.mandatoryArgStr().GetText()).Map(bool.Parse),
             Default = context.defaultStmt()
-                .Select(x => VisitQuotedString(x.quotedString()))
-                .Select(x => x.StringValue()!)
+                .Select(x => ParseDefault(x)!)
                 .ToList(),
-            MinElements = context.minElementsStmt().MapSingle(x => int.Parse(x.minValueArgStr().GetText())),
-            MaxElements = context.maxElementsStmt().MapSingle(x => int.Parse(x.maxValueArgStr().GetText())),
+            MinElements = context.minElementsStmt().MapSingle(x => ParseMinValue(x.minValueArgStr())),
+            MaxElements = context.maxElementsStmt().MapSingle(x => ParseMaxValue(x.maxValueArgStr())),
             Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             IfFeatures = ParseIfFeatures(context.ifFeatureStmt()),
         };
@@ -535,7 +543,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
     public override INode VisitAugmentStmt(YangRfcParser.AugmentStmtContext context) =>
         new AugmentNode
         {
-            Argument = context.augmentArgStr().Map(x => VisitQuotedString(x.quotedString())).StringValue()!,
+            Argument = ParseOptionalQuotedString(context.augmentArgStr(), q => q.quotedString())!,
             Description = context.descriptionStmt().MapSingle(VisitDescriptionStmt).StringValue(),
             Reference = context.referenceStmt().MapSingle(VisitReferenceStmt).StringValue(),
             Status = context.statusStmt().MapSingle(ParseStatus),
@@ -596,7 +604,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
                 .Concat(context.deviateAddStmt().Map(x => x.Select(VisitDeviateAddStmt).ToList()) ?? new())
                 .Concat(context.deviateDeleteStmt().Map(x => x.Select(VisitDeviateDeleteStmt).ToList()) ?? new())
                 .Concat(context.deviateReplaceStmt().Map(x => x.Select(VisitDeviateReplaceStmt).ToList()) ?? new())
-                .Concat(context.deviateNotSupportedStmt().MapSingle(x => new []{new DeviateNotSupportedNode()}) ?? Array.Empty<DeviateNotSupportedNode>())
+                .Concat(context.deviateNotSupportedStmt().MapSingle(_ => new[] { new DeviateNotSupportedNode() }) ?? Array.Empty<DeviateNotSupportedNode>())
                 .ToList()
         };
 
@@ -604,18 +612,16 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
         new DeviateAddNode
         {
             Units = context.unitsStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
-            Config = context.configStmt().MapSingle(x => x.configArgStr().GetText()).Map(bool.Parse),
+            Config = context.configStmt().MapSingle(ParseConfig),
             Mandatory = context.mandatoryStmt().MapSingle(x => x.mandatoryArgStr().GetText()).Map(bool.Parse),
-            MinElements = context.minElementsStmt().MapSingle(x => int.Parse(x.minValueArgStr().GetText())),
-            MaxElements = context.maxElementsStmt().MapSingle(x => int.Parse(x.maxValueArgStr().GetText())),
+            MinElements = context.minElementsStmt().MapSingle(x => ParseMinValue(x.minValueArgStr())),
+            MaxElements = context.maxElementsStmt().MapSingle(x => ParseMaxValue(x.maxValueArgStr())),
             Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             UniqueConstraints = context.uniqueStmt()
-                .Select(x => (StringNode)VisitUniqueStmt(x))
-                .Select(x => x.Value!)
+                .Select(x => ParseUnique(x)!)
                 .ToList(),
             Default = context.defaultStmt()
-                .Select(x => VisitQuotedString(x.quotedString()))
-                .Select(x => x.StringValue()!)
+                .Select(x => ParseDefault(x)!)
                 .ToList(),
         };
 
@@ -624,13 +630,12 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
         {
             Type = context.typeStmt().MapSingle(x => (TypeNode)VisitTypeStmt(x)),
             Units = context.unitsStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
-            Config = context.configStmt().MapSingle(x => x.configArgStr().GetText()).Map(bool.Parse),
+            Config = context.configStmt().MapSingle(ParseConfig),
             Mandatory = context.mandatoryStmt().MapSingle(x => x.mandatoryArgStr().GetText()).Map(bool.Parse),
-            MinElements = context.minElementsStmt().MapSingle(x => int.Parse(x.minValueArgStr().GetText())),
-            MaxElements = context.maxElementsStmt().MapSingle(x => int.Parse(x.maxValueArgStr().GetText())),
+            MinElements = context.minElementsStmt().MapSingle(x => ParseMinValue(x.minValueArgStr())),
+            MaxElements = context.maxElementsStmt().MapSingle(x => ParseMaxValue(x.maxValueArgStr())),
             Default = context.defaultStmt()
-                .Select(x => VisitQuotedString(x.quotedString()))
-                .Select(x => x.StringValue()!)
+                .Select(x => ParseDefault(x)!)
                 .ToList(),
         };
 
@@ -640,36 +645,38 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             Units = context.unitsStmt().MapSingle(x => VisitQuotedString(x.quotedString())).StringValue(),
             Must = context.mustStmt().Select(x => (MustNode)VisitMustStmt(x)).ToList(),
             UniqueConstraints = context.uniqueStmt()
-                .Select(x => (StringNode)VisitUniqueStmt(x))
-                .Select(x => x.Value!)
+                .Select(x => ParseUnique(x)!)
                 .ToList(),
             Default = context.defaultStmt()
-                .Select(x => VisitQuotedString(x.quotedString()))
-                .Select(x => x.StringValue()!)
+                .Select(x => ParseDefault(x)!)
                 .ToList(),
         };
-
-    public override INode VisitUniqueStmt(YangRfcParser.UniqueStmtContext context) => context.uniqueArgStr().Map(x => VisitQuotedString(x.quotedString()))!;
 
     public override INode VisitQuotedString(YangRfcParser.QuotedStringContext context) => new StringNode(context.GetContentText());
     public override INode VisitDescriptionStmt(YangRfcParser.DescriptionStmtContext context) => context.Map(x => VisitQuotedString(x.quotedString()))!;
     public override INode VisitReferenceStmt(YangRfcParser.ReferenceStmtContext context) => context.Map(x => VisitQuotedString(x.quotedString()))!;
 
     private Status ParseStatus(YangRfcParser.StatusStmtContext context) =>
-        context.statusArgStr().Map(x => Enum.Parse<Status>(x.GetText(), true));
+        ParseOptionalQuotedString(context.statusArgStr(), q => q.quotedString())
+            .Map(x => Enum.Parse<Status>(x, true));
 
     private OrderedBy ParseOrderedBy(YangRfcParser.OrderedByStmtContext context) =>
-        context.orderedByArgStr().Map(x => Enum.Parse<OrderedBy>(x.GetText(), true));
+        ParseOptionalQuotedString(context.orderedByArgStr(), q => q.quotedString())
+            .Map(x => Enum.Parse<OrderedBy>(x, true));
 
     private List<string> ParseBaseStmts(IEnumerable<YangRfcParser.BaseStmtContext> context) =>
         context
             .Select(x => VisitIdentifierRefArgStr(x.identifierRefArgStr()).StringValue()!)
             .ToList();
-    
-    public override INode VisitIdentifierOrQuotedString(YangRfcParser.IdentifierOrQuotedStringContext context) => 
+
+    private bool? ParseConfig(YangRfcParser.ConfigStmtContext context) =>
+        ParseOptionalQuotedString(context.configArgStr(), q => q.quotedString())
+            .Map(x => (bool?)bool.Parse(x));
+
+    public override INode VisitIdentifierOrQuotedString(YangRfcParser.IdentifierOrQuotedStringContext context) =>
         context.quotedString().Map(VisitQuotedString) ?? new StringNode(context.GetText());
 
-    public override INode VisitIdentifierRefArgStr(YangRfcParser.IdentifierRefArgStrContext context) => 
+    public override INode VisitIdentifierRefArgStr(YangRfcParser.IdentifierRefArgStrContext context) =>
         context.quotedString().Map(VisitQuotedString) ?? new StringNode(context.GetText());
 
     private List<string> ParseIfFeatures(IEnumerable<YangRfcParser.IfFeatureStmtContext> context) =>
@@ -678,19 +685,13 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
             .Select(x => VisitQuotedString(x.quotedString()))
             .Select(x => x.StringValue()!)
             .ToList();
-    
+
     private List<string> ParseKeysArgStr(YangRfcParser.KeyArgStrContext context) =>
-        context.quotedString()
-            .Map(VisitQuotedString)
-            .StringValue()
+        ParseOptionalQuotedString(context, q => q.quotedString())
             .Map(x => x.Split(
-                    new[] { ' ', '\t', '\r', '\n' }, 
+                    new[] { ' ', '\t', '\r', '\n' },
                     StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                 .ToList())
-        ?? context
-            .Map(x => x.keyArg())
-            .Map(x => x.nodeIdentifier())
-            .Map(x => x.Select(i => i.GetText()).ToList())
         ?? new();
 
     private List<INode> ParseBodyStmts(YangRfcParser.BodyStmtsContext context) =>
@@ -722,4 +723,25 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
         ?? context.anydataStmt().Map(VisitAnydataStmt)
         ?? context.anyxmlStmt().Map(VisitAnyxmlStmt)
         ?? throw new NotImplementedException();
+
+    private string? ParseDefault(YangRfcParser.DefaultStmtContext context) =>
+        ParseOptionalQuotedString(context.defaultArgStr(), q => q.quotedString());
+
+    private int? ParseMinValue(YangRfcParser.MinValueArgStrContext context) =>
+        ParseOptionalQuotedString(context, q => q.quotedString())
+            .Map(x => (int?)int.Parse(x));
+
+    private int? ParseMaxValue(YangRfcParser.MaxValueArgStrContext context) =>
+        ParseOptionalQuotedString(context, q => q.quotedString())
+            .Map(x => (int?)int.Parse(x));
+    
+    private string? ParseUnique(YangRfcParser.UniqueStmtContext context) =>
+        ParseOptionalQuotedString(context.uniqueArgStr(), q => q.quotedString());
+
+    private string? ParseOptionalQuotedString<TContext>(TContext context, Func<TContext, YangRfcParser.QuotedStringContext> quotedString)
+        where TContext : IParseTree =>
+        quotedString(context)
+            .Map(VisitQuotedString)
+            .StringValue()
+        ?? context.GetText();
 }
