@@ -1,4 +1,6 @@
-﻿namespace YangParser.Model;
+﻿using YangParser.GrammarModel;
+
+namespace YangParser.Model;
 
 public class NotificationNode: IIdentifiableNode
 {

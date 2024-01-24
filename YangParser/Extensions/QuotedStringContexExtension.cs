@@ -1,4 +1,5 @@
-﻿using YangParser.Model;
+﻿using YangParser.GrammarModel;
+using YangParser.Model;
 
 namespace YangParser.Extensions;
 
