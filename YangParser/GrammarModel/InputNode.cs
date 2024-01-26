@@ -16,7 +16,7 @@ public class InputNode : INode
     public List<TypedefNode> Typedefs { get; set; } = new();
 
     /// <summary>
-    /// Collection of elements describing data structure.
+    /// Collection of elements describing nested data nodes.
     /// </summary>
     public List<INode> DataDefinitions { get; init; } = new();
 

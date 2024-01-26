@@ -3,7 +3,7 @@
 namespace YangParser.GrammarModel;
 
 /// <summary>
-/// Definition of a collection of compound objects.
+/// Definition of a collection of compound data nodes.
 /// </summary>
 public class ListNode : IIdentifiableNode
 {
@@ -46,7 +46,7 @@ public class ListNode : IIdentifiableNode
     /// <summary>List of reusable model block defined in this scope.</summary>
     public List<GroupingNode> Groupings { get; set; } = new();
 
-    /// <summary>Collection of elements describing data structure.</summary>
+    /// <summary>Collection of elements describing nested data nodes.</summary>
     public List<INode> DataDefinitions { get; set; } = new();
 
     /// <summary>Collection of identifiers of nested leaf data nodes.</summary>
