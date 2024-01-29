@@ -33,7 +33,7 @@ public class RpcStmtTests
     }
 
     [Fact]
-    public void HandlesGrouppings()
+    public void HandlesGroupings()
     {
         YangRfcParser parser = ParserHelpers.CreateParser($"{Folder}/data/{Prefix}-grouping.yang");
 

@@ -98,19 +98,19 @@
       <None Update="ContainerStmt\data\container-typedef.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="GrouppingStmt\data\container.yang">
+      <None Update="GroupingStmt\data\container.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="GrouppingStmt\data\container-if.yang">
+      <None Update="GroupingStmt\data\container-if.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="GrouppingStmt\data\container-when.yang">
+      <None Update="GroupingStmt\data\container-when.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="GrouppingStmt\data\container-must.yang">
+      <None Update="GroupingStmt\data\container-must.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="GrouppingStmt\data\container-typedef.yang">
+      <None Update="GroupingStmt\data\container-typedef.yang">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="GroupingStmt\data\grouping.yang">

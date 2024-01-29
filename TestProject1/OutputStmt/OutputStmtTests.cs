@@ -52,7 +52,7 @@ public class OutputStmtTests
     }
 
     [Fact]
-    public void HandlesGrouppings()
+    public void HandlesGroupings()
     {
         YangRfcParser parser = ParserHelpers.CreateParser("OutputStmt/data/output-grouping.yang");
 

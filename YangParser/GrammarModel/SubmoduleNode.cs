@@ -2,6 +2,7 @@
 
 namespace YangParser.GrammarModel;
 
+/// <summary>Submodule definition.</summary>
 public class SubmoduleNode : IIdentifiableNode
 {
     /// <summary>Identifier of the submodule.</summary>

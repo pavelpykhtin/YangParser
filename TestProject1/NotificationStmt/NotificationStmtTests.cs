@@ -32,7 +32,7 @@ public class NotificationStmtTests
     }
 
     [Fact]
-    public void HandlesGrouppings()
+    public void HandlesGroupings()
     {
         YangRfcParser parser = ParserHelpers.CreateParser("NotificationStmt/data/notification-grouping.yang");
 

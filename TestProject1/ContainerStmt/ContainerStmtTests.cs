@@ -95,7 +95,7 @@ public class ContainerStmtTests
     }
 
     [Fact]
-    public void HandlesGrouppings()
+    public void HandlesGroupings()
     {
         YangRfcParser parser = ParserHelpers.CreateParser("ContainerStmt/data/container-grouping.yang");
 

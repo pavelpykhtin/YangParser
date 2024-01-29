@@ -2,7 +2,7 @@
 
 namespace YangParser.GrammarModel;
 
-/// <summary>Contains a collection of definitions.</summary>
+/// <summary>Module definition.</summary>
 public class ModuleNode : IIdentifiableNode
 {
     /// <summary>Identifier of the module.</summary>

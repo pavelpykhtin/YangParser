@@ -121,7 +121,7 @@ public class ListStmtTests
     }
 
     [Fact]
-    public void HandlesGrouppings()
+    public void HandlesGroupings()
     {
         YangRfcParser parser = ParserHelpers.CreateParser("ListStmt/data/list-grouping.yang");
 
