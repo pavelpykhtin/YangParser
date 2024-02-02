@@ -142,7 +142,7 @@ public class TypeStmtTests
         var typeNode = (TypeNode)_visitor.Visit(context);
 
         typeNode.Identifier.Should().Be("identityref");
-        typeNode.IdentityReference!.References.Should().Contain(new[]{"crypto:crypto-alg", "ssh"} );
+        typeNode.IdentityReference!.BaseTypes.Should().Contain(new[]{"crypto:crypto-alg", "ssh"} );
     }
 
     [Fact]

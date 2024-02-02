@@ -1,16 +1,31 @@
-﻿namespace YangParser.Model;
+﻿using YangParser.Model;
 
-public class DeviateAddNode: INode
+namespace YangParser.GrammarModel;
+
+///<summary>Defines properties to add to a data node.</summary>
+public class DeviateAddNode : INode
 {
-    /// <summary>Wether the data node is mandatory for data tree in order to be valid.</summary>
+    ///<summary>When set adds Mandatory property.</summary>
     public bool? Mandatory { get; set; }
-    /// <summary>Collection of predicates which are used to validate this data node.</summary>
+
+    ///<summary>Adds predicates to Must collection of a data node.</summary>
     public List<MustNode> Must { get; init; } = new();
-    /// <summary>Whether these data are part of a device configuration or a device state.</summary>
+
+    ///<summary>When set adds Config property.</summary>
     public bool? Config { get; set; }
+
+    ///<summary>When set adds Units property.</summary>
     public string? Units { get; set; }
+
+    ///<summary>Adds constraints to Unique collection of a data node.</summary>
     public List<string> UniqueConstraints { get; set; } = new();
+
+    ///<summary>When set adds Default property.</summary>
     public List<string> Default { get; set; } = new();
+
+    ///<summary>When set adds MaxElements property.</summary>
     public int? MaxElements { get; set; }
+
+    ///<summary>When set adds MinElements property.</summary>
     public int? MinElements { get; set; }
 }

@@ -407,7 +407,7 @@ public class YangRfcVisitor : YangRfcParserBaseVisitor<INode>
     public override INode VisitIdentityrefSpecification(YangRfcParser.IdentityrefSpecificationContext context) =>
         new IdentityReferenceNode
         {
-            References = context.baseStmt().Map(ParseBaseStmts) ?? new List<string>()
+            BaseTypes = context.baseStmt().Map(ParseBaseStmts) ?? new List<string>()
         };
 
     public override INode VisitBitsSpecification(YangRfcParser.BitsSpecificationContext context) =>

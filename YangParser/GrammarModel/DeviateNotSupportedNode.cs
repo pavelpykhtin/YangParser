@@ -1,5 +1,8 @@
-﻿namespace YangParser.Model;
+﻿using YangParser.Model;
 
-public class DeviateNotSupportedNode: INode
+namespace YangParser.GrammarModel;
+
+///<summary>Defines that a data node is not supproted by the server.</summary>
+public class DeviateNotSupportedNode : INode
 {
 }

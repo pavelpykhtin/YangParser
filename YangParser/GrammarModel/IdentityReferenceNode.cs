@@ -1,6 +1,10 @@
-﻿namespace YangParser.Model;
+﻿using YangParser.Model;
 
-public class IdentityReferenceNode: INode
+namespace YangParser.GrammarModel;
+
+/// <summary>Defines a reference to an existing identity.</summary>
+public class IdentityReferenceNode : INode
 {
-    public List<string> References { get; init; } = new();
+    ///<summary>Collection of base types from which referenced identitie's type must be derived.</summary>
+    public List<string> BaseTypes { get; init; } = new();
 }
